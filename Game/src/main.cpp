@@ -3,7 +3,10 @@
 //
 
 #include <cstdio>
+#include "core/App.h"
 
-int main() {
-    printf("Hello World!\n");
+int main(int argc, char** argv) {
+    Game::App app{argc, argv};
+
+    app.run();
 }

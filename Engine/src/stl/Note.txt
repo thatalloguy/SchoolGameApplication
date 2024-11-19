@@ -1,0 +1,6 @@
+NOTE:
+
+this STL is from catos: https://github.com/thatalloguy/Catos/tree/main/Runtime/src/stl
+
+which is also written by myself, but before I started this project.
+

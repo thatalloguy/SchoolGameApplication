@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 # List of dependencies (that we can automatically do with cmake)
 add_subdirectory("Thirdparty/glfw")
+add_subdirectory("Thirdparty/spdlog")
 
 # Imgui, stb  and GLAD we have to do manually
 file(GLOB_RECURSE IMGUI_SOURCE

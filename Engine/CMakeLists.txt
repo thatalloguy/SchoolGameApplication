@@ -7,6 +7,12 @@ file(GLOB_RECURSE TYCHE_ENGINE_SRC
         src/core/*.h
         src/core/*.cpp
 
+        src/math/*.h
+        src/math/*.cpp
+
+        src/stl/*.h
+        src/stl/*.cpp
+
 )
 
 add_library(tyche-engine-static STATIC ${TYCHE_ENGINE_SRC} ${IMGUI_SOURCE} ${GLAD_SOURCE} ${STB_IMAGE_SOURCE})
@@ -18,3 +24,11 @@ target_include_directories(tyche-engine-static PUBLIC "Thirdparty/imgui")
 target_include_directories(tyche-engine-static PUBLIC "Thirdparty/stb")
 target_include_directories(tyche-engine-static PUBLIC "Thirdparty/glfw/include")
 target_include_directories(tyche-engine-static PUBLIC "Thirdparty/glad/include/")
+
+target_link_libraries(tyche-engine-static PUBLIC spdlog)
+target_link_libraries(tyche-engine-static PUBLIC glfw)
+
+# If we are on windows also link dwmapi so that we can support darktheme
+IF (WIN32)
+    target_link_libraries(tyche-engine-static PUBLIC dwmapi)
+ENDIF()

@@ -4,6 +4,5 @@
 
 #pragma once
 
-namespace Tyche::Logger {
-
-}
+typedef unsigned int uint;
+typedef const char* cstr;
