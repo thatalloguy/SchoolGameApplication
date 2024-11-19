@@ -13,6 +13,8 @@ file(GLOB_RECURSE TYCHE_ENGINE_SRC
         src/stl/*.h
         src/stl/*.cpp
 
+        src/renderer/*.h
+        src/renderer/*.cpp
 )
 
 add_library(tyche-engine-static STATIC ${TYCHE_ENGINE_SRC} ${IMGUI_SOURCE} ${GLAD_SOURCE} ${STB_IMAGE_SOURCE})

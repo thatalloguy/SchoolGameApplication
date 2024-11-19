@@ -4,6 +4,7 @@
 #pragma once
 
 #include "core/Window.h"
+#include "renderer/TileRenderer.h"
 
 namespace Game {
 
@@ -18,6 +19,7 @@ namespace Game {
 
     private:
         Tyche::Window* _window;
+        Tyche::TileRenderer _tile_renderer{};
 
     };
 

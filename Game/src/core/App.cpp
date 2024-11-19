@@ -10,6 +10,12 @@ Game::App::App(int argc, char **argv) {
     };
 
     _window = new Tyche::Window{defaultWindowInfo};
+
+    _tile_renderer.initialize();
+
+    Tyche::Tile testTile{};
+
+    _tile_renderer.addTile(testTile);
 }
 
 Game::App::~App() {
@@ -21,6 +27,8 @@ void Game::App::run() {
     while (!_window->shouldWindowClose()) {
 
         _window->update();
+
+        _tile_renderer.renderTiles();
     }
 
 }

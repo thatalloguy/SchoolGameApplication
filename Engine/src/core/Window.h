@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <glad/glad.h>
 #include <math/vecs.h>
 #include <stl/string.h>
 #include <GLFW/glfw3.h>
@@ -15,6 +16,7 @@ using namespace Tyche::STL;
 
 namespace Tyche {
 
+    //This is a struct to specify how our window should be created.
     struct WindowCreationInfo {
         Vector2 size{1280, 720};
         string window_title = "Tyche Application";
@@ -30,7 +32,7 @@ namespace Tyche {
         //Retuns the Size of the PRIMARY monitor.
         static Vector2 getMonitorSize();
 
-        //Creates and initializes a window with glfw
+        //Creates and initializes a window with glfw and glad (our gl loader)
         Window(const WindowCreationInfo& creation_info);
 
         //Destroys all allocated objects by this class.

@@ -3,8 +3,6 @@
 //
 
 #include "Window.h"
-
-#include <cstdlib>
 #include <spdlog/spdlog.h>
 
 
@@ -67,10 +65,20 @@ Tyche::Window::Window(const Tyche::WindowCreationInfo &creation_info) {
 
     //Make the Window focused.
     glfwMakeContextCurrent(_raw_window);
+
+
+    //load Glad
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+        spdlog::error("Could not load GLAD");
+        exit(-12);
+    } else {
+        spdlog::info("Loaded GLAD");
+    }
 }
 
 Tyche::Window::~Window() {
     spdlog::info("Destroying the window");
+
     glfwDestroyWindow(_raw_window);
     glfwTerminate();
 }
@@ -90,6 +98,10 @@ bool Tyche::Window::shouldWindowClose() {
 void Tyche::Window::update() {
     glfwPollEvents();
     glfwSwapBuffers(_raw_window);
+
+    glClearColor(0, 1, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 }
 
 void *Tyche::Window::getRawWindowPtr() {
