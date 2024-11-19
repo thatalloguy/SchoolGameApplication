@@ -7,6 +7,7 @@
 #include "stl/vector.h"
 #include "Shader.h"
 #include "core/typedefs.h"
+#include "math/mat4.h"
 
 using namespace Tyche::Math;
 using namespace Tyche::STL;
@@ -25,6 +26,12 @@ namespace Tyche {
     struct Tile {
         // Position where the texture is rendered
         Vector2 position{0, 0};
+        // The scale of tile (not really used)
+        Vector2 scale{1, 1};
+
+        // The final transformation matrix (should include  the scale and position of the tile)
+        Matrix4 transform;
+
         // Type determines the texture the tile will have
         int type = 0;
         //Layer determines in what order the tiles are drawn.

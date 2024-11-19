@@ -72,6 +72,7 @@ namespace Tyche::Math {
 
     };
 
+    // A struct to represent a Vector4 that has builtin math operators.
     struct Vector4 {
         // Very simple constructor.
         Vector4(float x, float y, float z, float w) {
@@ -81,17 +82,18 @@ namespace Tyche::Math {
             _[3] = w;
         };
 
-        // use an array instead of just float x, y;
-        // so that for uniforms we can just point to the internal array for opengl.
+        //Our internal buffer.
         float _[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 
-        // we impl this operator since Vector2._[] looks very messy.
+        //Returns the value of the given axis.
         float operator[](int index) const {
             return _[index];
         }
 
+        // Returns the begin of our internal buffer.
+        // Meant for opengl uniforms
         float* value_ptr() {
-            return _;
+            return &_[0];
         }
 
         Vector4 operator*(float v) {

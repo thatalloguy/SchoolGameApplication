@@ -3,7 +3,6 @@
 //
 
 #include "TileRenderer.h"
-#include "math/mat4.h"
 #include <glad/glad.h>
 
 
@@ -26,13 +25,16 @@ std::string loadTxtFromFile(const char* path){
     std::ifstream in(path, std::ios::binary);
     if (in)
     {
+        //Read the contents of the file
         std::string contents;
         in.seekg(0, std::ios::end);
         contents.resize(in.tellg());
 
         in.seekg(0, std::ios::beg);
         in.read(&contents[0], contents.length());
+
         in.close();
+        // Give
         return contents;
     }
     spdlog::error("Couldn't load: ", path);
@@ -84,17 +86,22 @@ void Tyche::TileRenderer::clearTiles() {
 }
 
 void Tyche::TileRenderer::renderTiles() {
-    glDisable(GL_DEPTH_TEST);
+    glViewport(0, 0, 1280, 720);
 
     _tile_shader.bind();
 
-    Matrix4 transform;
+    Matrix4 camera;
+    camera.ortho(0.0f, 1280, 720, 0.0f, -1.0f, 1.0f);
 
-    transform.translate({-0.2f, 0});
+    _tile_shader.setMatrix4("projection", camera.value_ptr());
 
     for (auto tile: _tiles) {
         glBindVertexArray(_mesh.VAO);
-        _tile_shader.setMatrix4("model", transform.value_ptr());
+        tile.transform.translate({600, 600.0f});
+        tile.transform.scale({200, 200});
+
+        _tile_shader.setMatrix4("model", tile.transform.value_ptr());
+
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 }
