@@ -62,7 +62,7 @@ namespace Tyche {
 
         void init(TextureCreationInfo& creationInfo);
 
-        void bind(int slot = 0x84C1);
+        void bind(int slot = 0x84C0);
 
         Vector2 getSize() { return Vector2{(float) width, (float) height}; };
         int getNrChannels() { return nrChannels; };

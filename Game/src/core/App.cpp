@@ -15,6 +15,10 @@ Game::App::App(int argc, char **argv) {
     Tyche::TileRendererCreationInfo tile_renderer_info {};
     _tile_renderer.initialize(tile_renderer_info);
 
+    Tyche::EntityRendererCreationInfo entity_renderer_info {};
+    _entity_renderer.initialize(entity_renderer_info);
+
+
     Tyche::Tile testTile{};
     Tyche::Tile testTile2{
         .position{200, 500},
@@ -23,6 +27,10 @@ Game::App::App(int argc, char **argv) {
 
     _tile_renderer.addTile(testTile);
     _tile_renderer.addTile(testTile2);
+
+
+    TestEntity bob{};
+    _entity_renderer.addEntity(bob);
 
 }
 
@@ -38,6 +46,7 @@ void Game::App::run() {
         _camera.update();
 
         _tile_renderer.renderTiles(_camera);
+        _entity_renderer.renderEntities(_camera);
     }
 
 }

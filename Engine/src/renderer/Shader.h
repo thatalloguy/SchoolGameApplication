@@ -4,8 +4,12 @@
 #pragma once
 
 #include "glad/glad.h"
+#include <string>
+#include <fstream>
+#include "spdlog/spdlog.h"
 
 // Credits to the shader class from Catos engine (made by myself)
+
 
 
 namespace Tyche {

@@ -17,13 +17,7 @@ using namespace Tyche::STL;
 
 namespace Tyche {
 
-    //just a very simple struct to represent a GPU mesh.
-    struct TileMesh {
-        //VAO = vertex array buffer
-        unsigned int VAO = 0;
-        //VBO = vertex buffer object
-        unsigned int VBO = 0;
-    };
+
 
     // A Tile is a textured Square that
     struct Tile {
@@ -75,7 +69,7 @@ namespace Tyche {
 
     private:
         vector<Tile> _tiles;
-        TileMesh _mesh{0, 0};
+        GPUMesh _mesh{0, 0};
         Shader _tile_shader;
         // x is the tile_size and y is the atlas size
         Vector2 _grid{16, 64};

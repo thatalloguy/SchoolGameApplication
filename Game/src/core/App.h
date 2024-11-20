@@ -5,8 +5,14 @@
 
 #include "core/Window.h"
 #include "renderer/TileRenderer.h"
+#include "renderer/EntityRenderer.h"
 
 namespace Game {
+
+    class TestEntity: public Tyche::Entity {
+    public:
+        void test() {};
+    };
 
     class App {
 
@@ -20,6 +26,7 @@ namespace Game {
     private:
         Tyche::Window* _window;
         Tyche::TileRenderer _tile_renderer{};
+        Tyche::EntityRenderer _entity_renderer{};
         Tyche::Camera _camera{};
 
     };
