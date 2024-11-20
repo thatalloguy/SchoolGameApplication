@@ -8,6 +8,7 @@
 #include "Shader.h"
 #include "core/typedefs.h"
 #include "math/mat4.h"
+#include "Camera.h"
 
 using namespace Tyche::Math;
 using namespace Tyche::STL;
@@ -56,7 +57,7 @@ namespace Tyche {
         void clearTiles();
 
         //Renders all layers and tiles to the screen.
-        void renderTiles();
+        void renderTiles(const Camera& camera);
 
     private:
         vector<Tile> _tiles;

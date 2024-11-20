@@ -20,6 +20,7 @@ namespace Game {
     private:
         Tyche::Window* _window;
         Tyche::TileRenderer _tile_renderer{};
+        Tyche::Camera _camera{};
 
     };
 

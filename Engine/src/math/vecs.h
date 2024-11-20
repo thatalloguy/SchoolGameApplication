@@ -11,8 +11,9 @@ namespace Tyche::Math {
      */
     struct Vector2 {
 
-        // Very simple constructor.
+        // Very simple constructor(s).
         Vector2(float x, float y) {_[0] = x; _[1] = y; };
+        Vector2() = default;
 
         // use an array instead of just float x, y;
         // so that for uniforms we can just point to the internal array for opengl.

@@ -16,6 +16,8 @@ Game::App::App(int argc, char **argv) {
     Tyche::Tile testTile{};
 
     _tile_renderer.addTile(testTile);
+
+    _camera.setViewportSize(_window->getWindowSize());
 }
 
 Game::App::~App() {
@@ -27,8 +29,9 @@ void Game::App::run() {
     while (!_window->shouldWindowClose()) {
 
         _window->update();
+        _camera.update();
 
-        _tile_renderer.renderTiles();
+        _tile_renderer.renderTiles(_camera);
     }
 
 }

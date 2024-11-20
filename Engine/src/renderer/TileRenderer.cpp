@@ -85,15 +85,10 @@ void Tyche::TileRenderer::clearTiles() {
     _tiles.clear();
 }
 
-void Tyche::TileRenderer::renderTiles() {
-    glViewport(0, 0, 1280, 720);
+void Tyche::TileRenderer::renderTiles(const Camera& camera) {
 
     _tile_shader.bind();
-
-    Matrix4 camera;
-    camera.ortho(0.0f, 1280, 720, 0.0f, -1.0f, 1.0f);
-
-    _tile_shader.setMatrix4("projection", camera.value_ptr());
+    _tile_shader.setMatrix4("projection", camera.getMatrix().value_ptr());
 
     for (auto tile: _tiles) {
         glBindVertexArray(_mesh.VAO);
