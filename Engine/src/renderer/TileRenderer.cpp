@@ -49,7 +49,7 @@ Tyche::TileRenderer::~TileRenderer() {
 
 }
 
-void Tyche::TileRenderer::initialize() {
+void Tyche::TileRenderer::initialize(const TileRendererCreationInfo& creation_info) {
 
     //Create a tile mesh and upload it to the gpu.
     glGenVertexArrays(1, &_mesh.VAO);
@@ -74,7 +74,10 @@ void Tyche::TileRenderer::initialize() {
 
     _tile_shader.init(tile_shader_info);
 
+    _grid.setX((float) creation_info.tile_size);
+    _grid.setY((float) creation_info.atlas_size);
 
+    loadTextureAtlas(creation_info.texture_path);
 }
 
 void Tyche::TileRenderer::addTile(Tyche::Tile& tile) {
@@ -90,13 +93,49 @@ void Tyche::TileRenderer::renderTiles(const Camera& camera) {
     _tile_shader.bind();
     _tile_shader.setMatrix4("projection", camera.getMatrix().value_ptr());
 
+    _texture_atlas.bind();
+    _tile_shader.setInt("texture_atlas", 0);
+    _tile_shader.setVector2("grid", _grid.value_ptr());
+
     for (auto tile: _tiles) {
         glBindVertexArray(_mesh.VAO);
-        tile.transform.translate({600, 600.0f});
-        tile.transform.scale({200, 200});
+        // update the transform matrix of the tile
+        tile.transform.translate(tile.position);
+        tile.transform.scale(tile.scale);
 
         _tile_shader.setMatrix4("model", tile.transform.value_ptr());
+        _tile_shader.setVector2("texture_slot", tile.texture_pos.value_ptr());
 
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
+}
+
+int Tyche::TileRenderer::getTileSize() {
+    return (int) _grid.getX();
+}
+
+void Tyche::TileRenderer::setTileSize(int new_tile_size) {
+
+}
+
+int Tyche::TileRenderer::getAtlasSize() {
+    return (int) _grid.getY();
+}
+
+void Tyche::TileRenderer::setAtlasSize(int new_atlas_size) {
+
+}
+
+void Tyche::TileRenderer::loadTextureAtlas(const string &path) {
+
+    TextureCreationInfo atlas_texture_info {
+        .path = path.c_str(),
+        .flip_vertically = false,
+
+        .minFilter = FilterType::NEAREST,
+        .magFilter = FilterType::NEAREST,
+        .color = TextureColor::RGBA,
+    };
+
+    _texture_atlas.init(atlas_texture_info);
 }

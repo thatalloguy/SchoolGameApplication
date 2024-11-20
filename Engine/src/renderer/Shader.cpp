@@ -83,3 +83,9 @@ void Tyche::Shader::setMatrix4(const char *name, float *val) {
     unsigned int loc = glGetUniformLocation(shaderProgram, name);
     glUniformMatrix4fv(loc, 1, GL_FALSE, val);
 }
+
+void Tyche::Shader::setVector2(const char *name, float *val) {
+    unsigned int loc = glGetUniformLocation(shaderProgram, name);
+    glUniform2fv(loc, 1, val);
+
+}

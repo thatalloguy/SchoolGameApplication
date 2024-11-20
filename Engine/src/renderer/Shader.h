@@ -5,6 +5,8 @@
 
 #include "glad/glad.h"
 
+// Credits to the shader class from Catos engine (made by myself)
+
 
 namespace Tyche {
 
@@ -57,6 +59,7 @@ namespace Tyche {
         void setInt(const char* name, int val);
 
         void setMatrix4(const char* name,float* val);
+        void setVector2(const char* name,float* val);
 
     private:
 

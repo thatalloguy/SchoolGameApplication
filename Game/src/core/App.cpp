@@ -10,14 +10,20 @@ Game::App::App(int argc, char **argv) {
     };
 
     _window = new Tyche::Window{defaultWindowInfo};
+    _camera.setViewportSize(_window->getWindowSize());
 
-    _tile_renderer.initialize();
+    Tyche::TileRendererCreationInfo tile_renderer_info {};
+    _tile_renderer.initialize(tile_renderer_info);
 
     Tyche::Tile testTile{};
+    Tyche::Tile testTile2{
+        .position{200, 500},
+        .texture_pos{1,1}
+    };
 
     _tile_renderer.addTile(testTile);
+    _tile_renderer.addTile(testTile2);
 
-    _camera.setViewportSize(_window->getWindowSize());
 }
 
 Game::App::~App() {
