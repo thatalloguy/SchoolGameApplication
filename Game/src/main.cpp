@@ -8,5 +8,7 @@
 int main(int argc, char** argv) {
     Game::App app{argc, argv};
 
+    auto hash = std::hash<std::string>();
+
     app.run();
 }

@@ -74,3 +74,15 @@ Tyche::STL::string Tyche::STL::string::operator+(const Tyche::STL::string &obj) 
 
     return s;
 }
+
+bool Tyche::STL::string::operator==(const string& obj) const {
+    int result = strcmp(buf, obj.c_str());
+
+    return result;
+}
+
+bool Tyche::STL::string::operator!=(const string& obj) const {
+    int result = strcmp(buf, obj.c_str());
+
+    return !result;
+}

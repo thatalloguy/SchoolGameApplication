@@ -2,6 +2,8 @@
 // Created by allos on 11/21/2024.
 //
 #pragma once
+#include "typedefs.h"
+#include "Window.h"
 #include "GLFW/glfw3.h"
 #include "stl/string.h"
 
@@ -11,7 +13,7 @@ namespace Tyche::Input {
 
     typedef string Action;
 
-    enum Key {
+    enum Key: unsigned int {
         Q = 81,
         W = 87,
         E = 69,
@@ -77,12 +79,15 @@ namespace Tyche::Input {
         F12 = 301
     };
 
+    void setTargetWindow(Window& window);
 
     void addAction(const Action& action);
     void addKey(const Action& action, Key key);
 
+    void processInputs();
 
     bool isActionPressed(const Action& action);
-    bool isActionJustPressed(const Action& action);
+
+    void cleanUp();
 
 }

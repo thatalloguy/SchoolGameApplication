@@ -4,6 +4,8 @@
 
 #include "App.h"
 
+#include "core/Input.h"
+
 Game::App::App(int argc, char **argv) {
     Tyche::WindowCreationInfo defaultWindowInfo{
         .window_title = "Game"
@@ -28,9 +30,14 @@ Game::App::App(int argc, char **argv) {
     _tile_renderer.addTile(testTile);
     _tile_renderer.addTile(testTile2);
 
-
     TestEntity bob{};
     _entity_renderer.addEntity(bob);
+
+    Tyche::Input::setTargetWindow(*_window);
+
+    Tyche::Input::addAction("test");
+    Tyche::Input::addKey("test", Tyche::Input::Key::W);
+    Tyche::Input::addKey("test", Tyche::Input::Key::D);
 
 }
 
@@ -43,10 +50,16 @@ void Game::App::run() {
     while (!_window->shouldWindowClose()) {
 
         _window->update();
+        Tyche::Input::processInputs();
+
         _camera.update();
 
         _tile_renderer.renderTiles(_camera);
         _entity_renderer.renderEntities(_camera);
+
+        if (Tyche::Input::isActionPressed("test")) {
+            spdlog::info("key press");
+        }
     }
 
 }

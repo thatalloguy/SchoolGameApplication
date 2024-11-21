@@ -56,7 +56,7 @@ namespace Tyche::STL {
 
         /// Copies the obj.
         vector& operator=(vector& obj) {
-            if (*this == obj) return *this; // no self asignment.
+            //if (*this == obj) return *this; // no self asignment.
 
             if (maxSize >= obj.size)
                 reserve(obj.size);

@@ -33,6 +33,11 @@ namespace Tyche::STL {
         /// Adds a string to itself.
         string operator+(const string& obj);
 
+        /// returns if the strings are not the same
+        bool operator==(const string& obj) const;
+
+        /// returns if the strings are the same
+        bool operator!=(const string& obj) const;
 
         /// Returns the size of the internal buffer.
         unsigned int length() { return size; };
@@ -40,7 +45,8 @@ namespace Tyche::STL {
         /// Returns the internal buffer;
         const char* c_str() const { return buf; };
 
-
+        char* begin() const {return &buf[0]; };
+        char* end() const {return &buf[size - 1]; };
 
         /// Deletes the allocated char array
         ~string();
