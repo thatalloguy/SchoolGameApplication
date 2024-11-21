@@ -16,7 +16,7 @@ namespace Tyche {
         Camera() = default;
         ~Camera() = default;
 
-        // Recalculates the internal camera matrix;
+        // Recalculates the internal camera matrix; and sets the viewport to the correct size
         void update();
 
         Math::Matrix4 getMatrix() const;

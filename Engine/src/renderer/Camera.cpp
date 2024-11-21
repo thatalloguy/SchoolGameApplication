@@ -4,6 +4,8 @@
 
 #include "Camera.h"
 
+#include "glad/glad.h"
+
 Tyche::Camera::Camera(const Tyche::Math::Vector2& viewport_size): _viewport_size(viewport_size) { };
 
 Tyche::Math::Matrix4 Tyche::Camera::getMatrix() const {
@@ -32,4 +34,6 @@ void Tyche::Camera::update() {
     //First calculate the projection matrix and then translate (move) it to our position;
     _camera_matrix.ortho(0.0f, _viewport_size.getX(), _viewport_size.getY(), 0.0f, -1.0f, 1.0f);
     _camera_matrix.translate(_position);
+
+    glViewport(0, 0, (int) _viewport_size[0], (int) _viewport_size[1]);
 }
