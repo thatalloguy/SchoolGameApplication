@@ -99,14 +99,23 @@ namespace Tyche::STL {
 
 
         hashnode<K, V>* getStartHashNode() {
-            return buf[1];
+            auto entry = buf[0];
+            int i = 0;
+            while (entry == nullptr && i<maxSize) {
+                i++;
+                entry = buf[i];
+                if (entry != nullptr) {
+                    return entry;
+                }
+            }
+
+            return buf[0];
         };
 
         /// Gets the value based on the key given.
         V get(const K& key) {
 
             unsigned int index = hashFunc(key, maxSize);
-            printf("index %u", index);
             auto entry = buf[index];
 
             // loop through all of the buckets with the same hash until we found the right key.
@@ -124,7 +133,7 @@ namespace Tyche::STL {
         bool has(const K& key)
         {
 
-            unsigned int index = hashFunc(key, maxSize);
+            int index = hashFunc(key, maxSize);
             auto entry = buf[index];
 
             // loop through all of the buckets with the same hash until we found the right key.
@@ -152,7 +161,6 @@ namespace Tyche::STL {
             int index = hashFunc(key, maxSize);
             hashnode<K, V>* prev = nullptr;
             auto entry = buf[index];
-            printf("index %u \n", index);
 
             // find an empty bucket that doenst have the same key.
             while (entry != nullptr && entry->getKey() != key) {

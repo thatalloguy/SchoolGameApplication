@@ -48,7 +48,6 @@ void Tyche::Input::processInputs() {
                 _key_state_map.put(entry->getKey(), true);
             }
         }
-
         entry = entry->getNext();
     }
 }
@@ -56,8 +55,10 @@ void Tyche::Input::processInputs() {
 bool Tyche::Input::isActionPressed(const Action& action) {
     if (_key_map.has(action) && _key_state_map.has(action)) {
         bool state = _key_state_map.get(action);
+
         return state;
     }
+
     return false;
 }
 

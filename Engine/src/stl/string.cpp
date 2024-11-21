@@ -3,6 +3,7 @@
 //
 
 #include <cstring>
+#include <cstdio>
 #include "string.h"
 
 Tyche::STL::string::~string() {
@@ -76,13 +77,17 @@ Tyche::STL::string Tyche::STL::string::operator+(const Tyche::STL::string &obj) 
 }
 
 bool Tyche::STL::string::operator==(const string& obj) const {
-    int result = strcmp(buf, obj.c_str());
+    const char* a = obj.c_str();
+    const char* b = buf;
+    bool result = strcmp(a, b);
 
-    return result;
+    return !result;
 }
 
 bool Tyche::STL::string::operator!=(const string& obj) const {
-    int result = strcmp(buf, obj.c_str());
+    const char* a = obj.c_str();
+    const char* b = buf;
+    bool result = strcmp(a, b);
 
-    return !result;
+    return result;
 }
