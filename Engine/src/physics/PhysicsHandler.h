@@ -4,6 +4,7 @@
 #pragma once
 
 #include "math/vecs.h"
+#include "PhysicsObject.h"
 
 namespace Tyche {
 
@@ -12,16 +13,20 @@ namespace Tyche {
     // z, w = max;
     typedef Math::Vector4 AABB;
 
-    class PhysicsHandler {
+    struct PhysicsCollision {
+        PhysicsObject* a{};
+        PhysicsObject* b{};
+        Math::Vector2 normal;
+    };
 
-    public:
+    namespace PhysicsHandler {
 
-        static bool isColliding(const AABB& a,const  AABB& b);
-        static float distance(const Math::Vector2& a, const Math::Vector2& b);
 
-        void addPhysicsObject();
-        void clearPhysicsObject();
+        bool isColliding(const AABB& a,const  AABB& b);
+        float distance(const Math::Vector2& a, const Math::Vector2& b);
 
+        void ResolveCollision(PhysicsObject& a, PhysicsObject& b);
+        bool AABBvsAABB(PhysicsCollision& physics_collision);
 
 
     };

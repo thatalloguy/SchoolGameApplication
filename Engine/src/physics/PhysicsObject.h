@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "PhysicsHandler.h"
+#include "math/vecs.h"
 
 namespace Tyche {
 
@@ -22,12 +22,14 @@ namespace Tyche {
         Math::Vector2 getForce();
         Math::Vector4 getAABB();
         float getMass();
+        float getRestitution();
 
         void setPosition(const Math::Vector2& position);
         void setVelocity(const Math::Vector2& velocity);
         void setForce(const Math::Vector2& force);
         void setMass(float mass);
-        void setAABB(const Math::Vector4& AABB);
+        void setRestitution(float restitution);
+        void setAABB(float w, float h);
 
     private:
 
@@ -35,8 +37,10 @@ namespace Tyche {
         Math::Vector2 _velocity{0, 0};
         Math::Vector2 _force{0, 0};
         float _mass = 1.0f;
+        float _restitution = 0.1f;
 
         Math::Vector4 _aabb{0.0f, 0.0f, 0.0f, 0.0f};
+        Math::Vector2 _size{0.0f, 0.0f};
     };
 
 

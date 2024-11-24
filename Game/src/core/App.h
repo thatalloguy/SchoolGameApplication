@@ -30,6 +30,7 @@ namespace Game {
         Tyche::EntityRenderer _entity_renderer{};
         Tyche::Camera _camera{};
         Tyche::PhysicsObject _object{};
+        Tyche::PhysicsObject _object2{};
     };
 
 }

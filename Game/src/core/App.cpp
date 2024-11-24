@@ -6,6 +6,7 @@
 #include "App.h"
 
 #include "core/Input.h"
+#include "physics/PhysicsHandler.h"
 
 namespace {
     Tyche::Entity bob{};
@@ -28,7 +29,7 @@ Game::App::App(int argc, char **argv) {
 
     Tyche::Tile testTile{};
     Tyche::Tile testTile2{
-        .position{200, 500},
+        .position{100, 700},
         .texture_pos{1,1}
     };
 
@@ -44,6 +45,10 @@ Game::App::App(int argc, char **argv) {
     //bob.setPosition({200, 400});
     _entity_renderer.addEntity(&bob);
     _object.setPosition(bob.getPosition());
+    _object.setAABB(100, 100);
+
+    _object2.setPosition({100, 700});
+    _object2.setAABB(100, 100);
 
 
 }
@@ -65,6 +70,10 @@ void Game::App::run() {
         bob.setPosition(_object.getPosition());
 
 
+        if (Tyche::PhysicsHandler::isColliding(_object.getAABB(), _object2.getAABB())) {
+            spdlog::info("COLLISION");
+            Tyche::PhysicsHandler::ResolveCollision(_object, _object2);
+        }
 
 
         _window->update();

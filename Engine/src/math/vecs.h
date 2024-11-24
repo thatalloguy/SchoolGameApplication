@@ -58,16 +58,16 @@ namespace Tyche::Math {
             _[1] *= b;
         }
 
-        void operator-=(Vector2& b) {
+        void operator-=(Vector2 b) {
             _[0] -= b[0];
             _[1] -= b[1];
         }
 
-        Vector2 operator+(Vector2& b) const {
+        Vector2 operator+(Vector2 b) const {
             return {_[0] + b[0],_[1] + b[1]};
         }
 
-        Vector2 operator-(Vector2& b) const {
+        Vector2 operator-(Vector2 b) const {
             return {_[0] - b[0],_[1] - b[1]};
         }
 
@@ -96,6 +96,10 @@ namespace Tyche::Math {
 
         //Returns the value of the given axis.
         float operator[](int index) const {
+            return _[index];
+        }
+
+        float& operator[](int index) {
             return _[index];
         }
 
