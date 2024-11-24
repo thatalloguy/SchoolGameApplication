@@ -2,9 +2,14 @@
 // Created by allos on 11/19/2024.
 //
 
+#include <cstdlib>
 #include "App.h"
 
 #include "core/Input.h"
+
+namespace {
+    Tyche::Entity bob{};
+}
 
 Game::App::App(int argc, char **argv) {
     Tyche::WindowCreationInfo defaultWindowInfo{
@@ -30,14 +35,16 @@ Game::App::App(int argc, char **argv) {
     _tile_renderer.addTile(testTile);
     _tile_renderer.addTile(testTile2);
 
-    TestEntity bob{};
-    _entity_renderer.addEntity(bob);
-
     Tyche::Input::setTargetWindow(*_window);
 
     Tyche::Input::addAction("test");
     Tyche::Input::addKey("test", Tyche::Input::Key::W);
     Tyche::Input::addKey("test", Tyche::Input::Key::D);
+
+    //bob.setPosition({200, 400});
+    _entity_renderer.addEntity(&bob);
+    _object.setPosition(bob.getPosition());
+
 
 }
 
@@ -46,8 +53,19 @@ Game::App::~App() {
 }
 
 void Game::App::run() {
+    auto currentTime = std::chrono::high_resolution_clock ::now();
 
     while (!_window->shouldWindowClose()) {
+
+        auto newTime = std::chrono::high_resolution_clock::now();
+        double frameTime = (double) std::chrono::duration_cast<std::chrono::microseconds>(newTime - currentTime).count() / 100000;
+        currentTime = newTime;
+
+        _object.step(frameTime, {0, 9.7f});
+        bob.setPosition(_object.getPosition());
+
+
+
 
         _window->update();
         Tyche::Input::processInputs();
@@ -60,6 +78,9 @@ void Game::App::run() {
         if (Tyche::Input::isActionPressed("test")) {
             spdlog::info("key press");
         }
+
+
+
     }
 
 }

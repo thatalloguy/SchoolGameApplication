@@ -49,7 +49,7 @@ void Tyche::EntityRenderer::initialize(const EntityRendererCreationInfo& creatio
     loadTextureAtlas(creation_info.texture_path);
 }
 
-void Tyche::EntityRenderer::addEntity(Tyche::Entity& entity) {
+void Tyche::EntityRenderer::addEntity(Tyche::Entity* entity) {
     _entities.push_back(entity);
 }
 
@@ -68,7 +68,10 @@ void Tyche::EntityRenderer::renderEntities(const Tyche::Camera &camera) {
     _entity_shader.setInt("texture_atlas", 0);
     _entity_shader.setVector2("grid", _grid.value_ptr());
 
-    for (auto entity: _entities) {
+    for (auto entity_ptr: _entities) {
+
+        Entity entity = *entity_ptr;
+
         //Bind the mesh
         glBindVertexArray(_mesh.VAO);
 

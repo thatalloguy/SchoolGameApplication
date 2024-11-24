@@ -12,10 +12,10 @@ namespace Tyche::Math {
     struct Matrix4 {
 
         float _[4][4] = {
-                {1, 0, 0, 0},
-                {0, 1, 0, 0},
-                {0, 0, 1, 0},
-                {0, 0, 0, 1}
+                {1.f, 0.f, 0.f, 0.f},
+                {0.f, 1.f, 0.f, 0.f},
+                {0.f, 0.f, 1.f, 0.f},
+                {0.f, 0.f, 0.f, 1.f}
         };
 
         //Returns the array of the given row (index)

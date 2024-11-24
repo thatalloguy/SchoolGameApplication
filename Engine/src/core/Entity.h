@@ -35,9 +35,9 @@ namespace Tyche {
     protected:
         void calculateTransformMatrix();
 
-        Math::Matrix4 _transform{};
-        Math::Vector2 _position{100, 100};
-        Math::Vector2 _scale{100, 100};
+        Math::Matrix4 _transform;
+        Math::Vector2 _position{100.0f, 100.0f};
+        Math::Vector2 _scale{100.0f, 100.0f};
 
         Sprite _sprite{0, 0};
     };
