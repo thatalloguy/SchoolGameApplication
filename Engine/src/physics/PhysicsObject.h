@@ -8,6 +8,14 @@
 
 namespace Tyche {
 
+
+    typedef unsigned int PhysicsID;
+
+    enum class ObjectType: unsigned int {
+        Static = 0,
+        Rigid = 1
+    };
+
     class PhysicsObject {
 
     public:
@@ -24,6 +32,8 @@ namespace Tyche {
         Math::Vector4 getAABB();
         float getMass();
         float getRestitution();
+        PhysicsID getID();
+        ObjectType getObjectType();
 
         void setPosition(const Math::Vector2& position);
         void setVelocity(const Math::Vector2& velocity);
@@ -31,8 +41,15 @@ namespace Tyche {
         void setMass(float mass);
         void setRestitution(float restitution);
         void setAABB(float w, float h);
+        void setID(PhysicsID id);
+        void setObjectType(ObjectType type);
+
+        void addVelocity(const Math::Vector2& vel);
 
     private:
+
+        PhysicsID  _id = 0;
+        ObjectType _type = ObjectType::Static;
 
         Math::Vector2 _position{0, 0};
         Math::Vector2 _velocity{0, 0};

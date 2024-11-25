@@ -41,8 +41,8 @@ Tyche::Math::Vector4 Tyche::PhysicsObject::getAABB() {
     _aabb[0] = _position.getX();
     _aabb[1] = _position.getY();
 
-    _aabb[2] = _aabb[0] + _size[0];
-    _aabb[3] = _aabb[1] + _size[1];
+    _aabb[2] = _position.getX() + _size[0];
+    _aabb[3] = _position.getY() + _size[1];
 
     return _aabb;
 }
@@ -79,4 +79,24 @@ void Tyche::PhysicsObject::setRestitution(float restitution) {
 
 float Tyche::PhysicsObject::getRestitution() {
     return _restitution;
+}
+
+Tyche::PhysicsID Tyche::PhysicsObject::getID() {
+    return _id;
+}
+
+void Tyche::PhysicsObject::setID(Tyche::PhysicsID id) {
+    _id = id;
+}
+
+Tyche::ObjectType Tyche::PhysicsObject::getObjectType() {
+    return _type;
+}
+
+void Tyche::PhysicsObject::setObjectType(Tyche::ObjectType type) {
+    _type = type;
+}
+
+void Tyche::PhysicsObject::addVelocity(const Tyche::Math::Vector2 &vel) {
+    _velocity += vel;
 }

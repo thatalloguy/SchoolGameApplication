@@ -7,6 +7,7 @@
 #include "renderer/TileRenderer.h"
 #include "renderer/EntityRenderer.h"
 #include "physics/PhysicsObject.h"
+#include "physics/PhysicsHandler.h"
 
 namespace Game {
 
@@ -31,6 +32,8 @@ namespace Game {
         Tyche::Camera _camera{};
         Tyche::PhysicsObject _object{};
         Tyche::PhysicsObject _object2{};
+        Tyche::PhysicsObject _object3{};
+        Tyche::World _world{};
     };
 
 }

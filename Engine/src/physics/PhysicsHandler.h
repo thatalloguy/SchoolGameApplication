@@ -5,6 +5,7 @@
 
 #include "math/vecs.h"
 #include "PhysicsObject.h"
+#include "stl/vector.h"
 
 namespace Tyche {
 
@@ -28,6 +29,30 @@ namespace Tyche {
 
         void ResolveCollision(PhysicsObject& a, PhysicsObject& b);
         bool AABBvsAABB(PhysicsCollision& physics_collision);
+
+
+    };
+
+    class World {
+    public:
+        World(Math::Vector2 gravity = {0, 9.7f});
+        ~World();
+
+        PhysicsID addRigidBody(PhysicsObject* object);
+        PhysicsID addStaticBody(PhysicsObject* object);
+
+        void removeBody(PhysicsID id);
+
+        void step(float delta_time);
+
+        Math::Vector2 getGravity();
+        void setGravity(const Math::Vector2& vec);
+
+    private:
+        STL::vector<PhysicsObject*> _bodies;
+
+        unsigned int _id_count = 0;
+        Math::Vector2 _gravity{0, 9.7f};
 
 
     };

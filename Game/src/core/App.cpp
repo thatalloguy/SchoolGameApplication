@@ -2,11 +2,9 @@
 // Created by allos on 11/19/2024.
 //
 
-#include <cstdlib>
 #include "App.h"
 
 #include "core/Input.h"
-#include "physics/PhysicsHandler.h"
 
 namespace {
     Tyche::Entity bob{};
@@ -44,12 +42,20 @@ Game::App::App(int argc, char **argv) {
 
     //bob.setPosition({200, 400});
     _entity_renderer.addEntity(&bob);
-    _object.setPosition(bob.getPosition());
+    _object.setPosition({100, 0});
     _object.setAABB(200, 200);
 
     _object2.setPosition({100, 700});
     _object2.setAABB(200, 200);
 
+
+    _object3.setPosition({500, 500});
+    _object3.setAABB(200, 200);
+
+
+    _world.addRigidBody(&_object);
+    _world.addStaticBody(&_object2);
+    _world.addStaticBody(&_object3);
 
 }
 
@@ -66,16 +72,17 @@ void Game::App::run() {
         double frameTime = (double) std::chrono::duration_cast<std::chrono::microseconds>(newTime - currentTime).count() / 100000;
         currentTime = newTime;
 
+        // If we dont cap it, then the physics engine will explode since instead of correcting the velocities we are enlarging them.
+        if (frameTime >= 0.166)
+            frameTime = 0.166;
 
 
-
-        _object.step(frameTime, {0, 9.7f});
-
-        if (Tyche::PhysicsHandler::isColliding(_object.getAABB(), _object2.getAABB())) {
-            Tyche::PhysicsHandler::ResolveCollision(_object, _object2);
+        if (Tyche::Input::isActionPressed("test")) {
+            _object.setVelocity(Tyche::Math::Vector2{0, -100} * frameTime);
         }
 
-        _object.update(frameTime);
+       _world.step(frameTime);
+
 
         bob.setPosition(_object.getPosition());
 
@@ -88,9 +95,6 @@ void Game::App::run() {
         _tile_renderer.renderTiles(_camera);
         _entity_renderer.renderEntities(_camera);
 
-        if (Tyche::Input::isActionPressed("test")) {
-            spdlog::info("key press");
-        }
 
 
 

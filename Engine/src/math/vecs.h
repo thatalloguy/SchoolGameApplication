@@ -3,6 +3,8 @@
 //
 #pragma once
 
+#include <cmath>
+
 namespace Tyche::Math {
 
 
@@ -85,6 +87,11 @@ namespace Tyche::Math {
 
         Vector2 operator/(float b) const {
             return {_[0] / b, _[1] / b};
+        }
+
+        Vector2 normalize() {
+            float a = sqrt((_[0] * _[0]) + (_[1] * _[1]));
+            return {_[0] / a, _[1] / a};
         }
 
     };
