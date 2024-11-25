@@ -6,6 +6,8 @@
 #include <cstdio>
 #include "PhysicsHandler.h"
 
+#include "spdlog/spdlog.h"
+
 bool Tyche::PhysicsHandler::isColliding(const Tyche::AABB &a, const Tyche::AABB &b) {
     // [0] = min.x, [1] = min.y
     // [2] = max.x, [3] = max.y
@@ -36,8 +38,28 @@ void Tyche::PhysicsHandler::ResolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
     auto aVel = a.getVelocity();
     auto bVel = b.getVelocity();
 
-    a.setVelocity(aVel);
-    b.setVelocity(bVel);
+    float totalMass = pow(a.getMass(), -1) + pow(b.getMass(), -1);
+
+    auto contactVelocity = aVel - bVel;
+
+    float impulseForce = Math::dot(contactVelocity, m.normal);
+
+    float restitution = fmin(a.getRestitution(), b.getRestitution());
+
+    float j = ( -(1.0f + restitution) * impulseForce) / totalMass;
+
+    Math::Vector2 fullImpulse = m.normal * j;
+
+
+    a.setVelocity(fullImpulse);
+    b.setVelocity(-fullImpulse);
+
+    spdlog::info("A velocity: {} {}", aVel[0], aVel[1]);
+    spdlog::info("b velocity: {} {}", bVel[0], bVel[1]);
+
+
+
+    //spdlog::info("Vr: [ {} {} ] | e {} | Vj {} {} | j {} {}", Vr[0], Vr[1], e, Vj[0], Vj[1], J[0], J[1]);
 
 }
 
@@ -62,20 +84,23 @@ bool Tyche::PhysicsHandler::AABBvsAABB(Tyche::PhysicsCollision& physics_collisio
 
         float y_overlap = a_extent + b_extent - abs(n.getY());
 
+        physics_collision.correction.setX(x_overlap);
+        physics_collision.correction.setY(y_overlap);
+
         if (y_overlap > 0) {
 
             if (x_overlap > y_overlap) {
                 if (n.getX() < 0) {
-                    physics_collision.normal = {0, -1};
-                } else {
                     physics_collision.normal = {0, 1};
+                } else {
+                    physics_collision.normal = {0, -1};
                 }
                 return true;
             } else {
                 if (n.getY() < 0) {
-                    physics_collision.normal = {-1, 0};
-                } else {
                     physics_collision.normal = {1, 0};
+                } else {
+                    physics_collision.normal = {-1, 0};
                 }
                 return true;
             }

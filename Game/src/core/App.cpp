@@ -66,14 +66,16 @@ void Game::App::run() {
         double frameTime = (double) std::chrono::duration_cast<std::chrono::microseconds>(newTime - currentTime).count() / 100000;
         currentTime = newTime;
 
-        _object.step(frameTime, {0, 9.7f});
-        bob.setPosition(_object.getPosition());
 
+
+
+        _object.step(frameTime, {0, 9.7f});
 
         if (Tyche::PhysicsHandler::isColliding(_object.getAABB(), _object2.getAABB())) {
-            spdlog::info("COLLISION");
             Tyche::PhysicsHandler::ResolveCollision(_object, _object2);
         }
+
+        bob.setPosition(_object.getPosition());
 
 
         _window->update();

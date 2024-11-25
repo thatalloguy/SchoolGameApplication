@@ -17,6 +17,7 @@ namespace Tyche {
         PhysicsObject* a{};
         PhysicsObject* b{};
         Math::Vector2 normal;
+        Math::Vector2 correction;
     };
 
     namespace PhysicsHandler {

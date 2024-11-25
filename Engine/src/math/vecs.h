@@ -71,8 +71,16 @@ namespace Tyche::Math {
             return {_[0] - b[0],_[1] - b[1]};
         }
 
+        Vector2 operator-() const {
+            return {-_[0],-_[1]};
+        }
+
         Vector2 operator*(float b) const {
             return {_[0] * b, _[1] * b};
+        }
+
+        Vector2 operator*(Vector2 b) const {
+            return {_[0] * b[0], _[1] * b[1]};
         }
 
         Vector2 operator/(float b) const {
@@ -117,5 +125,15 @@ namespace Tyche::Math {
             return {_[0] + v[0], _[1] + v[1], _[2] + v[2], _[3] + v[3]};
         }
     };
+
+    static float dot(const Vector2& a, const Vector2& b) {
+        return (a[0] * b[0]) + (a[1] * b[1]);
+    }
+
+    static float round(float a, float perc) {
+        float value = (int)(a * perc + .5);
+        return (float)value / perc;
+    }
+
 
 }

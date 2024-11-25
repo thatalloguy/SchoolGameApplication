@@ -37,7 +37,7 @@ namespace Tyche {
         Math::Vector2 _velocity{0, 0};
         Math::Vector2 _force{0, 0};
         float _mass = 1.0f;
-        float _restitution = 0.1f;
+        float _restitution = 0.0f;
 
         Math::Vector4 _aabb{0.0f, 0.0f, 0.0f, 0.0f};
         Math::Vector2 _size{0.0f, 0.0f};
