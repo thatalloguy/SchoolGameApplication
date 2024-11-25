@@ -54,13 +54,6 @@ void Tyche::PhysicsHandler::ResolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
     a.setVelocity(fullImpulse);
     b.setVelocity(-fullImpulse);
 
-    spdlog::info("A velocity: {} {}", aVel[0], aVel[1]);
-    spdlog::info("b velocity: {} {}", bVel[0], bVel[1]);
-
-
-
-    //spdlog::info("Vr: [ {} {} ] | e {} | Vj {} {} | j {} {}", Vr[0], Vr[1], e, Vj[0], Vj[1], J[0], J[1]);
-
 }
 
 bool Tyche::PhysicsHandler::AABBvsAABB(Tyche::PhysicsCollision& physics_collision) {

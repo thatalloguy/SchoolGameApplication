@@ -12,9 +12,13 @@ void Tyche::PhysicsObject::step(float delta_time, Math::Vector2 gravity) {
     _force += gravity * _mass;
 
     _velocity += (_force / _mass) * delta_time;
-    _position += _velocity * delta_time;
+
 
     _force = {0, 0};
+}
+
+void Tyche::PhysicsObject::update(float delta_time) {
+    _position += _velocity * delta_time;
 }
 
 Tyche::Math::Vector2 Tyche::PhysicsObject::getPosition() {
@@ -38,7 +42,7 @@ Tyche::Math::Vector4 Tyche::PhysicsObject::getAABB() {
     _aabb[1] = _position.getY();
 
     _aabb[2] = _aabb[0] + _size[0];
-    _aabb[3] = _aabb[1] + (_size[1] * 1.5);
+    _aabb[3] = _aabb[1] + _size[1];
 
     return _aabb;
 }

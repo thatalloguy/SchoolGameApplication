@@ -45,10 +45,10 @@ Game::App::App(int argc, char **argv) {
     //bob.setPosition({200, 400});
     _entity_renderer.addEntity(&bob);
     _object.setPosition(bob.getPosition());
-    _object.setAABB(100, 100);
+    _object.setAABB(200, 200);
 
     _object2.setPosition({100, 700});
-    _object2.setAABB(100, 100);
+    _object2.setAABB(200, 200);
 
 
 }
@@ -74,6 +74,8 @@ void Game::App::run() {
         if (Tyche::PhysicsHandler::isColliding(_object.getAABB(), _object2.getAABB())) {
             Tyche::PhysicsHandler::ResolveCollision(_object, _object2);
         }
+
+        _object.update(frameTime);
 
         bob.setPosition(_object.getPosition());
 
