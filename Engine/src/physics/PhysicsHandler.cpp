@@ -71,14 +71,15 @@ bool Tyche::PhysicsHandler::AABBvsAABB(Tyche::PhysicsCollision& physics_collisio
 
     float x_overlap = a_extent + b_extent - abs(n.getX());
 
+    physics_collision.correction.setX(bbox[0] - abox[2]);
+    physics_collision.correction.setY(bbox[1] - abox[3]);
+
     if (x_overlap > 0) {
         a_extent = (abox[3] - abox[1]) / 2;
         b_extent = (bbox[3] - bbox[1]) / 2;
 
         float y_overlap = a_extent + b_extent - abs(n.getY());
 
-        physics_collision.correction.setX(x_overlap);
-        physics_collision.correction.setY(y_overlap);
 
         if (y_overlap > 0) {
 
