@@ -36,9 +36,12 @@ Game::App::App(int argc, char **argv) {
 
     Tyche::Input::setTargetWindow(*_window);
 
-    Tyche::Input::addAction("test");
-    Tyche::Input::addKey("test", Tyche::Input::Key::W);
-    Tyche::Input::addKey("test", Tyche::Input::Key::D);
+    Tyche::Input::addAction("jump");
+    Tyche::Input::addAction("left");
+    Tyche::Input::addAction("right");
+    Tyche::Input::addKey("jump", Tyche::Input::Key::W);
+    Tyche::Input::addKey("left", Tyche::Input::Key::D);
+    Tyche::Input::addKey("right", Tyche::Input::Key::A);
 
     //bob.setPosition({200, 400});
     _entity_renderer.addEntity(&bob);
@@ -77,18 +80,25 @@ void Game::App::run() {
             frameTime = 0.166;
 
 
-        if (Tyche::Input::isActionPressed("test")) {
-            _object.setVelocity(Tyche::Math::Vector2{0, -100} * frameTime);
+        _window->update();
+
+        if (Tyche::Input::isActionPressed("jump")) {
+            _object.setVelocity(Tyche::Math::Vector2{_object.getVelocity().getX(), -100} * frameTime);
         }
+
+        if (Tyche::Input::isActionPressed("left")) {
+            _object.setVelocity(Tyche::Math::Vector2{100, _object.getVelocity().getY()} * frameTime);
+        }
+        if (Tyche::Input::isActionPressed("right")) {
+            _object.setVelocity(Tyche::Math::Vector2{-100, _object.getVelocity().getY()} * frameTime);
+        }
+
 
        _world.step(frameTime);
 
 
         bob.setPosition(_object.getPosition());
 
-
-        _window->update();
-        Tyche::Input::processInputs();
 
         _camera.update();
 

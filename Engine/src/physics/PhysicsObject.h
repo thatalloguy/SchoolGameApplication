@@ -45,6 +45,7 @@ namespace Tyche {
         void setObjectType(ObjectType type);
 
         void addVelocity(const Math::Vector2& vel);
+        void setCorrection(const Math::Vector2& cor);
 
     private:
 
@@ -52,6 +53,7 @@ namespace Tyche {
         ObjectType _type = ObjectType::Static;
 
         Math::Vector2 _position{0, 0};
+        Math::Vector2 _correction{0, 0};
         Math::Vector2 _velocity{0, 0};
         Math::Vector2 _force{0, 0};
         float _mass = 1.0f;

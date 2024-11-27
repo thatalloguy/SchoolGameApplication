@@ -8,7 +8,8 @@
 
 #include "spdlog/spdlog.h"
 
-bool Tyche::PhysicsHandler::isColliding(const Tyche::AABB &a, const Tyche::AABB &b) {
+bool Tyche::PhysicsHandler::collision(const Tyche::AABB &a, const Tyche::AABB &b) {
+
     // [0] = min.x, [1] = min.y
     // [2] = max.x, [3] = max.y
 
@@ -25,14 +26,17 @@ float Tyche::PhysicsHandler::distance(const Tyche::Math::Vector2 &a, const Tyche
     return sqrt( sqrt(a.getX() - b.getX()) + sqrt(a.getY() - b.getY()));
 }
 
-void Tyche::PhysicsHandler::ResolveCollision(Tyche::PhysicsObject &a, Tyche::PhysicsObject &b) {
+Tyche::Math::Vector2 Tyche::PhysicsHandler::getCorrection(const Math::Vector2& aCenter, const Math::Vector2& bCenter, const AABB& C) {
 
-    spdlog::info(" B {}", a.getVelocity().getY());
+    Math::Vector2 correction{0, 0};
 
-    PhysicsCollision m {
-        .a = &a,
-        .b = &b
-    };
+    correction.setX((C[2] - C[0]) / 2);
+    correction.setY((C[3] - C[1]) / 2);
+
+    return correction;
+}
+
+void Tyche::PhysicsHandler::resolveCollision(Tyche::PhysicsObject &a, Tyche::PhysicsObject &b) {
 
     Math::Vector2 normal;
 
@@ -40,8 +44,6 @@ void Tyche::PhysicsHandler::ResolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
     normal.setY(a.getVelocity().getY() - b.getVelocity().getY());
 
     normal = normal.normalize();
-
-    normal *= -1;
 
     auto aVel = a.getVelocity();
     auto bVel = b.getVelocity();
@@ -52,64 +54,42 @@ void Tyche::PhysicsHandler::ResolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
 
     float restitution = fmin(a.getRestitution(), b.getRestitution());
 
-    auto j = (  contactVelocity * -(1.0f + restitution)) / totalMass;
+    auto Vj = (  contactVelocity * -(1.0f + restitution)) * normal;
+
+    auto j =  Vj / totalMass;
 
 
 
     a.setVelocity(-(normal * j * pow(a.getMass(), -1)));
     b.setVelocity(bVel - normal * j * pow(b.getMass(), -1));
 
+    spdlog::info("V {} {}", a.getVelocity()[0], a.getVelocity()[1]);
+    spdlog::info("N {} {} ", normal[0], normal[1]);
 
-    spdlog::info(" N {} {}", normal[0], normal[1]);
+    //calc correction position
 
-}
+    auto aBox = a.getAABB();
+    auto bBox = b.getAABB();
 
-bool Tyche::PhysicsHandler::AABBvsAABB(Tyche::PhysicsCollision& physics_collision) {
+    Math::Vector2 aCenter = {aBox[0] + ((aBox[2] - aBox[0] ) / 2),aBox[1] + ((aBox[3] - aBox[1]) / 2)};
+    Math::Vector2 bCenter = {bBox[0] + ((bBox[2] - bBox[0] ) / 2),bBox[1] + ((bBox[3] - bBox[1]) / 2)};
 
-    PhysicsObject* a = physics_collision.a;
-    PhysicsObject* b = physics_collision.b;
+    Math::Vector4 cBox = {0.0f, 0.0f, 0.0f, 0.0f};
 
-    Math::Vector2 n = b->getPosition() - a->getPosition();
-
-
-    AABB abox = a->getAABB();
-    AABB bbox = b->getAABB();
-
-    physics_collision.correction = {bbox[2] - abox[0], bbox[3] - abox[1]};
-
-    float a_extent = (abox[2] - abox[0]) / 2;
-    float b_extent = (bbox[2] - bbox[0]) / 2;
-
-    float x_overlap = a_extent + b_extent - abs(n.getX());
-
-    if (x_overlap > 0) {
-        a_extent = (abox[3] - abox[1]) / 2;
-        b_extent = (bbox[3] - bbox[1]) / 2;
-
-        float y_overlap = a_extent + b_extent - abs(n.getY());
+    cBox[0] = aBox[0] <= bBox[0] ? bBox[0] : aBox[0];
+    cBox[1] = aBox[1] <= bBox[1] ? bBox[1] : aBox[1];
+    cBox[2] = aBox[2] <= bBox[2] ? bBox[2] : aBox[2];
+    cBox[3] = aBox[3] <= bBox[3] ? bBox[3] : aBox[3];
 
 
-        if (y_overlap > 0) {
+    Math::Vector2 correction = getCorrection(aCenter, bCenter, cBox);
 
-            if (x_overlap > y_overlap) {
-                if (n.getX() < 0) {
-                    physics_collision.normal = {0, -1};
-                } else {
-                    physics_collision.normal = {0, 1};
-                }
-                return true;
-            } else {
-                if (n.getY() < 0) {
-                    physics_collision.normal = {-1, 0};
-                } else {
-                    physics_collision.normal = {1, 0};
-                }
-                return true;
-            }
-        }
-    }
+    spdlog::info("Cbox {} {} {} {}", cBox[0], cBox[1], cBox[2], cBox[3]);
 
-    return false;
+    spdlog::info("Correction {} {}", correction[0], correction[1]);
+
+    a.setCorrection(correction);
+    b.setCorrection(-correction);
 }
 
 Tyche::World::World(Tyche::Math::Vector2 gravity) : _gravity(gravity) {
@@ -169,8 +149,8 @@ void Tyche::World::step(float delta_time) {
             if (b->getID() == a->getID())
                 break;
 
-            if (PhysicsHandler::isColliding(a->getAABB(), b->getAABB())) {
-                PhysicsHandler::ResolveCollision(*a, *b);
+            if (PhysicsHandler::collision(a->getAABB(), b->getAABB())) {
+                PhysicsHandler::resolveCollision(*a, *b);
             }
         }
     }

@@ -17,18 +17,16 @@ namespace Tyche {
     struct PhysicsCollision {
         PhysicsObject* a{};
         PhysicsObject* b{};
-        Math::Vector2 normal;
-        Math::Vector2 correction;
     };
 
     namespace PhysicsHandler {
 
 
-        bool isColliding(const AABB& a,const  AABB& b);
+        bool collision(const AABB& a,const  AABB& b);
         float distance(const Math::Vector2& a, const Math::Vector2& b);
 
-        void ResolveCollision(PhysicsObject& a, PhysicsObject& b);
-        bool AABBvsAABB(PhysicsCollision& physics_collision);
+        void resolveCollision(Tyche::PhysicsObject &a, Tyche::PhysicsObject &b);
+        Math::Vector2 getCorrection(const Math::Vector2& aCenter, const Math::Vector2& bCenter, const AABB& C);
 
 
     };

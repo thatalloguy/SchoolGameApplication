@@ -84,10 +84,6 @@ namespace Tyche::Input {
     void addAction(const Action& action);
     void addKey(const Action& action, Key key);
 
-    void processInputs();
-
     bool isActionPressed(const Action& action);
-
-    void cleanUp();
 
 }
