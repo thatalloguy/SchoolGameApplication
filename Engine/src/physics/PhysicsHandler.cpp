@@ -40,10 +40,8 @@ Tyche::Math::Vector2 Tyche::PhysicsHandler::getCorrection(const Math::Vector2& a
     } else {
         if (aCenter.getX() <= bCenter.getX()) {
             correction.setX(B[0] - A[2]);
-            spdlog::info("SMAL");
         } else {
             correction.setX(B[2] - A[0]);
-            spdlog::info("BIG");
         }
     }
 
@@ -54,7 +52,7 @@ void Tyche::PhysicsHandler::resolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
 
     Math::Vector2 normal;
 
-    normal.setX(a.getVelocity().getX() - b.getVelocity().getX());
+    normal.setX(b.getVelocity().getX() - a.getVelocity().getX());
     normal.setY(a.getVelocity().getY() - b.getVelocity().getY());
 
     normal = normal.normalize();
@@ -62,25 +60,40 @@ void Tyche::PhysicsHandler::resolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
     auto aVel = a.getVelocity();
     auto bVel = b.getVelocity();
 
+    /*
     float totalMass = pow(a.getMass(), -1) + pow(b.getMass(), -1);
 
     auto contactVelocity = aVel - bVel;
 
     float restitution = fmin(a.getRestitution(), b.getRestitution());
 
-    auto Vj = (  contactVelocity * -(1.0f + restitution)) * normal;
+    float impulseForce = Math::dot(normal, contactVelocity);
 
-    auto j =  Vj / totalMass;
+    auto Vj =  -(1.66f) * impulseForce;
+
+    auto j =  Vj / totalMass;*/
+
+    auto rv = bVel - aVel;
+
+    float velAlongNormal = Tyche::Math::dot(rv, normal);
 
 
+    float e = fmin(a.getRestitution(), b.getRestitution());
 
-    a.setVelocity(-(normal * j * pow(a.getMass(), -1)));
-    b.setVelocity(bVel - normal * j * pow(b.getMass(), -1));
+    float j = -(1 + e) * velAlongNormal;
+    j /= 1 / a.getMass() + 1 / b.getMass();
 
-    spdlog::info("V {} {}", a.getVelocity()[0], a.getVelocity()[1]);
-    spdlog::info("N {} {} ", normal[0], normal[1]);
+    Math::Vector2 impulse =  normal * j;
+    b.setVelocity(b.getVelocity() + (impulse * (1 / b.getMass())));
 
-    //calc correction position
+
+    if (a.getObjectType() == ObjectType::Rigid) {
+        a.setVelocity(a.getVelocity() - (impulse * (1 / a.getMass())));
+    }
+
+    if (b.getObjectType() == ObjectType::Rigid) {
+        b.setVelocity(b.getVelocity() + (impulse * (1 / b.getMass())));
+    }
 
     auto aBox = a.getAABB();
     auto bBox = b.getAABB();
@@ -88,9 +101,8 @@ void Tyche::PhysicsHandler::resolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
     Math::Vector2 aCenter = {aBox[0] + ((aBox[2] - aBox[0] ) / 2),aBox[1] + ((aBox[3] - aBox[1]) / 2)};
     Math::Vector2 bCenter = {bBox[0] + ((bBox[2] - bBox[0] ) / 2),bBox[1] + ((bBox[3] - bBox[1]) / 2)};
 
-    Math::Vector2 correction = getCorrection(aCenter, bCenter, aBox, bBox);
 
-    spdlog::info("Correction {} {}", correction[0], correction[1]);
+    Math::Vector2 correction = getCorrection(aCenter, bCenter, aBox, bBox);
 
     a.setCorrection(correction);
     b.setCorrection(-correction);

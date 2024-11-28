@@ -8,6 +8,7 @@
 
 namespace {
     Tyche::Entity bob{};
+    Tyche::Entity bob2{};
 }
 
 Game::App::App(int argc, char **argv) {
@@ -45,6 +46,7 @@ Game::App::App(int argc, char **argv) {
 
     //bob.setPosition({200, 400});
     _entity_renderer.addEntity(&bob);
+    _entity_renderer.addEntity(&bob2);
     _object.setPosition({100, 0});
     _object.setAABB(200, 200);
 
@@ -56,10 +58,14 @@ Game::App::App(int argc, char **argv) {
     _object3.setAABB(200, 200);
 
 
+    _object4.setPosition({500, 0});
+    _object4.setAABB(200, 200);
+
+
     _world.addRigidBody(&_object);
+    _world.addRigidBody(&_object4);
     _world.addStaticBody(&_object2);
     _world.addStaticBody(&_object3);
-
 }
 
 Game::App::~App() {
@@ -83,14 +89,14 @@ void Game::App::run() {
         _window->update();
 
         if (Tyche::Input::isActionPressed("jump")) {
-            _object.setVelocity(Tyche::Math::Vector2{_object.getVelocity().getX(), -4000} * frameTime);
+            _object.setVelocity(Tyche::Math::Vector2{_object.getVelocity().getX(), -40});
         }
 
         if (Tyche::Input::isActionPressed("left")) {
-            _object.setVelocity(Tyche::Math::Vector2{4000, _object.getVelocity().getY()} * frameTime);
+            _object.setVelocity(Tyche::Math::Vector2{40, _object.getVelocity().getY()});
         }
         if (Tyche::Input::isActionPressed("right")) {
-            _object.setVelocity(Tyche::Math::Vector2{-4000, _object.getVelocity().getY()} * frameTime);
+            _object.setVelocity(Tyche::Math::Vector2{-40, _object.getVelocity().getY()});
         }
 
 
@@ -98,6 +104,7 @@ void Game::App::run() {
 
 
         bob.setPosition(_object.getPosition());
+        bob2.setPosition(_object4.getPosition());
 
 
         _camera.update();

@@ -15,14 +15,16 @@ void Tyche::PhysicsObject::step(float delta_time, Math::Vector2 gravity) {
 
 
     _force = {0, 0};
-}
-
-void Tyche::PhysicsObject::update(float delta_time) {
-    _position += _velocity * delta_time;
 
     _position += _correction;
 
+    _position += _velocity * delta_time;
+
+
     _correction = {0, 0};
+}
+
+void Tyche::PhysicsObject::update(float delta_time) {
 }
 
 Tyche::Math::Vector2 Tyche::PhysicsObject::getPosition() {
@@ -102,7 +104,7 @@ void Tyche::PhysicsObject::setObjectType(Tyche::ObjectType type) {
 }
 
 void Tyche::PhysicsObject::addVelocity(const Tyche::Math::Vector2 &vel) {
-    _velocity += vel;
+    _velocity -= vel;
 }
 
 void Tyche::PhysicsObject::setCorrection(const Tyche::Math::Vector2 &cor) {

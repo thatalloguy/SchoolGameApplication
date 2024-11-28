@@ -50,7 +50,7 @@ namespace Tyche::Math {
             _[1] += b[1];
         }
 
-        void operator*=(Vector2& b) {
+        void operator*=(const Vector2& b) {
             _[0] *= b[0];
             _[1] *= b[1];
         }
