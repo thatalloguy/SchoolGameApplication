@@ -16,16 +16,19 @@ namespace Tyche {
         Rigid = 1
     };
 
+    // A physics object represents a physical object.
     class PhysicsObject {
 
     public:
+        // 2 different contructors so that we also have the option to set the data manually with having to do at first.
         PhysicsObject() = default;
         PhysicsObject(const Math::Vector2& position, const Math::Vector2& init_vel, float mass = 1.0f); //init_vel = Initial Velocity
         ~PhysicsObject() = default;
 
+        // Applies gravity to our velocity and updates our position.
         void step(float delta_time, Math::Vector2 gravity);
-        void update(float delta_time);
 
+        // Getters and setters
         Math::Vector2 getPosition();
         Math::Vector2 getVelocity();
         Math::Vector2 getForce();
@@ -44,7 +47,7 @@ namespace Tyche {
         void setID(PhysicsID id);
         void setObjectType(ObjectType type);
 
-        void addVelocity(const Math::Vector2& vel);
+        void addForce(const Math::Vector2& force);
         void setCorrection(const Math::Vector2& cor);
 
     private:
@@ -56,6 +59,7 @@ namespace Tyche {
         Math::Vector2 _correction{0, 0};
         Math::Vector2 _velocity{0, 0};
         Math::Vector2 _force{0, 0};
+
         float _mass = 1.0f;
         float _restitution = 0.1f;
 

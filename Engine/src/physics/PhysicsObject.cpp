@@ -9,23 +9,25 @@ Tyche::PhysicsObject::PhysicsObject(const Tyche::Math::Vector2 &position, const 
 
 void Tyche::PhysicsObject::step(float delta_time, Math::Vector2 gravity) {
 
+    // Calc the force from the gravity; F = m * G;
     _force += gravity * _mass;
 
+    // calc our new velocity, V+ = F/m
     _velocity += (_force / _mass) * delta_time;
 
-
+    //Reset our force;
     _force = {0, 0};
 
+    // Add a correction (if we have one)
     _position += _correction;
 
+    // Update our position according to our velocity
     _position += _velocity * delta_time;
 
-
+    // Reset the correction;
     _correction = {0, 0};
 }
 
-void Tyche::PhysicsObject::update(float delta_time) {
-}
 
 Tyche::Math::Vector2 Tyche::PhysicsObject::getPosition() {
     return _position;
@@ -44,6 +46,14 @@ float Tyche::PhysicsObject::getMass() {
 }
 
 Tyche::Math::Vector4 Tyche::PhysicsObject::getAABB() {
+    //Update our AABB
+    // ([0],[1]) ------- ([2],[1])
+    // |                    |
+    // |                    |
+    // |                    |
+    // |                    |
+    // ([0],[3]) ------  ([2],[3])
+
     _aabb[0] = _position.getX();
     _aabb[1] = _position.getY();
 
@@ -62,7 +72,7 @@ void Tyche::PhysicsObject::setVelocity(const Tyche::Math::Vector2 &velocity) {
 }
 
 void Tyche::PhysicsObject::setForce(const Tyche::Math::Vector2 &force) {
-    _force = force;
+    _velocity = force;
 }
 
 void Tyche::PhysicsObject::setMass(float mass) {
@@ -72,6 +82,7 @@ void Tyche::PhysicsObject::setMass(float mass) {
 void Tyche::PhysicsObject::setAABB(float w, float h) {
     _aabb[0] = _position.getX();
     _aabb[1] = _position.getY();
+
     _size.setX(w);
     _size.setY(h);
 
@@ -103,8 +114,8 @@ void Tyche::PhysicsObject::setObjectType(Tyche::ObjectType type) {
     _type = type;
 }
 
-void Tyche::PhysicsObject::addVelocity(const Tyche::Math::Vector2 &vel) {
-    _velocity -= vel;
+void Tyche::PhysicsObject::addForce(const Tyche::Math::Vector2 &vel) {
+    _force -= vel;
 }
 
 void Tyche::PhysicsObject::setCorrection(const Tyche::Math::Vector2 &cor) {

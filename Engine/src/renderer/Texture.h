@@ -62,6 +62,7 @@ namespace Tyche {
 
         void init(TextureCreationInfo& creationInfo);
 
+        // The default slot is TEXTURE0
         void bind(int slot = 0x84C0);
 
         Vector2 getSize() { return Vector2{(float) width, (float) height}; };

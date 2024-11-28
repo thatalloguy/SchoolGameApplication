@@ -22,22 +22,21 @@ bool Tyche::PhysicsHandler::collision(const Tyche::AABB &a, const Tyche::AABB &b
     return true;
 }
 
-float Tyche::PhysicsHandler::distance(const Tyche::Math::Vector2 &a, const Tyche::Math::Vector2 &b) {
-    return sqrt( sqrt(a.getX() - b.getX()) + sqrt(a.getY() - b.getY()));
-}
 
 Tyche::Math::Vector2 Tyche::PhysicsHandler::getCorrection(const Math::Vector2& aCenter, const Math::Vector2& bCenter, const AABB& A, const AABB& B) {
 
     Math::Vector2 correction{0, 0};
 
-
+    // First check what axis we should correct (the one most far away from each other)
     if (Math::getDistance(aCenter.getY(), bCenter.getY()) >= Math::getDistance(aCenter.getX(), bCenter.getX())) {
+        // Check if A is above or below B
         if (aCenter.getY() <= bCenter.getY()) {
             correction.setY(B[1] - A[3]);
         } else {
             correction.setY(B[3] - A[1]);
         }
     } else {
+        // Check if A is left or right from B
         if (aCenter.getX() <= bCenter.getX()) {
             correction.setX(B[0] - A[2]);
         } else {
@@ -52,6 +51,7 @@ void Tyche::PhysicsHandler::resolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
 
     Math::Vector2 normal;
 
+    // n = normalize(bVel - aVel)
     normal.setX(b.getVelocity().getX() - a.getVelocity().getX());
     normal.setY(a.getVelocity().getY() - b.getVelocity().getY());
 
@@ -60,33 +60,26 @@ void Tyche::PhysicsHandler::resolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
     auto aVel = a.getVelocity();
     auto bVel = b.getVelocity();
 
-    /*
-    float totalMass = pow(a.getMass(), -1) + pow(b.getMass(), -1);
-
-    auto contactVelocity = aVel - bVel;
-
-    float restitution = fmin(a.getRestitution(), b.getRestitution());
-
-    float impulseForce = Math::dot(normal, contactVelocity);
-
-    auto Vj =  -(1.66f) * impulseForce;
-
-    auto j =  Vj / totalMass;*/
-
+    // The relative velocity
     auto rv = bVel - aVel;
 
+    // The velocity we should have along the collision
     float velAlongNormal = Tyche::Math::dot(rv, normal);
 
-
+    // get the smallest resititution
     float e = fmin(a.getRestitution(), b.getRestitution());
 
+    // j = -(1 + e) * vel / totalmass;
     float j = -(1 + e) * velAlongNormal;
     j /= 1 / a.getMass() + 1 / b.getMass();
 
     Math::Vector2 impulse =  normal * j;
+
+    // DO NOT REMOVE ELSE EVERYTHING BREAKS
     b.setVelocity(b.getVelocity() + (impulse * (1 / b.getMass())));
 
 
+    //apply velocities only to rigidbodies
     if (a.getObjectType() == ObjectType::Rigid) {
         a.setVelocity(a.getVelocity() - (impulse * (1 / a.getMass())));
     }
@@ -95,6 +88,7 @@ void Tyche::PhysicsHandler::resolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
         b.setVelocity(b.getVelocity() + (impulse * (1 / b.getMass())));
     }
 
+    // Calculate and apply corrections
     auto aBox = a.getAABB();
     auto bBox = b.getAABB();
 
@@ -106,6 +100,7 @@ void Tyche::PhysicsHandler::resolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
 
     a.setCorrection(correction);
     b.setCorrection(-correction);
+
 }
 
 Tyche::World::World(Tyche::Math::Vector2 gravity) : _gravity(gravity) {
@@ -117,8 +112,10 @@ Tyche::World::~World() {
 }
 
 Tyche::PhysicsID Tyche::World::addRigidBody(Tyche::PhysicsObject *object) {
+    // Increase the id count
     _id_count++;
 
+    // Update the object's information
     object->setID(_id_count);
     object->setObjectType(ObjectType::Rigid);
 
@@ -128,8 +125,10 @@ Tyche::PhysicsID Tyche::World::addRigidBody(Tyche::PhysicsObject *object) {
 }
 
 Tyche::PhysicsID Tyche::World::addStaticBody(Tyche::PhysicsObject *object) {
+    // Increase the id count
     _id_count++;
 
+    // Update the object's information
     object->setID(_id_count);
     object->setObjectType(ObjectType::Static);
 
@@ -150,17 +149,19 @@ void Tyche::World::removeBody(Tyche::PhysicsID id) {
 
 
 void Tyche::World::step(float delta_time) {
-    // Update all of our rigidBodies;
+    //First  Update all of our rigidBodies;
     for (auto body: _bodies) {
         if (body->getObjectType() == ObjectType::Rigid) {
             body->step(delta_time, _gravity);
         }
     }
 
-
+    // Then check for collision and resolve them if needed
     for (int i=0; i<_bodies.length(); i++) {
         auto a = _bodies[i];
 
+        // Loop through all of the other objects, since we have to check against every other body
+        // Isnt optimale but we wont have so much bodies in our vector so it wont be a issue
         for (auto b: _bodies) {
             if (b->getID() == a->getID())
                 break;
@@ -169,11 +170,6 @@ void Tyche::World::step(float delta_time) {
                 PhysicsHandler::resolveCollision(*a, *b);
             }
         }
-    }
-
-    for (auto body: _bodies) {
-        if (body->getObjectType() == ObjectType::Rigid)
-            body->update(delta_time);
     }
 }
 

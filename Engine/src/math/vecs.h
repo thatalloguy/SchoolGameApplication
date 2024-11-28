@@ -137,11 +137,6 @@ namespace Tyche::Math {
         return (a[0] * b[0]) + (a[1] * b[1]);
     }
 
-    static float round(float a, float perc) {
-        float value = (int)(a * perc + .5);
-        return (float)value / perc;
-    }
-
     static float getDistance(float a, float b) {
         return (float) sqrt(pow(a - b, 2));
     }

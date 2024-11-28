@@ -14,25 +14,28 @@ namespace Tyche {
     // z, w = max;
     typedef Math::Vector4 AABB;
 
-    struct PhysicsCollision {
-        PhysicsObject* a{};
-        PhysicsObject* b{};
-    };
 
+    // Some general Physics functions
     namespace PhysicsHandler {
 
-
+        // Returns wether or not the boxes are colliding
         bool collision(const AABB& a,const  AABB& b);
-        float distance(const Math::Vector2& a, const Math::Vector2& b);
 
+        // Calculates / adjustes the velocities of the objects (and correction positions if needed)
         void resolveCollision(Tyche::PhysicsObject &a, Tyche::PhysicsObject &b);
+
+        // Returns the correct correction position
+        // aCenter = the Center of box A
+        // bCenter = the Center of box B
         Math::Vector2 getCorrection(const Math::Vector2& aCenter, const Math::Vector2& bCenter, const AABB& A, const AABB& B);
 
 
     };
 
+    // The world is a class the manages and updates PhysicsBodies
     class World {
     public:
+        // The default gravity of earth is 9.7N
         World(Math::Vector2 gravity = {0, 9.7f});
         ~World();
 
@@ -41,8 +44,10 @@ namespace Tyche {
 
         void removeBody(PhysicsID id);
 
+        // Updates all of the bodies in the world
         void step(float delta_time);
 
+        // getters and setters
         Math::Vector2 getGravity();
         void setGravity(const Math::Vector2& vec);
 
