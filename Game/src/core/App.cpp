@@ -83,14 +83,14 @@ void Game::App::run() {
         _window->update();
 
         if (Tyche::Input::isActionPressed("jump")) {
-            _object.setVelocity(Tyche::Math::Vector2{_object.getVelocity().getX(), -100} * frameTime);
+            _object.setVelocity(Tyche::Math::Vector2{_object.getVelocity().getX(), -4000} * frameTime);
         }
 
         if (Tyche::Input::isActionPressed("left")) {
-            _object.setVelocity(Tyche::Math::Vector2{100, _object.getVelocity().getY()} * frameTime);
+            _object.setVelocity(Tyche::Math::Vector2{4000, _object.getVelocity().getY()} * frameTime);
         }
         if (Tyche::Input::isActionPressed("right")) {
-            _object.setVelocity(Tyche::Math::Vector2{-100, _object.getVelocity().getY()} * frameTime);
+            _object.setVelocity(Tyche::Math::Vector2{-4000, _object.getVelocity().getY()} * frameTime);
         }
 
 

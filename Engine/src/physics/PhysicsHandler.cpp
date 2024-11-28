@@ -26,12 +26,26 @@ float Tyche::PhysicsHandler::distance(const Tyche::Math::Vector2 &a, const Tyche
     return sqrt( sqrt(a.getX() - b.getX()) + sqrt(a.getY() - b.getY()));
 }
 
-Tyche::Math::Vector2 Tyche::PhysicsHandler::getCorrection(const Math::Vector2& aCenter, const Math::Vector2& bCenter, const AABB& C) {
+Tyche::Math::Vector2 Tyche::PhysicsHandler::getCorrection(const Math::Vector2& aCenter, const Math::Vector2& bCenter, const AABB& A, const AABB& B) {
 
     Math::Vector2 correction{0, 0};
 
-    correction.setX((C[2] - C[0]) / 2);
-    correction.setY((C[3] - C[1]) / 2);
+
+    if (Math::getDistance(aCenter.getY(), bCenter.getY()) >= Math::getDistance(aCenter.getX(), bCenter.getX())) {
+        if (aCenter.getY() <= bCenter.getY()) {
+            correction.setY(B[1] - A[3]);
+        } else {
+            correction.setY(B[3] - A[1]);
+        }
+    } else {
+        if (aCenter.getX() <= bCenter.getX()) {
+            correction.setX(B[0] - A[2]);
+            spdlog::info("SMAL");
+        } else {
+            correction.setX(B[2] - A[0]);
+            spdlog::info("BIG");
+        }
+    }
 
     return correction;
 }
@@ -74,17 +88,7 @@ void Tyche::PhysicsHandler::resolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
     Math::Vector2 aCenter = {aBox[0] + ((aBox[2] - aBox[0] ) / 2),aBox[1] + ((aBox[3] - aBox[1]) / 2)};
     Math::Vector2 bCenter = {bBox[0] + ((bBox[2] - bBox[0] ) / 2),bBox[1] + ((bBox[3] - bBox[1]) / 2)};
 
-    Math::Vector4 cBox = {0.0f, 0.0f, 0.0f, 0.0f};
-
-    cBox[0] = aBox[0] <= bBox[0] ? bBox[0] : aBox[0];
-    cBox[1] = aBox[1] <= bBox[1] ? bBox[1] : aBox[1];
-    cBox[2] = aBox[2] <= bBox[2] ? bBox[2] : aBox[2];
-    cBox[3] = aBox[3] <= bBox[3] ? bBox[3] : aBox[3];
-
-
-    Math::Vector2 correction = getCorrection(aCenter, bCenter, cBox);
-
-    spdlog::info("Cbox {} {} {} {}", cBox[0], cBox[1], cBox[2], cBox[3]);
+    Math::Vector2 correction = getCorrection(aCenter, bCenter, aBox, bBox);
 
     spdlog::info("Correction {} {}", correction[0], correction[1]);
 

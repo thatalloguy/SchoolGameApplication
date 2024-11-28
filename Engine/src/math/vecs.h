@@ -142,5 +142,9 @@ namespace Tyche::Math {
         return (float)value / perc;
     }
 
+    static float getDistance(float a, float b) {
+        return (float) sqrt(pow(a - b, 2));
+    }
+
 
 }

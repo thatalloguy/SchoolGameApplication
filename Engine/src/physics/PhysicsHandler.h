@@ -26,7 +26,7 @@ namespace Tyche {
         float distance(const Math::Vector2& a, const Math::Vector2& b);
 
         void resolveCollision(Tyche::PhysicsObject &a, Tyche::PhysicsObject &b);
-        Math::Vector2 getCorrection(const Math::Vector2& aCenter, const Math::Vector2& bCenter, const AABB& C);
+        Math::Vector2 getCorrection(const Math::Vector2& aCenter, const Math::Vector2& bCenter, const AABB& A, const AABB& B);
 
 
     };
