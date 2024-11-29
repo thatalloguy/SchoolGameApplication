@@ -11,6 +11,9 @@
 #include <phonon.h>
 #include <miniaudio.h>
 
+#include "math/vecs.h"
+#include "stl/string.h"
+
 #ifndef AUDIO_SETTINGS
 
 #define FORMAT ma_format_32
@@ -23,10 +26,19 @@
 
 namespace Tyche {
 
+    typedef unsigned int SoundID;
+
     namespace AudioDevice {
 
         void initializeDevice();
         void cleanUp();
+
+        SoundID loadSound(const STL::string& path);
+        void playSound(SoundID id, Math::Vector2 position);
+
+        void updateListener();
+
+
 
     }
 }
