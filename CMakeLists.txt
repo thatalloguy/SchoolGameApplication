@@ -37,12 +37,15 @@ file(GLOB_RECURSE STB_IMAGE_SOURCE
         Thirdparty/stb/stb_image.h
 )
 
+set(STEAMAUDIO_DLL_LOC "ThirdParty/steamaudio/lib/windows-x64/phonon.dll")
 
 
 include_directories("Thirdparty/imgui")
 include_directories("Thirdparty/stb")
 include_directories("Thirdparty/glfw/include")
 include_directories("Thirdparty/GLAD/include")
+include_directories("Thirdparty/miniaudio/")
+include_directories("Thirdparty/steamaudio/include")
 
 # Tyche is the name i use for the project :)
 add_library(tyche-headers INTERFACE)
@@ -53,4 +56,14 @@ add_library(tyche-headers INTERFACE)
 
 add_subdirectory(Game)
 add_subdirectory(Engine)
+
+# Building SteamAudio is a bit weird, so we have to manually copy the phonon.dll file to where our executables are.
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    file(COPY ${STEAMAUDIO_DLL_LOC} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Engine/Debug/)
+    file(COPY ${STEAMAUDIO_DLL_LOC} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Game/Debug/)
+else()
+    file(COPY ${STEAMAUDIO_DLL_LOC} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Engine/Release/)
+    file(COPY ${STEAMAUDIO_DLL_LOC} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Game/Release/)
+endif()
+
 ##add_subdirectory(MapEditor)

@@ -4,6 +4,7 @@
 
 #include "App.h"
 
+#include "audio/AudioDevice.h"
 #include "core/Input.h"
 
 namespace {
@@ -66,9 +67,12 @@ Game::App::App(int argc, char **argv) {
     _world.addRigidBody(&_object4);
     _world.addStaticBody(&_object2);
     _world.addStaticBody(&_object3);
+
+    Tyche::AudioDevice::initializeDevice();
 }
 
 Game::App::~App() {
+    Tyche::AudioDevice::cleanUp();
     delete _window;
 }
 
