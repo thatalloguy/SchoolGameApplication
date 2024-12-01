@@ -12,11 +12,14 @@
 #include "math/vecs.h"
 #include "stl/string.h"
 
+
+
+
 #ifndef AUDIO_SETTINGS
 
-#define FORMAT ma_format_32
+#define FORMAT ma_format_f32
 #define CHANNELS 2
-#define SAMPLE_RATE 44100
+#define SAMPLE_RATE 48000
 
 #define AUDIO_SETTINGS 1
 

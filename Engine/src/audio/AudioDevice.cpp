@@ -6,12 +6,16 @@
 #include "stl/hashmap.h"
 #include "stl/vector.h"
 
+
+
+#include <spdlog/spdlog.h>
+
+
 #include <phonon.h>
 
 #define MINIAUDIO_IMPLEMENTATION
 #include <miniaudio.h>
 
-#include <spdlog/spdlog.h>
 
 namespace {
 
@@ -22,17 +26,13 @@ namespace {
     };
 
     struct SoundNode {
-        ma_sound sound;
         ma_node_base base_node;
         Tyche::AudioBuffer buffer;
     };
 
-    ma_node_vtable sound_node_VTable {
-            NULL,
-            NULL,
-            1,
-            1,
-            0
+    struct SoundObject {
+        ma_sound sound;
+        SoundNode node;
     };
 
 
@@ -56,11 +56,89 @@ namespace {
     //Other Misc Globals
     unsigned int id_counter = 0;
     bool need_effects = false; // See initializeDevice comment in the header for variable explanation
-    Tyche::STL::hashmap<unsigned int, SoundNode*> _sounds;
+    Tyche::STL::hashmap<unsigned int, SoundObject*> _sounds;
     // Using a separate vector to easily iterate through the sounds, since the current hashmap class doesnt support it
-    Tyche::STL::vector<SoundNode*> _sound_ptrs;
+    Tyche::STL::vector<SoundObject*> _sound_ptrs;
 
 
+    //our frame processing function
+
+    void effectProccessFrames(ma_node* pNode, const float** ppFramesIn, ma_uint32* pFrameCountIn, float** ppFramesOut, ma_uint32* pFrameCountOut) {
+        SoundNode* sound_node = (SoundNode*) pNode;
+
+        IPLBinauralEffectParams  binauralEffectParams;
+        IPLAudioBuffer inputBufferDesc;
+        IPLAudioBuffer outputBufferDesc;
+        ma_uint32 totalFramesToProcess = *pFrameCountOut;
+        ma_uint32 totalFramesProcessed = 0;
+
+        binauralEffectParams.direction.x = 1;
+        binauralEffectParams.direction.y = 1;
+        binauralEffectParams.direction.z = 1;
+        binauralEffectParams.interpolation = IPL_HRTFINTERPOLATION_NEAREST;
+        binauralEffectParams.spatialBlend = 1.0f;
+        binauralEffectParams.hrtf = ipl_hrtf;
+        binauralEffectParams.peakDelays = nullptr;
+
+        inputBufferDesc.numChannels = (IPLint32) ma_node_get_input_channels(pNode, 0);
+
+        outputBufferDesc.numSamples = ipl_audio_settings.frameSize;
+        outputBufferDesc.numChannels = 2;
+        outputBufferDesc.data = sound_node->buffer.out_buffer;
+
+        while (totalFramesProcessed < totalFramesToProcess) {
+            ma_uint32  framesToProcessThisIteration = totalFramesToProcess - totalFramesProcessed;
+            if  (framesToProcessThisIteration > (ma_uint32) ipl_audio_settings.frameSize) {
+                framesToProcessThisIteration = (ma_uint32) ipl_audio_settings.frameSize;
+            }
+
+            if (inputBufferDesc.numChannels == 1) {
+                // no need for deinterleaving since its a mono stream.
+                sound_node->buffer.in_buffer[0] = (float*) ma_offset_pcm_frames_const_ptr_f32(ppFramesIn[0], totalFramesProcessed, 1);
+            } else {
+                // womp womp we need to deinterleave the input stream.
+                ma_deinterleave_pcm_frames(FORMAT, inputBufferDesc.numChannels,
+                                           framesToProcessThisIteration,
+                                           ma_offset_pcm_frames_const_ptr_f32(ppFramesIn[0], totalFramesProcessed,inputBufferDesc.numChannels),
+                                           reinterpret_cast<void **>(&sound_node->buffer.in_buffer)); // note the example doenst cast to (void **)
+            }
+
+            inputBufferDesc.data = sound_node->buffer.in_buffer;
+            inputBufferDesc.numSamples = (IPLint32) framesToProcessThisIteration;
+            // spannend
+
+
+
+            iplBinauralEffectApply(binaural_effect, &binauralEffectParams, &inputBufferDesc, &outputBufferDesc);
+
+
+            ////iplDirectEffectApply(soundEffect->directEffect, &directEffectParams, &outputBufferDesc, &outputBufferDesc);
+
+
+            ma_interleave_pcm_frames(
+                    ma_format_f32,
+                    2,
+                    framesToProcessThisIteration,
+                    reinterpret_cast<const void **>(&sound_node->buffer.out_buffer), // note the example also doenst cast anything here.
+                    ma_offset_pcm_frames_ptr_f32(ppFramesOut[0], totalFramesProcessed, 2)
+            );
+
+
+            totalFramesProcessed += framesToProcessThisIteration;
+        }
+
+        (void)pFrameCountIn; // unused?
+    }
+
+
+
+    ma_node_vtable sound_node_VTable {
+            effectProccessFrames,
+            NULL,
+            1,
+            1,
+            0
+    };
 
 }
 
@@ -142,11 +220,6 @@ namespace SteamAudioUtils {
 
 namespace MiniAudioUtils {
 
-
-    void effectProccessFrames(ma_node* pNode, const float** ppFramesIn, ma_uint32* pFrameCountIn, float** ppFramesOut, ma_uint32* pFrameCountOut) {
-
-    }
-
     void initializeMiniAudio() {
         engine_config = ma_engine_config_init();
 
@@ -158,8 +231,6 @@ namespace MiniAudioUtils {
         if (result != MA_SUCCESS) {
             spdlog::error("Failed to initialize Miniaudio: {}", ma_result_description(result));
         }
-
-        sound_node_VTable.onProcess = effectProccessFrames;
 
         spdlog::info("Initialized Miniaudio engine");
     }
@@ -235,8 +306,8 @@ void Tyche::AudioDevice::cleanUp() {
 
     for (auto ptr : _sound_ptrs) {
 
-        ma_node_uninit(&ptr->base_node, nullptr);
-        ma_free(ptr->buffer._heap, nullptr);
+        ma_node_uninit(&ptr->node.base_node, nullptr);
+        ma_free(ptr->node.buffer._heap, nullptr);
 
         delete ptr;
 
@@ -251,7 +322,7 @@ void Tyche::AudioDevice::cleanUp() {
 Tyche::SoundID Tyche::AudioDevice::loadSound(const Tyche::STL::string &path) {
     id_counter++;
 
-    SoundNode* new_sound = new SoundNode{};
+    SoundObject* new_sound = new SoundObject{};
 
     ma_sound_config sound_config = ma_sound_config_init();
 
@@ -267,24 +338,32 @@ Tyche::SoundID Tyche::AudioDevice::loadSound(const Tyche::STL::string &path) {
 
     ma_sound_set_directional_attenuation_factor(&new_sound->sound, 0);
 
-    MiniAudioUtils::initializeSoundNode(new_sound, ma_engine_get_node_graph(&engine));
+    MiniAudioUtils::initializeSoundNode(&new_sound->node, ma_engine_get_node_graph(&engine));
 
-    ma_node_attach_output_bus(&new_sound, 0, ma_engine_get_endpoint(&engine), 0);
-    ma_node_attach_output_bus(&new_sound->sound, 0, &new_sound, 0);
+    auto r = ma_node_attach_output_bus(&new_sound->node, 0, ma_engine_get_endpoint(&engine), 0);
 
+    spdlog::info("Message {}", ma_result_description(r));
+
+    r = ma_node_attach_output_bus(&new_sound->sound, 0, &new_sound->node, 0);
+
+    spdlog::info("Message {}", ma_result_description(r));
 
     _sounds.put(id_counter, new_sound);
     _sound_ptrs.push_back(new_sound);
+
+    return id_counter;
 }
 
 
 
 void Tyche::AudioDevice::playSound(Tyche::SoundID id, const Tyche::Math::Vector2 &position) {
 
-    auto sound_node = _sounds.get(id);
+    auto sound = _sounds.get(id)->sound;
 
-    ma_sound_start(&sound_node->sound);
+    //ma_sound_set_volume(&sound, 2.0f);
+    auto r = ma_sound_start(&sound);
 
+    spdlog::info("Message {}", ma_result_description(r));
 
 }
 

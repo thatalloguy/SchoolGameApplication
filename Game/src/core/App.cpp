@@ -4,8 +4,8 @@
 
 #include "App.h"
 
-#include "audio/AudioDevice.h"
 #include "core/Input.h"
+#include "audio/AudioDevice.h"
 
 namespace {
     Tyche::Entity bob{};
