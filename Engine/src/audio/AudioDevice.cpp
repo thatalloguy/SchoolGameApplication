@@ -125,6 +125,7 @@ ma_result Tyche::AudioEngine::initSoundEffect(ma_node_graph* nodeGraph, const So
     soundEffect.HRTF          = config->HRTF;
 
 
+
     //Initialize Binaural effect
     effectSettings.hrtf = soundEffect.HRTF;
 
@@ -315,60 +316,38 @@ Tyche::SoundID Tyche::AudioEngine::registerSound(SoundCreationInfo info) {
     return idCounter;
 }
 
-void Tyche::AudioEngine::updateSound(Tyche::SoundID id, const Math::Vector2& playerPos, const Math::Vector2& soundDirection) {
-    auto sound = registry.get(id);
 
-    sound->soundEffect.playerPosition = playerPos;
-    sound->soundEffect.direction = soundDirection;
-
-}
 
 void Tyche::AudioEngine::playSound(Tyche::SoundID id, float volume) {
 
-    auto sound = &registry.get(id)->g_sound;
+    SoundObject* obj = registry.get(id);
+
+    auto sound = &obj->g_sound;
 
     ma_sound_set_volume(sound, volume);
     ma_sound_start(sound);
+
+    _queue.push_back(obj);
 }
 
 bool Tyche::AudioEngine::isSoundPlaying(Tyche::SoundID id) {
     return (bool) ma_sound_is_playing(&registry.get(id)->g_sound);
 }
-/*
 
-void Tyche::AudioEngine::doSillyDirectionTest() {
+void Tyche::AudioEngine::update(const Tyche::Math::Vector2 &listenerPos) {
+    for (int i=0; i<_queue.length(); i++) {
 
+        auto sound = _queue[i];
 
-    float stepAngle = 0.002f;
-    float angle = 0;
-    float distance = 2;
+        if (ma_sound_is_playing(&sound->g_sound)) {
 
+            //Update the direction
+            sound->soundEffect.direction = sound->soundEffect.soundPosition - listenerPos;
+            sound->soundEffect.direction.normalize();
 
-    int i = 0;
-    for (;;) {
-        double x = ma_cosd(angle) - ma_sind(angle);
-        double y = ma_sind(angle) + ma_cosd(angle);
-        ma_vec3f direction;
-
-        ma_sound_set_position(&g_sound, (float)x * distance, 0, (float)y * distance);
-        direction = ma_sound_get_direction_to_listener(&g_sound);
-
-        g_soundEffect.direction.x = direction.x;
-        g_soundEffect.direction.y = direction.y;
-        g_soundEffect.direction.z = direction.z;
-
-        g_soundEffect.soundPosition.x += 0.02f;
-        angle += stepAngle;
-
-        spdlog::info("D {} {} {}", direction.x, direction.y, direction.z);
-
-        ma_sleep(1);
-        if (i > 1000) {
-            break;
+            sound->soundEffect.playerPosition = listenerPos;
+        } else {
+            _queue.remove(i);
         }
-        i++;
-    };
-
-
+    }
 }
-*/

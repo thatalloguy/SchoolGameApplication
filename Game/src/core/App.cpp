@@ -86,7 +86,6 @@ void Game::App::run() {
     auto soundId = _audio_engine.registerSound(info);
 
     _audio_engine.playSound(soundId);
-    _audio_engine.updateSound(soundId, {0, 0}, {10, 0});
 
     while (!_window->shouldWindowClose()) {
 

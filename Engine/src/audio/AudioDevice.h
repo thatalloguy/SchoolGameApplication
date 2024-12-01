@@ -4,7 +4,7 @@
 #pragma once
 
 
-/// Inspired by the SteamAudio implementation from DuckWatchers remake (also made by myself)
+/// A modified version of the audio engine from Duck Watchers remake (also made by myself)
 /// https://github.com/thatalloguy/GameProject/blob/main/Engine/Audio/AudioEngine.h
 
 
@@ -91,7 +91,7 @@ namespace Tyche {
 
         void playSound(SoundID id, float volume=1.0f);
 
-        void updateSound(SoundID id, const Math::Vector2& listenerPos, const Math::Vector2&  soundDirection);
+        void update(const Math::Vector2& listenerPos);
         bool isSoundPlaying(SoundID id);
     private:
 
@@ -135,6 +135,7 @@ namespace Tyche {
 
         STL::hashmap<SoundID, SoundObject*> registry;
         STL::vector<SoundObject*> _objects;
+        STL::vector<SoundObject*> _queue;
         unsigned int idCounter = 1;
 
     };
