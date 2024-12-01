@@ -5,7 +5,6 @@
 #include "App.h"
 
 #include "core/Input.h"
-#include "audio/AudioDevice.h"
 
 namespace {
     Tyche::Entity bob{};
@@ -68,20 +67,26 @@ Game::App::App(int argc, char **argv) {
     _world.addStaticBody(&_object2);
     _world.addStaticBody(&_object3);
 
-    Tyche::AudioDevice::initializeDevice();
+    _audio_engine.Init();
+
 }
 
 Game::App::~App() {
-    Tyche::AudioDevice::cleanUp();
+    _audio_engine.CleanUp();
     delete _window;
 }
 
 void Game::App::run() {
     auto currentTime = std::chrono::high_resolution_clock ::now();
 
-    auto sound = Tyche::AudioDevice::loadSound("../../../Resources/Audio/bluebonnet_in_b_major_looped.wav");
+    Tyche::SoundCreationInfo info {
+        .filePath = "../../../Resources/Audio/bluebonnet_in_b_major_looped.mp3"
+    };
 
-    Tyche::AudioDevice::playSound(sound, {0, 0});
+    auto soundId = _audio_engine.registerSound(info);
+
+    _audio_engine.playSound(soundId);
+    _audio_engine.updateSound(soundId, {0, 0}, {10, 0});
 
     while (!_window->shouldWindowClose()) {
 

@@ -8,6 +8,7 @@
 #include "renderer/EntityRenderer.h"
 #include "physics/PhysicsObject.h"
 #include "physics/PhysicsHandler.h"
+#include "audio/AudioDevice.h"
 
 namespace Game {
 
@@ -29,7 +30,11 @@ namespace Game {
         Tyche::Window* _window;
         Tyche::TileRenderer _tile_renderer{};
         Tyche::EntityRenderer _entity_renderer{};
+
+        Tyche::AudioEngine _audio_engine;
+
         Tyche::Camera _camera{};
+
         Tyche::PhysicsObject _object{};
         Tyche::PhysicsObject _object4{};
         Tyche::PhysicsObject _object2{};
