@@ -8,8 +8,6 @@
 /// https://github.com/thatalloguy/GameProject/blob/main/Engine/Audio/AudioEngine.h
 
 
-#include <phonon.h>
-#include <miniaudio.h>
 
 #include "math/vecs.h"
 #include "stl/string.h"
@@ -18,7 +16,7 @@
 
 #define FORMAT ma_format_32
 #define CHANNELS 2
-#define SAMPLE_RATE 48000
+#define SAMPLE_RATE 44100
 
 #define AUDIO_SETTINGS 1
 
@@ -28,15 +26,31 @@ namespace Tyche {
 
     typedef unsigned int SoundID;
 
+    struct AudioBuffer {
+        float* in_buffer[2];
+        float* out_buffer[2];
+        void* _heap;
+    };
+
+    enum class AudioResult: unsigned int {
+        SUCCESS = 0,
+        FAILURE = 1,
+    };
+
     namespace AudioDevice {
 
-        void initializeDevice();
+        // need_effects determines if the program should exit if we fail to load any effects.
+        // made it false by default since we rather have sound with no effects and the game works, then the game  just straight up doesn't work
+        void initializeDevice(bool need_effects=false);
+
         void cleanUp();
 
-        SoundID loadSound(const STL::string& path);
-        void playSound(SoundID id, Math::Vector2 position);
 
-        void updateListener();
+        SoundID loadSound(const STL::string& path);
+
+        void playSound(SoundID id, const Math::Vector2& position);
+
+        void updateListener(const Math::Vector2& pos);
 
 
 

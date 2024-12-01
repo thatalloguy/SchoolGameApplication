@@ -1,0 +1,3 @@
+-401 = Failed to load Audio effects
+-11 = Failed to load GLAD
+-12 = Failed to load GLFW
