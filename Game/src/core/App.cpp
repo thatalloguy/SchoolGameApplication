@@ -79,9 +79,9 @@ Game::App::~App() {
 void Game::App::run() {
     auto currentTime = std::chrono::high_resolution_clock ::now();
 
-    //auto sound = Tyche::AudioDevice::loadSound("../../../Resources/Audio/bluebonnet_in_b_major_looped.wav");
+    auto sound = Tyche::AudioDevice::loadSound("../../../Resources/Audio/bluebonnet_in_b_major_looped.wav");
 
-//    Tyche::AudioDevice::playSound(sound, {0, 0});
+    Tyche::AudioDevice::playSound(sound, {0, 0});
 
     while (!_window->shouldWindowClose()) {
 

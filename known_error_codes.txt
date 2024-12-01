@@ -1,3 +1,5 @@
 -401 = Failed to load Audio effects
+-402 = Failed to initialize a Sound Node
+-403 = Failed to allocate enough memory for a Sound node
 -11 = Failed to load GLAD
 -12 = Failed to load GLFW

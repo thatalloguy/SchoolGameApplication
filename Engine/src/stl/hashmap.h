@@ -259,6 +259,7 @@ namespace Tyche::STL {
             buf = temp;
         }
 
+
     private:
 
         void cleanup() {
@@ -297,6 +298,7 @@ namespace Tyche::STL {
         int maxSize = 0;
 
     };
+
 
 }
 
