@@ -14,6 +14,7 @@ void Tyche::AudioEngine::soundEffectProccessPCMFrames(ma_node *pNode, const floa
     ma_uint32 totalFramesToProcess = *pFrameCountOut;
     ma_uint32 totalFramesProcessed = 0;
 
+    // Setup the parameters for the binural effect
     binauralEffectParams.direction.x = soundEffect->direction[0];
     binauralEffectParams.direction.y = soundEffect->direction[1];
     binauralEffectParams.direction.z = 1;
@@ -56,15 +57,12 @@ void Tyche::AudioEngine::soundEffectProccessPCMFrames(ma_node *pNode, const floa
 
         inputBufferDesc.data = soundEffect->inBuffer;
         inputBufferDesc.numSamples = (IPLint32) framesToProcessThisIteration;
-        // spannend
-
-
 
         iplBinauralEffectApply(soundEffect->binauralEffect, &binauralEffectParams, &inputBufferDesc, &outputBufferDesc);
 
         iplDirectEffectApply(soundEffect->directEffect, &directEffectParams, &outputBufferDesc, &outputBufferDesc);
-        // then apply the direct efffect?
 
+        //Convert the audio buffer back to interleaved
         ma_interleave_pcm_frames(
                 ma_format_f32,
                 2,
@@ -132,6 +130,9 @@ ma_result Tyche::AudioEngine::initSoundEffect(ma_node_graph* nodeGraph, const So
 
     directEffectSettings.numChannels = 2;
 
+    //Create all of the objects that we need.
+
+
     result = ma_node_init(nodeGraph, &baseConfig, allocationCallbacks, &soundEffect.baseNode);
     if (result != MA_SUCCESS) {
         return result;
@@ -148,6 +149,8 @@ ma_result Tyche::AudioEngine::initSoundEffect(ma_node_graph* nodeGraph, const So
     if (success != IPL_STATUS_SUCCESS) {
         return MA_INVALID_DATA;
     }
+
+    //Allocate the buffers we need
 
     heapSizeInBytes = 0;
 
@@ -175,10 +178,11 @@ ma_result Tyche::AudioEngine::initSoundEffect(ma_node_graph* nodeGraph, const So
 
 void Tyche::AudioEngine::destroySoundEffect(SoundEffect *binauralEffect,
                                             const ma_allocation_callbacks *allocationCallbacks) {
-    if (binauralEffect == NULL) {
+    // dont remember writing this.
+    /*if (binauralEffect == NULL) {
         spdlog::error("CPP IS TWEAKING IS SWEAR TO GOD");
         return;
-    }
+    }*/
 
     ma_node_uninit(&binauralEffect->baseNode, allocationCallbacks);
 
