@@ -79,13 +79,6 @@ Game::App::~App() {
 void Game::App::run() {
     auto currentTime = std::chrono::high_resolution_clock ::now();
 
-    Tyche::SoundCreationInfo info {
-        .filePath = "../../../Resources/Audio/bluebonnet_in_b_major_looped.mp3"
-    };
-
-    auto soundId = _audio_engine.registerSound(info);
-
-    _audio_engine.playSound(soundId);
 
     while (!_window->shouldWindowClose()) {
 

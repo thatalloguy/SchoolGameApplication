@@ -318,11 +318,12 @@ Tyche::SoundID Tyche::AudioEngine::registerSound(SoundCreationInfo info) {
 
 
 
-void Tyche::AudioEngine::playSound(Tyche::SoundID id, float volume) {
+void Tyche::AudioEngine::playSound(SoundID id, const Math::Vector2& pos, float volume) {
 
     SoundObject* obj = registry.get(id);
 
     auto sound = &obj->g_sound;
+    obj->soundEffect.soundPosition = pos;
 
     ma_sound_set_volume(sound, volume);
     ma_sound_start(sound);

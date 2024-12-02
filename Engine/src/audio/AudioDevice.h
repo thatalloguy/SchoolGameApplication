@@ -89,7 +89,7 @@ namespace Tyche {
 
         SoundID registerSound(SoundCreationInfo info);
 
-        void playSound(SoundID id, float volume=1.0f);
+        void playSound(SoundID id, const Math::Vector2& pos, float volume=1.0f);
 
         void update(const Math::Vector2& listenerPos);
         bool isSoundPlaying(SoundID id);
