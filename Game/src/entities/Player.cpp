@@ -21,16 +21,22 @@ void Entities::Player::update() {
 
     if (Tyche::Input::isActionPressed("left")) {
         _collision_body.setVelocity(Vector2{40, _collision_body.getVelocity().getY()});
+        //Unflip the sprite
+        _scale.setX(100);
     }
     if (Tyche::Input::isActionPressed("right")) {
         _collision_body.setVelocity(Vector2{-40, _collision_body.getVelocity().getY()});
+        //Flip the sprite
+        _scale.setX(-100);
     }
 
+    //Check if we should jump
     auto collision_info = _collision_body.getCollisionInfo();
     if (collision_info.is_colliding &&
         collision_info.collision_normal[1] < 0 && Tyche::Input::isActionPressed("jump")) {
         _collision_body.setVelocity(Vector2{_collision_body.getVelocity().getX(), -40});
     }
+
 }
 
 
