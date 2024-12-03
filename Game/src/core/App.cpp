@@ -26,14 +26,13 @@ Game::App::App(int argc, char **argv) {
     _entity_renderer.initialize(entity_renderer_info);
 
 
-    Tyche::Tile testTile{};
-    Tyche::Tile testTile2{
+    Tyche::Tile floor{
         .position{100, 700},
+        .scale{1200, 100},
         .texture_pos{1,1}
     };
 
-    _tile_renderer.addTile(testTile);
-    _tile_renderer.addTile(testTile2);
+    _tile_renderer.addTile(floor);
 
     Tyche::Input::setTargetWindow(*_window);
 
@@ -44,28 +43,20 @@ Game::App::App(int argc, char **argv) {
     Tyche::Input::addKey("left", Tyche::Input::Key::D);
     Tyche::Input::addKey("right", Tyche::Input::Key::A);
 
-    //bob.setPosition({200, 400});
     _entity_renderer.addEntity(&bob);
-    _entity_renderer.addEntity(&bob2);
+
     _object.setPosition({100, 0});
     _object.setAABB(200, 200);
 
+
     _object2.setPosition({100, 700});
-    _object2.setAABB(200, 200);
+    _object2.setAABB(1200, 200);
 
 
-    _object3.setPosition({500, 500});
-    _object3.setAABB(200, 200);
-
-
-    _object4.setPosition({500, 0});
-    _object4.setAABB(200, 200);
 
 
     _world.addRigidBody(&_object);
-    _world.addRigidBody(&_object4);
     _world.addStaticBody(&_object2);
-    _world.addStaticBody(&_object3);
 
     _audio_engine.Init();
 
@@ -109,7 +100,6 @@ void Game::App::run() {
 
 
         bob.setPosition(_object.getPosition());
-        bob2.setPosition(_object4.getPosition());
 
 
         _camera.update();

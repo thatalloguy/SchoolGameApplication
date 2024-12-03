@@ -28,7 +28,7 @@ Tyche::Math::Vector2 Tyche::PhysicsHandler::getCorrection(const Math::Vector2& a
     Math::Vector2 correction{0, 0};
 
     // First check what axis we should correct (the one most far away from each other)
-    if (Math::getDistance(aCenter.getY(), bCenter.getY()) >= Math::getDistance(aCenter.getX(), bCenter.getX())) {
+    if (bCenter.getY() <= A[1] && bCenter.getY() <= A[3]) {
         // Check if A is above or below B
         if (aCenter.getY() <= bCenter.getY()) {
             correction.setY(B[1] - A[3]);
@@ -97,6 +97,8 @@ void Tyche::PhysicsHandler::resolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
 
 
     Math::Vector2 correction = getCorrection(aCenter, bCenter, aBox, bBox);
+
+    spdlog::info("Correction {} {}", correction[0], correction[1]);
 
     a.setCorrection(correction);
     b.setCorrection(-correction);
