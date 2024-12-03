@@ -56,6 +56,8 @@ add_library(tyche-headers INTERFACE)
 
 add_subdirectory(Game)
 add_subdirectory(Engine)
+add_subdirectory(MapEditor)
+
 
 # Building SteamAudio is a bit weird, so we have to manually copy the phonon.dll file to where our executables are.
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -65,5 +67,3 @@ else()
     file(COPY ${STEAMAUDIO_DLL_LOC} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Engine/Release/)
     file(COPY ${STEAMAUDIO_DLL_LOC} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Game/Release/)
 endif()
-
-##add_subdirectory(MapEditor)
