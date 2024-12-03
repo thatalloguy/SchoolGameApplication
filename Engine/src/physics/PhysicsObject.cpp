@@ -121,3 +121,14 @@ void Tyche::PhysicsObject::addForce(const Tyche::Math::Vector2 &vel) {
 void Tyche::PhysicsObject::setCorrection(const Tyche::Math::Vector2 &cor) {
     _correction = cor;
 }
+
+Tyche::CollisionInfo Tyche::PhysicsObject::getCollisionInfo() {
+    CollisionInfo info{_col_info.is_colliding, _col_info.collision_normal};
+    _col_info = {false, {0, 0}};
+
+    return info;
+}
+
+void Tyche::PhysicsObject::setCollisionInfo(const CollisionInfo& new_info) {
+    _col_info = new_info;
+}

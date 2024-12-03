@@ -16,6 +16,11 @@ namespace Tyche {
         Rigid = 1
     };
 
+    struct CollisionInfo {
+        bool is_colliding = false;
+        Math::Vector2 collision_normal{0, 0};
+    };
+
     // A physics object represents a physical object.
     class PhysicsObject {
 
@@ -50,10 +55,13 @@ namespace Tyche {
         void addForce(const Math::Vector2& force);
         void setCorrection(const Math::Vector2& cor);
 
+        CollisionInfo getCollisionInfo();
+        void setCollisionInfo(const CollisionInfo& new_info);
     private:
 
         PhysicsID  _id = 0;
         ObjectType _type = ObjectType::Static;
+        CollisionInfo _col_info{};
 
         Math::Vector2 _position{0, 0};
         Math::Vector2 _correction{0, 0};

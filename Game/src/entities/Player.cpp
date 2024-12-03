@@ -19,15 +19,17 @@ void Entities::Player::initialize() {
 void Entities::Player::update() {
     _position = _collision_body.getPosition();
 
-    if (Tyche::Input::isActionPressed("jump")) {
-        _collision_body.setVelocity(Vector2{_collision_body.getVelocity().getX(), -40});
-    }
-
     if (Tyche::Input::isActionPressed("left")) {
         _collision_body.setVelocity(Vector2{40, _collision_body.getVelocity().getY()});
     }
     if (Tyche::Input::isActionPressed("right")) {
         _collision_body.setVelocity(Vector2{-40, _collision_body.getVelocity().getY()});
+    }
+
+    auto collision_info = _collision_body.getCollisionInfo();
+    if (collision_info.is_colliding &&
+        collision_info.collision_normal[1] < 0 && Tyche::Input::isActionPressed("jump")) {
+        _collision_body.setVelocity(Vector2{_collision_body.getVelocity().getX(), -40});
     }
 }
 

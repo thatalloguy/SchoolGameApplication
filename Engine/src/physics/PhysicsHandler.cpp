@@ -98,10 +98,11 @@ void Tyche::PhysicsHandler::resolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
 
     Math::Vector2 correction = getCorrection(aCenter, bCenter, aBox, bBox);
 
-    spdlog::info("Correction {} {}", correction[0], correction[1]);
-
     a.setCorrection(correction);
     b.setCorrection(-correction);
+
+    a.setCollisionInfo({true, normal});
+    b.setCollisionInfo({true, normal});
 
 }
 
