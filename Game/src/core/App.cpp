@@ -29,7 +29,7 @@ Game::App::App(int argc, char **argv) {
     Tyche::Tile floor{
         .position{100, 700},
         .scale{1200, 100},
-        .texture_pos{1,1}
+        .texture_pos{0, 0}
     };
 
     _tile_renderer.addTile(floor);
