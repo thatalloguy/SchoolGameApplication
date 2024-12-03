@@ -4,11 +4,11 @@
 
 #include "App.h"
 
+#include "../entities/Player.h"
 #include "core/Input.h"
 
 namespace {
-    Tyche::Entity bob{};
-    Tyche::Entity bob2{};
+    Entities::Player player;
 }
 
 Game::App::App(int argc, char **argv) {
@@ -43,19 +43,16 @@ Game::App::App(int argc, char **argv) {
     Tyche::Input::addKey("left", Tyche::Input::Key::D);
     Tyche::Input::addKey("right", Tyche::Input::Key::A);
 
-    _entity_renderer.addEntity(&bob);
+    player.initialize();
 
-    _object.setPosition({100, 0});
-    _object.setAABB(200, 200);
-
+    _entity_renderer.addEntity(&player);
 
     _object2.setPosition({100, 700});
     _object2.setAABB(1200, 200);
 
 
 
-
-    _world.addRigidBody(&_object);
+    _world.addRigidBody(&player.getBody());
     _world.addStaticBody(&_object2);
 
     _audio_engine.Init();
@@ -84,22 +81,10 @@ void Game::App::run() {
 
         _window->update();
 
-        if (Tyche::Input::isActionPressed("jump")) {
-            _object.setVelocity(Tyche::Math::Vector2{_object.getVelocity().getX(), -40});
-        }
-
-        if (Tyche::Input::isActionPressed("left")) {
-            _object.setVelocity(Tyche::Math::Vector2{40, _object.getVelocity().getY()});
-        }
-        if (Tyche::Input::isActionPressed("right")) {
-            _object.setVelocity(Tyche::Math::Vector2{-40, _object.getVelocity().getY()});
-        }
-
-
        _world.step(frameTime);
 
 
-        bob.setPosition(_object.getPosition());
+        player.update();
 
 
         _camera.update();

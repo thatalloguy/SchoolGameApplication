@@ -35,7 +35,6 @@ namespace Game {
 
         Tyche::Camera _camera{};
 
-        Tyche::PhysicsObject _object{};
         Tyche::PhysicsObject _object2{};
         Tyche::World _world{};
     };

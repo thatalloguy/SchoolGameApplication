@@ -2,6 +2,9 @@
 file(GLOB_RECURSE GAME_SOURCE
     src/core/*.h
     src/core/*.cpp
+
+    src/entities/*.h
+    src/entities/*.cpp
 )
 
 add_executable(tyche-game
