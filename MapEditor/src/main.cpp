@@ -2,11 +2,15 @@
 // Created by allos on 12/3/2024.
 //
 
-#include <spdlog/spdlog.h>
+#include "core/App.h"
 
 int main() {
 
-    spdlog::info("Hello World!");
+    MapEditor::App editor{};
+
+    editor.init();
+
+    editor.run();
 
     return 0;
 }

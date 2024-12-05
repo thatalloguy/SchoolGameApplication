@@ -9,7 +9,8 @@ file(GLOB_RECURSE EDITOR_SOURCE
 
 add_executable(tyche-editor
         src/main.cpp
-        ${GAME_SOURCE}
+        ${EDITOR_SOURCE}
+        ${IMGUI_SOURCE}
 )
 
 
