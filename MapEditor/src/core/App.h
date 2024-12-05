@@ -2,11 +2,12 @@
 // Created by allos on 12/5/2024.
 //
 #pragma once
+
+
 #include "../entities/Cursor.h"
 #include "../tools/Tool.h"
 #include "core/Window.h"
-#include "renderer/EntityRenderer.h"
-#include "stl/hashmap.h"
+#include "renderer/TileRenderer.h"
 #include "stl/vector.h"
 
 namespace MapEditor {
@@ -21,18 +22,18 @@ namespace MapEditor {
         void init();
         void run();
 
-        MapEntities::Cursor& getCursorEntity();
+        Tyche::Tile& getCursor();
 
     private:
         Tyche::Window _window{{{1280, 720}, "TombCrawler - Map Editor"}};
-        Tyche::EntityRenderer _entity_renderer{};
+        Tyche::TileRenderer _tile_renderer{};
         Tyche::Camera _camera{{1280, 720}};
 
         vector<Tools::ToolInfo*> _tools;
         Tools::ToolInfo* _current_tool = nullptr;
 
         //default Debug Entities;
-        MapEntities::Cursor _cursor_entity{};
+        Tyche::Tile _cursor{.scale = {30, 30}, .texture_pos = {3, 3}};
 
         void registerNewTool(Tools::ToolInfo* tool_info);
         void setCurrentTool(Tools::ToolInfo* tool_info);

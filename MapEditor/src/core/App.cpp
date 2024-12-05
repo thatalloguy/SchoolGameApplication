@@ -47,13 +47,13 @@ void MapEditor::App::init() {
 
     setCurrentTool(paintTool);
 
-    _cursor_entity.initialize();
 
 
-    _entity_renderer.initialize({});
-    _entity_renderer.addEntity(&_cursor_entity);
+    _tile_renderer.initialize({});
+    _tile_renderer.addTile(_cursor);
 
     initializeTools();
+
 }
 
 void MapEditor::App::run() {
@@ -62,9 +62,10 @@ void MapEditor::App::run() {
         _window.update();
         checkForToolHotkeys();
 
+        _camera.setViewportSize(_window.getWindowSize());
         _camera.update();
 
-        _entity_renderer.renderEntities(_camera);
+        _tile_renderer.renderTiles(_camera);
 
         newImGuiFrame();
 
@@ -81,8 +82,8 @@ void MapEditor::App::run() {
 }
 
 
-MapEntities::Cursor& MapEditor::App::getCursorEntity() {
-    return _cursor_entity;
+Tyche::Tile& MapEditor::App::getCursor() {
+    return _cursor;
 }
 
 

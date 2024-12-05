@@ -10,14 +10,15 @@
 void Tools::EraseTool::initialize(MapEditor::App& editor_instance) {
     _editor = &editor_instance;
 
-    _cursor = &editor_instance.getCursorEntity();
+    _cursor = &editor_instance.getCursor();
 }
 
 void Tools::EraseTool::update() {
-    _cursor->updateSprite({3, 0});
+    _cursor->texture_pos = {3, 3};
+    _cursor->scale = {50, 50};
 
     auto mouse_pos = Tyche::Mouse::getPosition();
-    _cursor->setPosition(mouse_pos);
+    _cursor->position = mouse_pos;
 }
 
 void Tools::EraseTool::onSwitch() {

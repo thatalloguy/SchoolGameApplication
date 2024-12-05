@@ -4,6 +4,11 @@
 #pragma once
 
 #include "Tool.h"
+#include "renderer/TileRenderer.h"
+
+namespace MapEntities {
+    class Cursor;
+}
 
 namespace Tools {
 
@@ -14,6 +19,10 @@ namespace Tools {
         void initialize(MapEditor::App& editor_instance) override;
         void update() override;
         void destroy() override;
+
+    private:
+        MapEditor::App* _editor = nullptr;
+        Tyche::Tile* _cursor = nullptr;
     };
 
 }

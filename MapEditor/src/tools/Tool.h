@@ -2,6 +2,11 @@
 // Created by allos on 12/5/2024.
 //
 #pragma once
+
+#ifndef GRID_SIZE
+#define GRID_SIZE 200
+#endif
+
 #include "core/Input.h"
 #include "stl/string.h"
 

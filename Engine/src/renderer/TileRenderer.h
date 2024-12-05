@@ -68,7 +68,7 @@ namespace Tyche {
         void setAtlasSize(int new_atlas_size);
 
     private:
-        vector<Tile> _tiles;
+        vector<Tile*> _tiles;
         GPUMesh _mesh{0, 0};
         Shader _tile_shader;
         // x is the tile_size and y is the atlas size

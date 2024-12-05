@@ -3,8 +3,9 @@
 //
 #pragma once
 
+
 #include "Tool.h"
-#include "../entities/Cursor.h"
+#include "renderer/TileRenderer.h"
 
 namespace Tools {
 
@@ -19,7 +20,7 @@ namespace Tools {
 
     private:
         MapEditor::App* _editor = nullptr;
-        MapEntities::Cursor* _cursor = nullptr;
+        Tyche::Tile* _cursor = nullptr;
     };
 
 }

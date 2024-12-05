@@ -51,7 +51,7 @@ void Tyche::TileRenderer::initialize(const TileRendererCreationInfo& creation_in
 }
 
 void Tyche::TileRenderer::addTile(Tyche::Tile& tile) {
-    _tiles.push_back(tile);
+    _tiles.push_back(&tile);
 }
 
 void Tyche::TileRenderer::clearTiles() {
@@ -69,7 +69,9 @@ void Tyche::TileRenderer::renderTiles(const Camera& camera) {
     _tile_shader.setInt("texture_atlas", 0);
     _tile_shader.setVector2("grid", _grid.value_ptr());
 
-    for (auto tile: _tiles) {
+    for (auto tile_ptr: _tiles) {
+
+        auto tile = *tile_ptr;
         //Bind the mesh
         glBindVertexArray(_mesh.VAO);
 
