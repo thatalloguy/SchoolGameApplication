@@ -9,6 +9,7 @@
 
 void Tools::EraseTool::initialize(MapEditor::App& editor_instance) {
     _editor = &editor_instance;
+    _window = &_editor->getWindow();
 
     _cursor = &editor_instance.getCursor();
 }
@@ -20,9 +21,9 @@ void Tools::EraseTool::update() {
     auto mouse_pos = Tyche::Mouse::getPosition();
     auto snapped_pos = Vector2{floor(mouse_pos[0] / GRID_SIZE), floor(mouse_pos[1] / GRID_SIZE)} * GRID_SIZE;
 
-    _cursor->position = snapped_pos;
+    _cursor->position = mouse_pos;
 
-    if (Tyche::Mouse::isMouseButtonPressed(Tyche::Mouse::LEFT) && last_snapped_position != snapped_pos) {
+    if (Tyche::Mouse::isMouseButtonPressed(Tyche::Mouse::LEFT) && last_snapped_position != snapped_pos && mouse_pos[1] > _window->getWindowPosition().getY() + 20) {
         last_snapped_position = snapped_pos;
 
         _editor->removeTile(snapped_pos);

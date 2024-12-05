@@ -91,6 +91,12 @@ Vector2 Tyche::Window::getWindowSize() {
     return Vector2((float) w, (float) h);
 }
 
+Vector2 Tyche::Window::getWindowPosition() {
+    int x, y;
+    glfwGetWindowPos(_raw_window, &x, &y);
+    return {(float) x,(float) y};
+}
+
 bool Tyche::Window::shouldWindowClose() {
     return glfwWindowShouldClose(_raw_window);
 }

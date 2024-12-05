@@ -28,6 +28,7 @@ namespace MapEditor {
         void run();
 
         Tyche::Tile& getCursor();
+        Tyche::Window& getWindow();
 
         void placeTile(Vector2 pos, Tyche::Tile* tile);
         void removeTile(Vector2 pos);

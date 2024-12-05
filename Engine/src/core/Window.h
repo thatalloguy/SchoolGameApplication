@@ -40,6 +40,9 @@ namespace Tyche {
 
         //Returns the size of the window.
         Vector2 getWindowSize();
+
+        Vector2 getWindowPosition();
+
         //Returns true or false if the user has requested to close the window.
         bool shouldWindowClose();
 

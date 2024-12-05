@@ -76,12 +76,34 @@ void MapEditor::App::run() {
 
         newImGuiFrame();
 
-        ImGui::Begin("Hello Window");
+        ImGui::SetNextWindowPos({0, 0});
+        ImGui::SetNextWindowSize({_window.getWindowSize().getX(), _window.getWindowSize().getY()});
+        ImGui::Begin(" ", nullptr, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoCollapse);
 
-        ImGui::Text("Current Tool: %s", _current_tool->name.c_str());
+        if (ImGui::BeginMenuBar()) {
+
+            if (ImGui::BeginMenu("File")) {
+
+                ImGui::MenuItem("New Room");
+                ImGui::MenuItem("Save Room");
+                ImGui::MenuItem("Load Room");
+
+                ImGui::EndMenu();
+            }
+
+            if (ImGui::BeginMenu("Tools")) {
+
+                for (auto tool : _tools) {
+                    ImGui::MenuItem(tool->name.c_str());
+                }
+
+                ImGui::EndMenu();
+            }
+
+            ImGui::EndMenuBar();
+        }
 
         ImGui::End();
-
 
         renderImGuiFrame();
     }
@@ -90,6 +112,10 @@ void MapEditor::App::run() {
 
 Tyche::Tile& MapEditor::App::getCursor() {
     return _cursor;
+}
+
+Tyche::Window& MapEditor::App::getWindow() {
+    return _window;
 }
 
 void MapEditor::App::placeTile(Vector2 pos, Tyche::Tile* tile) {
