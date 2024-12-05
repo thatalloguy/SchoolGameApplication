@@ -9,7 +9,7 @@ void Tools::PaintTool::initialize() {
 }
 
 void Tools::PaintTool::update() {
-
+    spdlog::info("Update()");
 }
 
 void Tools::PaintTool::destroy() {

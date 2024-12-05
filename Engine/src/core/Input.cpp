@@ -47,3 +47,6 @@ bool Tyche::Input::isActionPressed(const Action& action) {
     return false;
 }
 
+bool Tyche::Input::isKeyPressed(Key key) {
+    return (glfwGetKey(_target_window, key) == GLFW_PRESS);
+}

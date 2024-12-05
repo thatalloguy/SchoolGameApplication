@@ -85,5 +85,6 @@ namespace Tyche::Input {
     void addKey(const Action& action, Key key);
 
     bool isActionPressed(const Action& action);
+    bool isKeyPressed(Key key);
 
 }
