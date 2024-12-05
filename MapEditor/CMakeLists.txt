@@ -5,6 +5,9 @@ file(GLOB_RECURSE EDITOR_SOURCE
 
         src/entities/*.h
         src/entities/*.cpp
+
+        src/tools/*.h
+        src/tools/*.cpp
 )
 
 add_executable(tyche-editor
