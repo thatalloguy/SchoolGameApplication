@@ -8,9 +8,14 @@
 #include "../tools/Tool.h"
 #include "core/Window.h"
 #include "renderer/TileRenderer.h"
+#include "stl/hashmap.h"
 #include "stl/vector.h"
 
 namespace MapEditor {
+
+    struct Room {
+        vector<Tyche::Tile*> tiles;
+    };
 
 
     class App {
@@ -24,6 +29,9 @@ namespace MapEditor {
 
         Tyche::Tile& getCursor();
 
+        void placeTile(Vector2 pos, Tyche::Tile* tile);
+        void removeTile(Vector2 pos);
+
     private:
         Tyche::Window _window{{{1280, 720}, "TombCrawler - Map Editor"}};
         Tyche::TileRenderer _tile_renderer{};
@@ -31,6 +39,8 @@ namespace MapEditor {
 
         vector<Tools::ToolInfo*> _tools;
         Tools::ToolInfo* _current_tool = nullptr;
+
+        Room _current_room{};
 
         //default Debug Entities;
         Tyche::Tile _cursor{.scale = {30, 30}, .texture_pos = {3, 3}};

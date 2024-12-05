@@ -16,6 +16,10 @@
 MapEditor::App::~App() {
     deinitializeImGui();
     destroyAllTools();
+
+    for (auto tile : _current_room.tiles) {
+        delete tile;
+    }
 }
 
 void MapEditor::App::init() {
@@ -50,7 +54,6 @@ void MapEditor::App::init() {
 
 
     _tile_renderer.initialize({});
-    _tile_renderer.addTile(_cursor);
 
     initializeTools();
 
@@ -66,6 +69,10 @@ void MapEditor::App::run() {
         _camera.update();
 
         _tile_renderer.renderTiles(_camera);
+        _tile_renderer.renderTile(_camera, _cursor);
+
+        updateCurrentTool();
+
 
         newImGuiFrame();
 
@@ -75,7 +82,6 @@ void MapEditor::App::run() {
 
         ImGui::End();
 
-        updateCurrentTool();
 
         renderImGuiFrame();
     }
@@ -84,6 +90,27 @@ void MapEditor::App::run() {
 
 Tyche::Tile& MapEditor::App::getCursor() {
     return _cursor;
+}
+
+void MapEditor::App::placeTile(Vector2 pos, Tyche::Tile* tile) {
+    _current_room.tiles.push_back(tile);
+    _tile_renderer.addTile(*tile);
+
+}
+
+void MapEditor::App::removeTile(Vector2 pos) {
+
+     for (int i=0; i<_current_room.tiles.length(); i++) {
+         auto tile = _current_room.tiles[i];
+
+         if (tile->position == pos) {
+             _current_room.tiles.remove(i);
+             _tile_renderer.removeTile(i);
+             delete tile;
+             return;
+         }
+     }
+
 }
 
 

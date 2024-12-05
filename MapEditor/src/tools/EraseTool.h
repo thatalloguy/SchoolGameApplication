@@ -21,6 +21,7 @@ namespace Tools {
     private:
         MapEditor::App* _editor = nullptr;
         Tyche::Tile* _cursor = nullptr;
+        Vector2 last_snapped_position{0, 0};
     };
 
 }

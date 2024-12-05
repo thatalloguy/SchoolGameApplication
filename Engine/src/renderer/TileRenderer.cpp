@@ -54,6 +54,10 @@ void Tyche::TileRenderer::addTile(Tyche::Tile& tile) {
     _tiles.push_back(&tile);
 }
 
+void Tyche::TileRenderer::removeTile(int index) {
+    _tiles.remove(index);
+}
+
 void Tyche::TileRenderer::clearTiles() {
     _tiles.clear();
 }
@@ -85,6 +89,33 @@ void Tyche::TileRenderer::renderTiles(const Camera& camera) {
         //Draw the mesh
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
+}
+
+void Tyche::TileRenderer::renderTile(const Camera& camera, Tile tile) {
+
+
+    //upload our camera projection to the shader
+    _tile_shader.bind();
+    _tile_shader.setMatrix4("projection", camera.getMatrix().value_ptr());
+
+    //upload our texture + our texture info to the shader
+    _texture_atlas.bind();
+    _tile_shader.setInt("texture_atlas", 0);
+    _tile_shader.setVector2("grid", _grid.value_ptr());
+
+
+    //Bind the mesh
+    glBindVertexArray(_mesh.VAO);
+
+    // update the transform matrix of the tile
+    tile.transform.translate(tile.position);
+    tile.transform.scale(tile.scale);
+
+    _tile_shader.setMatrix4("model", tile.transform.value_ptr());
+    _tile_shader.setVector2("texture_slot", tile.texture_pos.value_ptr());
+
+    //Draw the mesh
+    glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 int Tyche::TileRenderer::getTileSize() {

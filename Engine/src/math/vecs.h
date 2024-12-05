@@ -41,8 +41,13 @@ namespace Tyche::Math {
 
         // Implementations for my most used math operators.
 
-        bool operator==(Vector2& b) const {
+        bool operator==(Vector2 b) const {
             return (_[0] == b[0] && _[1] == b[1]);
+        }
+
+
+        bool operator!=(Vector2 b) const {
+            return (_[0] != b[0] ||  _[1] != b[1]);
         }
 
         void operator+=(const Vector2& b) {
@@ -140,6 +145,12 @@ namespace Tyche::Math {
     static float getDistance(float a, float b) {
         return (float) sqrt(pow(a - b, 2));
     }
+
+    struct Vector2Hash {
+        size_t operator()(const Vector2& key, int Size) const {
+            return static_cast<size_t>(key[0] + key[1]) % Size;
+        }
+    };
 
 
 }

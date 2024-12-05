@@ -18,7 +18,15 @@ void Tools::EraseTool::update() {
     _cursor->scale = {50, 50};
 
     auto mouse_pos = Tyche::Mouse::getPosition();
-    _cursor->position = mouse_pos;
+    auto snapped_pos = Vector2{floor(mouse_pos[0] / GRID_SIZE), floor(mouse_pos[1] / GRID_SIZE)} * GRID_SIZE;
+
+    _cursor->position = snapped_pos;
+
+    if (Tyche::Mouse::isMouseButtonPressed(Tyche::Mouse::LEFT) && last_snapped_position != snapped_pos) {
+        last_snapped_position = snapped_pos;
+
+        _editor->removeTile(snapped_pos);
+    }
 }
 
 void Tools::EraseTool::onSwitch() {

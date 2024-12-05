@@ -7,6 +7,8 @@ out vec4 fragColor;
 uniform sampler2D texture_atlas;
 
 void main() {
-    vec3 albedo = texture(texture_atlas, TexCoords).rgb;
-    fragColor = vec4(albedo, 1);
+    vec4 albedo = texture(texture_atlas, TexCoords).rgba;
+    if(albedo.a < 0.1)
+        discard;
+    fragColor = albedo;
 }

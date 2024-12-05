@@ -23,7 +23,12 @@ void Tools::PaintTool::update() {
     auto snapped_pos = Vector2{floor(mouse_pos[0] / GRID_SIZE), floor(mouse_pos[1] / GRID_SIZE)} * GRID_SIZE;
 
     _cursor->position = snapped_pos;
-    spdlog::info("Snapped position: {} {}", snapped_pos[0], snapped_pos[1]);
+
+    if (Tyche::Mouse::isMouseButtonPressed(Tyche::Mouse::LEFT) && last_snapped_position != snapped_pos) {
+        last_snapped_position = snapped_pos;
+
+        _editor->placeTile(snapped_pos, new Tyche::Tile{.position = snapped_pos, .texture_pos = _cursor->texture_pos});
+    }
 }
 
 void Tools::PaintTool::destroy() {

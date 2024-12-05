@@ -26,3 +26,7 @@ Tyche::Math::Vector2 Tyche::Mouse::getPosition() {
 void Tyche::Mouse::setMouseMode(MouseMode mode) {
     glfwSetInputMode(_window_ptr, GLFW_CURSOR, mode);
 }
+
+bool Tyche::Mouse::isMouseButtonPressed(MouseButton button) {
+    return (glfwGetMouseButton(_window_ptr, button) == GLFW_PRESS);
+}

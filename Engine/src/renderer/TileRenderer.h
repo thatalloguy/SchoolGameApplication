@@ -31,6 +31,8 @@ namespace Tyche {
 
         // Type determines the texture the tile will have
         Vector2 texture_pos = {0, 0};
+
+        float layer = 1;
     };
 
 
@@ -54,12 +56,14 @@ namespace Tyche {
 
         // Adds the tile to an internal list (with the correct layer)
         void addTile(Tile& tile);
+        void removeTile(int index);
 
         //Clears all tiles from every layer
         void clearTiles();
 
         //Renders all layers and tiles to the screen.
         void renderTiles(const Camera& camera);
+        void renderTile(const Camera& camera, Tile tile);
 
         int getTileSize();
         void setTileSize(int new_tile_size);
