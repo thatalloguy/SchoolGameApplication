@@ -46,6 +46,14 @@ void MapEditor::App::init() {
 
 
     setCurrentTool(paintTool);
+
+    _cursor_entity.initialize();
+
+
+    _entity_renderer.initialize({});
+    _entity_renderer.addEntity(&_cursor_entity);
+
+    initializeTools();
 }
 
 void MapEditor::App::run() {
@@ -54,9 +62,13 @@ void MapEditor::App::run() {
         _window.update();
         checkForToolHotkeys();
 
+        _camera.update();
+
+        _entity_renderer.renderEntities(_camera);
+
         newImGuiFrame();
 
-        ImGui::Begin("Hello Window");;
+        ImGui::Begin("Hello Window");
 
         ImGui::Text("Current Tool: %s", _current_tool->name.c_str());
 
@@ -67,6 +79,12 @@ void MapEditor::App::run() {
         renderImGuiFrame();
     }
 }
+
+
+MapEntities::Cursor& MapEditor::App::getCursorEntity() {
+    return _cursor_entity;
+}
+
 
 void MapEditor::App::registerNewTool(Tools::ToolInfo* tool_info) {
     if (tool_info->instance == nullptr) {
@@ -89,17 +107,15 @@ void MapEditor::App::checkForToolHotkeys() {
     }
 }
 
-
 void MapEditor::App::initializeTools() {
     for (auto tool : _tools) {
-        tool->instance->initialize();
+        tool->instance->initialize(*this);
     }
 }
 
 void MapEditor::App::updateCurrentTool() {
     _current_tool->instance->update();
 }
-
 
 void MapEditor::App::destroyAllTools() {
     for (auto tool : _tools) {
@@ -109,6 +125,8 @@ void MapEditor::App::destroyAllTools() {
         delete tool;
     }
 }
+
+
 
 void MapEditor::App::initializeImGui() {
     IMGUI_CHECKVERSION();

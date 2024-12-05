@@ -11,7 +11,7 @@ namespace Tools {
     class PaintTool: public Tools::Tool {
 
     public:
-        void initialize() override;
+        void initialize(MapEditor::App& editor_instance) override;
         void update() override;
         void destroy() override;
     };

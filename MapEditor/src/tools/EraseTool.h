@@ -4,6 +4,7 @@
 #pragma once
 
 #include "Tool.h"
+#include "../entities/Cursor.h"
 
 namespace Tools {
 
@@ -11,9 +12,14 @@ namespace Tools {
     class EraseTool: public Tools::Tool {
 
     public:
-        void initialize() override;
+        void initialize(MapEditor::App& editor_instance) override;
         void update() override;
+        void onSwitch() override;
         void destroy() override;
+
+    private:
+        MapEditor::App* _editor = nullptr;
+        MapEntities::Cursor* _cursor = nullptr;
     };
 
 }

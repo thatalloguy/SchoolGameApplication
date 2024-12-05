@@ -4,12 +4,12 @@
 
 #include "PaintTool.h"
 
-void Tools::PaintTool::initialize() {
+void Tools::PaintTool::initialize(MapEditor::App& editor_instance) {
 
 }
 
 void Tools::PaintTool::update() {
-    spdlog::info("Update()");
+
 }
 
 void Tools::PaintTool::destroy() {

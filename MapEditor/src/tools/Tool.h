@@ -5,14 +5,19 @@
 #include "core/Input.h"
 #include "stl/string.h"
 
+namespace MapEditor {
+    class App;
+}
+
 namespace Tools {
 
     class Tool {
 
     public:
 
-        virtual void initialize() {};
+        virtual void initialize(MapEditor::App& editor_instance) {};
         virtual void update() {};
+        virtual void onSwitch() {};
         virtual void destroy() {};
 
     };
