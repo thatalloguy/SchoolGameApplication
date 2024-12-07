@@ -11,6 +11,7 @@
 #include "../tools/EraseTool.h"
 #include "../tools/PaintTool.h"
 #include "core/Mouse.h"
+#include "core/IO.h"
 
 
 MapEditor::App::~App() {
@@ -29,6 +30,7 @@ void MapEditor::App::init() {
     Tyche::Input::setTargetWindow(_window);
 
     _tools.reserve(6);
+    _current_room.tiles.reserve(20);
 
 
     Tools::ToolInfo* paintTool = new Tools::ToolInfo{
@@ -85,8 +87,18 @@ void MapEditor::App::run() {
             if (ImGui::BeginMenu("File")) {
 
                 ImGui::MenuItem("New Room");
-                ImGui::MenuItem("Save Room");
-                ImGui::MenuItem("Load Room");
+
+                if (ImGui::MenuItem("Save Room")) {
+                    Tyche::IO::saveVectorToFile<Tyche::Tile*, Tyche::Tile>("../../../test.room", _current_room.tiles);
+                }
+
+                if (ImGui::MenuItem("Load Room")) {
+                    Tyche::IO::loadVectorFromFile<Tyche::Tile*, Tyche::Tile>("../../../test.room", _current_room.tiles);
+
+                    for (auto tile : _current_room.tiles) {
+                        _tile_renderer.addTile(*tile);
+                    }
+                }
 
                 ImGui::EndMenu();
             }
@@ -95,6 +107,7 @@ void MapEditor::App::run() {
 
                 for (auto tool : _tools) {
                     ImGui::MenuItem(tool->name.c_str());
+
                 }
 
                 ImGui::EndMenu();

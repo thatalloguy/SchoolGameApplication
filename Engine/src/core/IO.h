@@ -9,20 +9,24 @@
 
 namespace Tyche::IO {
 
-    template<typename T>
+    template<typename T, typename N>
     void saveVectorToFile(const char * path, STL::vector<T>& vec) {
 
         FILE* f_out = fopen(path, "w");
 
-        fwrite(&vec.length(), sizeof(int), 1, f_out);
-        for (auto obj : vec) {
-            fwrite(&obj, sizeof(T), 1, f_out);
+        int size = vec.length();
+
+        fwrite(&size, sizeof(int), 1, f_out);
+        for (T obj_ptr : vec) {
+            N obj = *obj_ptr;
+            printf("POS %f \n", obj.position[0]);
+            fwrite(&obj, sizeof(N), 1, f_out);
         }
 
         fclose(f_out);
     }
 
-    template<typename T>
+    template<typename T, typename N>
     void loadVectorFromFile(const char* path, STL::vector<T>& out ) {
         FILE* f_in = fopen(path, "r");
 
@@ -30,9 +34,10 @@ namespace Tyche::IO {
         fread(&size, sizeof(int), 1, f_in);
 
         for (int i=0; i<size; i++) {
-            T new_obj{};
+            N* new_obj = new N{};
 
-            fread(&new_obj, sizeof(T), 1, f_in);
+            fread(new_obj, sizeof(N), 1, f_in);
+
             out.push_back(new_obj);
         }
 
