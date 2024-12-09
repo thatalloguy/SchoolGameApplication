@@ -24,7 +24,7 @@ namespace Tyche {
         // Position where the texture is rendered
         Vector2 position{500, 500};
         // The scale of tile (not really used)
-        Vector2 scale{100, 100};
+        Vector2 scale{25, 25};
 
         // The final transformation matrix (should include  the scale and position of the tile)
         Matrix4 transform;

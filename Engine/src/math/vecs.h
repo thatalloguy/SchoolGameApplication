@@ -55,6 +55,8 @@ namespace Tyche::Math {
             _[1] += b[1];
         }
 
+
+
         void operator*=(const Vector2& b) {
             _[0] *= b[0];
             _[1] *= b[1];
@@ -72,6 +74,10 @@ namespace Tyche::Math {
 
         Vector2 operator+(Vector2 b) const {
             return {_[0] + b[0],_[1] + b[1]};
+        }
+
+        Vector2 operator+(float b) const {
+            return {_[0] + b,_[1] + b};
         }
 
         Vector2 operator-(Vector2 b) const {

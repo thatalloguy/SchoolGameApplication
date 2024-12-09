@@ -4,7 +4,7 @@
 #pragma once
 
 #ifndef GRID_SIZE
-#define GRID_SIZE 200
+#define GRID_SIZE 50
 #endif
 
 #include "core/Input.h"

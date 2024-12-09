@@ -3,7 +3,7 @@
 //
 
 #ifndef CAMERA_SPEED
-#define CAMERA_SPEED 300
+#define CAMERA_SPEED 200
 #endif
 
 #pragma once
@@ -43,6 +43,7 @@ namespace MapEditor {
 
         vector<Tools::ToolInfo*> _tools;
         Tools::ToolInfo* _current_tool = nullptr;
+
 
         Room _current_room{};
 

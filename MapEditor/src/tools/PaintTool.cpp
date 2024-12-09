@@ -18,7 +18,7 @@ void Tools::PaintTool::initialize(MapEditor::App& editor_instance) {
 void Tools::PaintTool::update() {
 
     _cursor->texture_pos = {0, 0};
-    _cursor->scale = {100, 100};
+    _cursor->scale = {25, 25};
 
     auto mouse_pos =  Tyche::Mouse::getPosition() - _camera->getPosition();
 

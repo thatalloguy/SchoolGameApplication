@@ -18,6 +18,8 @@
 #include <windows.h>
 #endif
 
+
+
 MapEditor::App::~App() {
     deinitializeImGui();
     destroyAllTools();
@@ -32,6 +34,7 @@ void MapEditor::App::init() {
 
     Tyche::Mouse::setTargetWindow(_window.getRawWindowPtr());
     Tyche::Input::setTargetWindow(_window);
+
 
     _tools.reserve(6);
     _current_room.tiles.reserve(20);
@@ -94,8 +97,8 @@ void MapEditor::App::run() {
         _window.update();
         checkForToolHotkeys();
 
-        _camera.setViewportSize(_window.getWindowSize());
         updateCamera(frameTime);
+        _camera.setViewportSize(_window.getWindowSize());
         _camera.update();
 
         _tile_renderer.renderTiles(_camera);
@@ -180,6 +183,8 @@ Tyche::Camera& MapEditor::App::getCamera() {
 void MapEditor::App::placeTile(Vector2 pos, Tyche::Tile* tile) {
     _current_room.tiles.push_back(tile);
     _tile_renderer.addTile(*tile);
+
+
 
 }
 
@@ -292,4 +297,5 @@ void MapEditor::App::updateCamera(float frameTime) {
     }
 
     _camera.setPosition(out_vec);
+
 }
