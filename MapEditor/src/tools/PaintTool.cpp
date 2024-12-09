@@ -6,10 +6,39 @@
 #include "../core/App.h"
 #include "core/Mouse.h"
 
+
+namespace {
+    Vector2 tile_texture{0, 0};
+
+    void scrollcallback(GLFWwindow* window, double x, double y) {
+        tile_texture += {(float) y / (float) y, 0};
+
+        if (tile_texture[0] > 3) {
+            tile_texture.setX(0);
+            tile_texture += {0, 1};
+        }
+
+        if (tile_texture[0] < 0) {
+            tile_texture.setX(0);
+            tile_texture += {0, 1};
+        }
+
+
+        if (tile_texture[1] > 3 || tile_texture[1] < 0) {
+            tile_texture.setY(0);
+            tile_texture.setX(0);
+        }
+
+        spdlog::info("TILE {} {}", tile_texture[0], tile_texture[1]);
+    }
+}
+
 void Tools::PaintTool::initialize(MapEditor::App& editor_instance) {
 
     _editor = &editor_instance;
     _window = &_editor->getWindow();
+
+    glfwSetScrollCallback((GLFWwindow*) _window->getRawWindowPtr(), scrollcallback);
 
     _cursor = &editor_instance.getCursor();
     _camera = &editor_instance.getCamera();
@@ -17,7 +46,7 @@ void Tools::PaintTool::initialize(MapEditor::App& editor_instance) {
 
 void Tools::PaintTool::update() {
 
-    _cursor->texture_pos = {0, 0};
+    _cursor->texture_pos = tile_texture;
     _cursor->scale = {25, 25};
 
     auto mouse_pos =  Tyche::Mouse::getPosition() - _camera->getPosition();

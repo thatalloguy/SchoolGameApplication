@@ -62,6 +62,8 @@ namespace MapEditor {
         void newImGuiFrame();
         void renderImGuiFrame();
 
+        void displayLoadMenu();
+
         void updateCamera(float frameTime);
     };
 

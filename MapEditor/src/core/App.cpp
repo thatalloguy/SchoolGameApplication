@@ -19,7 +19,6 @@
 #endif
 
 
-
 MapEditor::App::~App() {
     deinitializeImGui();
     destroyAllTools();
@@ -272,6 +271,10 @@ void MapEditor::App::renderImGuiFrame() {
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void MapEditor::App::displayLoadMenu() {
+
 }
 
 void MapEditor::App::updateCamera(float frameTime) {
