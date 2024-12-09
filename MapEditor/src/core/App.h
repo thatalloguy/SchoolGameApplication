@@ -3,12 +3,9 @@
 //
 #pragma once
 
-
-#include "../entities/Cursor.h"
 #include "../tools/Tool.h"
 #include "core/Window.h"
 #include "renderer/TileRenderer.h"
-#include "stl/hashmap.h"
 #include "stl/vector.h"
 
 namespace MapEditor {

@@ -12,6 +12,11 @@ namespace {
 }
 
 Game::App::App(int argc, char **argv) {
+
+    processArgs(argc, argv);
+
+
+
     Tyche::WindowCreationInfo defaultWindowInfo{
         .window_title = "Game"
     };
@@ -97,4 +102,16 @@ void Game::App::run() {
 
     }
 
+}
+
+void Game::App::processArgs(int argc, char** argv) {
+    for (int i=0; i< argc; i++) {
+        if (strcmp("-d", argv[i]) == 0) {
+            debugRoom(argv[i + 1]);
+        }
+    }
+}
+
+void Game::App::debugRoom(const char* path) {
+    spdlog::info("Path {}", path);
 }

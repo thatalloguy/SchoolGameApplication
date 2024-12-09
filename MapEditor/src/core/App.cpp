@@ -14,6 +14,10 @@
 #include "core/IO.h"
 
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 MapEditor::App::~App() {
     deinitializeImGui();
     destroyAllTools();
@@ -108,6 +112,20 @@ void MapEditor::App::run() {
                 for (auto tool : _tools) {
                     ImGui::MenuItem(tool->name.c_str());
 
+                }
+
+                ImGui::EndMenu();
+            }
+
+            if (ImGui::BeginMenu("Execute")) {
+
+                if (ImGui::MenuItem("Debug Current Room")) {
+                    spdlog::info("Debugging current Room");
+#ifdef WIN32
+                    system("start ../../Game/Debug/tyche-game.exe -d  \"../../../test.room\"");
+#else
+                    spdlog::error("Debugging Rooms is only supported on the windows platform");
+#endif
                 }
 
                 ImGui::EndMenu();

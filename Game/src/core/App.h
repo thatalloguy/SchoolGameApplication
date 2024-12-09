@@ -27,6 +27,10 @@ namespace Game {
         void run();
 
     private:
+
+        void processArgs(int argc, char** argv);
+        void debugRoom(const char* path);
+
         Tyche::Window* _window;
         Tyche::TileRenderer _tile_renderer{};
         Tyche::EntityRenderer _entity_renderer{};
