@@ -10,6 +10,7 @@
 namespace Tools {
 
 
+    // Tool for erasing Tile's
     class EraseTool: public Tools::Tool {
 
     public:

@@ -23,6 +23,7 @@ MapEditor::App::~App() {
     deinitializeImGui();
     destroyAllTools();
 
+    //TODO this should be done by the room itself and not the editor.
     for (auto tile : _current_room.tiles) {
         delete tile;
     }
@@ -31,14 +32,17 @@ MapEditor::App::~App() {
 void MapEditor::App::init() {
     initializeImGui();
 
+    //Set the window as target to capture input from/
     Tyche::Mouse::setTargetWindow(_window.getRawWindowPtr());
     Tyche::Input::setTargetWindow(_window);
 
 
+    // Reserve some memory to avoid having to resize alot.
     _tools.reserve(6);
     _current_room.tiles.reserve(20);
 
 
+    // Register all of the default tools, all allocated memory gets cleaned up in the Deconstructor
     Tools::ToolInfo* paintTool = new Tools::ToolInfo{
         "Paint",
         Tools::ToolType::MouseTool,
@@ -57,13 +61,14 @@ void MapEditor::App::init() {
     registerNewTool(eraseTool);
 
 
+    // Painting is the default.
     setCurrentTool(paintTool);
 
-
+    //Runs initialize for each registered tool.
+    initializeTools();
 
     _tile_renderer.initialize({});
 
-    initializeTools();
 
 
     //Setup inputs
@@ -85,6 +90,7 @@ void MapEditor::App::run() {
 
     while (!_window.shouldWindowClose()) {
 
+        // First calculate the frametime (used for updating the camera position)
         auto newTime = std::chrono::high_resolution_clock::now();
         double frameTime = (double) std::chrono::duration_cast<std::chrono::microseconds>(newTime - currentTime).count() / 100000;
         currentTime = newTime;
@@ -93,15 +99,20 @@ void MapEditor::App::run() {
         if (frameTime >= 0.166)
             frameTime = 0.166;
 
+        // Update the window and check for inputs.
         _window.update();
         checkForToolHotkeys();
 
+        // Update the canera
         updateCamera(frameTime);
         _camera.setViewportSize(_window.getWindowSize());
         _camera.update();
 
+        // Render all of the tiles first
         _tile_renderer.renderTiles(_camera);
+        // Render the cursor seperate so its always in front of the tiles.
         _tile_renderer.renderTile(_camera, _cursor);
+
 
         updateCurrentTool();
 

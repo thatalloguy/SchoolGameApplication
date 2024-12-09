@@ -15,11 +15,14 @@
 
 namespace MapEditor {
 
+    //Simple struct that holds all info we need about a room
+    // NOTE: every ptr in the internal vector gets cleaned up by the manager.
     struct Room {
         vector<Tyche::Tile*> tiles;
     };
 
 
+    // The Editor Master class.
     class App {
 
     public:
@@ -33,7 +36,9 @@ namespace MapEditor {
         Tyche::Window& getWindow();
         Tyche::Camera& getCamera();
 
+        //Places a tile and adds it to the current room
         void placeTile(Vector2 pos, Tyche::Tile* tile);
+        //Deletes the tile with this position both from memory and internal buffers.
         void removeTile(Vector2 pos);
 
     private:
@@ -50,6 +55,7 @@ namespace MapEditor {
         //default Debug Entities;
         Tyche::Tile _cursor{.scale = {30, 30}, .texture_pos = {3, 3}};
 
+        //Tool functions
         void registerNewTool(Tools::ToolInfo* tool_info);
         void setCurrentTool(Tools::ToolInfo* tool_info);
         void checkForToolHotkeys();
@@ -57,13 +63,14 @@ namespace MapEditor {
         void updateCurrentTool();
         void destroyAllTools();
 
+        //Imgui funcs
         void initializeImGui();
         void deinitializeImGui();
         void newImGuiFrame();
         void renderImGuiFrame();
 
+        //misc funcs
         void displayLoadMenu();
-
         void updateCamera(float frameTime);
     };
 

@@ -13,6 +13,7 @@ namespace MapEntities {
 namespace Tools {
 
 
+    // Tool for painting tiles
     class PaintTool: public Tools::Tool {
 
     public:

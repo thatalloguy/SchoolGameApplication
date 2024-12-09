@@ -16,6 +16,8 @@ namespace MapEditor {
 
 namespace Tools {
 
+    // A tool is a simple virtual class
+    // Tools are for doing logic inside of the editor
     class Tool {
 
     public:
@@ -27,16 +29,20 @@ namespace Tools {
 
     };
 
+    // Mouse tools are like painting or erasing
+    // GeneralTools are ment for tools that have something like an editing window
     enum class ToolType: unsigned int {
         MouseTool = 0,
         GeneralTool = 2
     };
 
+    // Basic struct with everything about a Tool that we need.
     struct ToolInfo {
         Tyche::STL::string name = "Tool";
         ToolType type = ToolType::GeneralTool;
         Tyche::Input::Key hotkey = Tyche::Input::E;
 
+        //Note: the editor itself deletes this instance.
         Tool* instance = nullptr;
     };
 }

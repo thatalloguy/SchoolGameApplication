@@ -6,7 +6,7 @@
 
 namespace MapEntities {
 
-
+// Just a simple Entity to draw a sprite at the mouse position
 class Cursor: public Tyche::Entity {
 
 public:
