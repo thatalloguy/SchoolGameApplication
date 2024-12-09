@@ -1,6 +1,11 @@
 //
 // Created by allos on 12/5/2024.
 //
+
+#ifndef CAMERA_SPEED
+#define CAMERA_SPEED 300
+#endif
+
 #pragma once
 
 #include "../tools/Tool.h"
@@ -26,6 +31,7 @@ namespace MapEditor {
 
         Tyche::Tile& getCursor();
         Tyche::Window& getWindow();
+        Tyche::Camera& getCamera();
 
         void placeTile(Vector2 pos, Tyche::Tile* tile);
         void removeTile(Vector2 pos);
@@ -54,6 +60,8 @@ namespace MapEditor {
         void deinitializeImGui();
         void newImGuiFrame();
         void renderImGuiFrame();
+
+        void updateCamera(float frameTime);
     };
 
 }

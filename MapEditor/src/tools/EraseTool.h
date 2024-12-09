@@ -22,6 +22,7 @@ namespace Tools {
         MapEditor::App* _editor = nullptr;
         Tyche::Tile* _cursor = nullptr;
         Tyche::Window* _window = nullptr;
+        Tyche::Camera* _camera = nullptr;
 
         Vector2 last_snapped_position{0, 0};
     };

@@ -12,6 +12,7 @@ void Tools::PaintTool::initialize(MapEditor::App& editor_instance) {
     _window = &_editor->getWindow();
 
     _cursor = &editor_instance.getCursor();
+    _camera = &editor_instance.getCamera();
 }
 
 void Tools::PaintTool::update() {
@@ -19,7 +20,7 @@ void Tools::PaintTool::update() {
     _cursor->texture_pos = {0, 0};
     _cursor->scale = {100, 100};
 
-    auto mouse_pos = Tyche::Mouse::getPosition();
+    auto mouse_pos =  Tyche::Mouse::getPosition() - _camera->getPosition();
 
     auto snapped_pos = Vector2{floor(mouse_pos[0] / GRID_SIZE), floor(mouse_pos[1] / GRID_SIZE)} * GRID_SIZE;
 

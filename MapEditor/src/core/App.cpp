@@ -63,15 +63,39 @@ void MapEditor::App::init() {
 
     initializeTools();
 
+
+    //Setup inputs
+    Tyche::Input::addAction("camera-left");
+    Tyche::Input::addAction("camera-right");
+    Tyche::Input::addAction("camera-up");
+    Tyche::Input::addAction("camera-down");
+
+    Tyche::Input::addKey("camera-left", Tyche::Input::A);
+    Tyche::Input::addKey("camera-right", Tyche::Input::D);
+    Tyche::Input::addKey("camera-up", Tyche::Input::W);
+    Tyche::Input::addKey("camera-down", Tyche::Input::S);
 }
 
 void MapEditor::App::run() {
+
+
+    auto currentTime = std::chrono::high_resolution_clock ::now();
+
     while (!_window.shouldWindowClose()) {
+
+        auto newTime = std::chrono::high_resolution_clock::now();
+        double frameTime = (double) std::chrono::duration_cast<std::chrono::microseconds>(newTime - currentTime).count() / 100000;
+        currentTime = newTime;
+
+        // If we dont cap it, then the physics engine will explode since instead of correcting the velocities we are enlarging them.
+        if (frameTime >= 0.166)
+            frameTime = 0.166;
 
         _window.update();
         checkForToolHotkeys();
 
         _camera.setViewportSize(_window.getWindowSize());
+        updateCamera(frameTime);
         _camera.update();
 
         _tile_renderer.renderTiles(_camera);
@@ -147,6 +171,10 @@ Tyche::Tile& MapEditor::App::getCursor() {
 
 Tyche::Window& MapEditor::App::getWindow() {
     return _window;
+}
+
+Tyche::Camera& MapEditor::App::getCamera() {
+    return _camera;
 }
 
 void MapEditor::App::placeTile(Vector2 pos, Tyche::Tile* tile) {
@@ -239,4 +267,29 @@ void MapEditor::App::renderImGuiFrame() {
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void MapEditor::App::updateCamera(float frameTime) {
+
+    auto out_vec = _camera.getPosition();
+
+    if (Tyche::Input::isActionPressed("camera-left")) {
+        out_vec += {CAMERA_SPEED * frameTime, 0};
+    }
+
+
+    if (Tyche::Input::isActionPressed("camera-right")) {
+        out_vec += {-CAMERA_SPEED  * frameTime, 0};
+    }
+
+    if (Tyche::Input::isActionPressed("camera-up")) {
+        out_vec += {0, CAMERA_SPEED * frameTime};
+    }
+
+
+    if (Tyche::Input::isActionPressed("camera-down")) {
+        out_vec += {0, -CAMERA_SPEED * frameTime};
+    }
+
+    _camera.setPosition(out_vec);
 }
