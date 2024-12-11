@@ -25,10 +25,10 @@ void Tools::CollisionTool::update() {
     auto mouse_pos =  Tyche::Mouse::getPosition() - _camera->getPosition();
     auto snapped_pos = Vector2{floor(mouse_pos[0] / GRID_SIZE), floor(mouse_pos[1] / GRID_SIZE)} * GRID_SIZE;
 
-    _cursor->position = snapped_pos;
+    _cursor->position = mouse_pos;
     if (Tyche::Mouse::isMouseButtonPressed(Tyche::Mouse::LEFT)) {
         if (!is_holding) {
-            _debug_box.setBeginPos(snapped_pos);
+            _debug_box.setBeginPos(mouse_pos);
         }
 
         _debug_box.setEndPos(snapped_pos);

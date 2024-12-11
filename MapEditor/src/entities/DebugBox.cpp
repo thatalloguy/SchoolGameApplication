@@ -14,10 +14,8 @@ void MapEntities::DebugBox::initialize() {
 }
 
 void MapEntities::DebugBox::update() {
-    _position = Vector2{_AABB[0], _AABB[1]} + ((Vector2{_AABB[2], _AABB[3]} + Vector2{_AABB[0], _AABB[1]}) / 2);
-    _scale =   Vector2{_AABB[0], _AABB[1]} - Vector2{_AABB[2], _AABB[3]};
-    printf(" X %f Y %f \n", _position[0], _position[1]);
-    printf(" W %f H %f \n", _scale[0], _scale[1]);
+    _position = Vector2{_AABB[0], _AABB[1]} + ((Vector2{_AABB[2], _AABB[3]} - Vector2{_AABB[0], _AABB[1]}) / 2);
+    _scale =  (Vector2{_AABB[2], _AABB[3]} - Vector2{_AABB[0], _AABB[1]}) / 2;
 }
 
 void MapEntities::DebugBox::prepareRendering() {
