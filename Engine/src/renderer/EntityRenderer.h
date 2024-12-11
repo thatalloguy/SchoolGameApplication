@@ -35,6 +35,7 @@ namespace Tyche {
         void clearEntities();
         // Calls the prepareRendering function on every entity and renders them
         void renderEntities(const Camera& camera);
+        void renderEntity(const Camera& camera, Entity* entity);
 
 
         void setTextureSize(int new_texture_size);

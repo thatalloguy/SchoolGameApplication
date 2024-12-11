@@ -12,6 +12,7 @@
 #include "../tools/PaintTool.h"
 #include "core/Mouse.h"
 #include "core/IO.h"
+#include "../tools/CollisionTool.h"
 
 
 #ifdef _WIN32
@@ -57,8 +58,16 @@ void MapEditor::App::init() {
         new Tools::EraseTool,
     };
 
+    Tools::ToolInfo* collisionTool = new Tools::ToolInfo{
+            "Collision",
+            Tools::ToolType::MouseTool,
+            Tyche::Input::Key::C,
+            new Tools::CollisionTool,
+    };
+
     registerNewTool(paintTool);
     registerNewTool(eraseTool);
+    registerNewTool(collisionTool);
 
 
     // Painting is the default.
@@ -68,6 +77,7 @@ void MapEditor::App::init() {
     initializeTools();
 
     _tile_renderer.initialize({});
+    _entity_renderer.initialize({});
 
 
 
@@ -110,6 +120,7 @@ void MapEditor::App::run() {
 
         // Render all of the tiles first
         _tile_renderer.renderTiles(_camera);
+        _entity_renderer.renderEntities(_camera);
         // Render the cursor seperate so its always in front of the tiles.
         _tile_renderer.renderTile(_camera, _cursor);
 
@@ -312,4 +323,8 @@ void MapEditor::App::updateCamera(float frameTime) {
 
     _camera.setPosition(out_vec);
 
+}
+
+Tyche::EntityRenderer &MapEditor::App::getEntityRenderer() {
+    return _entity_renderer;
 }

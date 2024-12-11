@@ -12,6 +12,7 @@
 #include "core/Window.h"
 #include "renderer/TileRenderer.h"
 #include "stl/vector.h"
+#include "renderer/EntityRenderer.h"
 
 namespace MapEditor {
 
@@ -35,6 +36,7 @@ namespace MapEditor {
         Tyche::Tile& getCursor();
         Tyche::Window& getWindow();
         Tyche::Camera& getCamera();
+        Tyche::EntityRenderer& getEntityRenderer();
 
         //Places a tile and adds it to the current room
         void placeTile(Vector2 pos, Tyche::Tile* tile);
@@ -44,6 +46,7 @@ namespace MapEditor {
     private:
         Tyche::Window _window{{{1280, 720}, "TombCrawler - Map Editor"}};
         Tyche::TileRenderer _tile_renderer{};
+        Tyche::EntityRenderer _entity_renderer{};
         Tyche::Camera _camera{{1280, 720}};
 
         vector<Tools::ToolInfo*> _tools;

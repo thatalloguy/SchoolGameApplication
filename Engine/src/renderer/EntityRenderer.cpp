@@ -85,6 +85,35 @@ void Tyche::EntityRenderer::renderEntities(const Tyche::Camera &camera) {
     }
 }
 
+
+void Tyche::EntityRenderer::renderEntity(const Tyche::Camera &camera, Tyche::Entity *entity_ptr) {
+
+    Tyche::Entity entity = *entity_ptr;
+
+    spdlog::info("Rendering entities {}", entity.getScale().getY());
+    //upload our camera projection to the shader
+    _entity_shader.bind();
+    _entity_shader.setMatrix4("projection", camera.getMatrix().value_ptr());
+
+    //upload our texture + our texture info to the shader
+    _texture_atlas.bind();
+    _entity_shader.setInt("texture_atlas", 0);
+    _entity_shader.setVector2("grid", _grid.value_ptr());
+
+        //Bind the mesh
+    glBindVertexArray(_mesh.VAO);
+
+    // prepare the entity for rendering
+    entity.prepareRendering();
+
+    _entity_shader.setMatrix4("model", entity.getTransform().value_ptr());
+    _entity_shader.setVector2("texture_slot", entity.getSprite().value_ptr());
+
+    //Draw the mesh
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+}
+
 void Tyche::EntityRenderer::setTextureSize(int new_texture_size) {
     _grid.setX((float) new_texture_size);
 }
@@ -106,3 +135,4 @@ void Tyche::EntityRenderer::loadTextureAtlas(const STL::string &path) {
 
     _texture_atlas.init(atlas_texture_info);
 }
+
