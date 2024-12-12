@@ -31,8 +31,6 @@ namespace Tyche {
     private:
         Vector2 _begin;
         Vector2 _end;
-
-        GPUMesh _line_mesh;
     };
 
     class PointDrawCommand: public DrawCommand {

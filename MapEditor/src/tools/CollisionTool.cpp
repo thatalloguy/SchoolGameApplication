@@ -9,12 +9,10 @@
 
 void Tools::CollisionTool::initialize(MapEditor::App& editor_instance) {
     _editor = &editor_instance;
-    _entity_renderer = &_editor->getEntityRenderer();
+    _debug_renderer = &_editor->getDebugRenderer();
 
     _cursor = &editor_instance.getCursor();
     _camera = &editor_instance.getCamera();
-
-    _debug_box.initialize();
 }
 
 void Tools::CollisionTool::update() {
@@ -28,17 +26,19 @@ void Tools::CollisionTool::update() {
     _cursor->position = mouse_pos;
     if (Tyche::Mouse::isMouseButtonPressed(Tyche::Mouse::LEFT)) {
         if (!is_holding) {
-            _debug_box.setBeginPos(mouse_pos);
+            AABB[0] = snapped_pos[0];
+            AABB[1] = snapped_pos[1];
         }
 
-        _debug_box.setEndPos(snapped_pos);
+        AABB[2] = snapped_pos[0];
+        AABB[3] = snapped_pos[1];
+
         is_holding = true;
     } else {
         is_holding = false;
     }
-    _debug_box.update();
 
-    _entity_renderer->renderEntity(*_camera, &_debug_box);
+    _debug_renderer->renderBox(AABB);
 }
 
 void Tools::CollisionTool::onSwitch() {

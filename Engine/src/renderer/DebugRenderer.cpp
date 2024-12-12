@@ -8,28 +8,13 @@
 namespace {
 
     GPUMesh _quad_mesh;
+    GPUMesh _line_mesh;
 
 }
 
 Tyche::LineDrawCommand::LineDrawCommand(const Vector2& begin, const Vector2& end) {
-
-    float line_verts[] = {
-        begin[0], begin[1],  0.0f, 1.0f,
-        end[0], end[1],  0.0f, 0.0f
-    };
-
-    //Setup a reusable quad mesh;
-    glGenVertexArrays(1, &_line_mesh.VAO);
-    glGenBuffers(1, &_line_mesh.VBO);
-
-    glBindVertexArray(_line_mesh.VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, _line_mesh.VBO);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(line_verts), &line_verts, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    _begin = begin;
+    _end = end;
 }
 
 void Tyche::LineDrawCommand::render(Shader& shader, Camera& camera) {
@@ -40,10 +25,22 @@ void Tyche::LineDrawCommand::render(Shader& shader, Camera& camera) {
     shader.setMatrix4("projection", camera.getMatrix().value_ptr());
     shader.setMatrix4("model", transform.value_ptr());
 
+
+    float line_verts[] = {
+        _begin[0], _begin[1],  0.0f, 1.0f,
+        _end[0], _end[1],  0.0f, 0.0f
+    };
+
+    //Setup a reusable quad mesh;
+
+    //    glBindVertexArray(_line_mesh.VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, _line_mesh.VBO);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(line_verts), &line_verts, GL_DYNAMIC_DRAW);
+
     glBindVertexArray(_line_mesh.VAO);
     glDrawArrays(GL_LINES, 0, 2);
 
-    glDeleteVertexArrays(1, &_line_mesh.VAO);
 }
 
 Tyche::PointDrawCommand::PointDrawCommand(const Vector2& position) {
@@ -90,11 +87,23 @@ Tyche::DebugRenderer::DebugRenderer() {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
 
+    glGenVertexArrays(1, &_line_mesh.VAO);
+    glGenBuffers(1, &_line_mesh.VBO);
+
+    glBindVertexArray(_line_mesh.VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, _line_mesh.VBO);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
     _queue.reserve(10);
 }
 
 Tyche::DebugRenderer::~DebugRenderer() {
     glDeleteVertexArrays(1, &_quad_mesh.VAO);
+    glDeleteVertexArrays(1, &_line_mesh.VAO);
 }
 
 void Tyche::DebugRenderer::renderLine(const Vector2& begin, const Vector2& end) {
@@ -122,7 +131,7 @@ void Tyche::DebugRenderer::renderBox(const Vector4& AABB) {
 }
 
 void Tyche::DebugRenderer::render(Camera& camera) {
-    for (auto command: _queue) {
+    for (DrawCommand* command: _queue) {
         command->render(_debug_shader, camera);
 
         delete command;

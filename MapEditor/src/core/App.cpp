@@ -124,8 +124,6 @@ void MapEditor::App::run() {
         // Render the cursor seperate so its always in front of the tiles.
         _tile_renderer.renderTile(_camera, _cursor);
 
-        _debug_renderer.renderBox({100, 100, 400, 400});
-
         _debug_renderer.render(_camera);
 
         updateCurrentTool();
@@ -330,4 +328,8 @@ void MapEditor::App::updateCamera(float frameTime) {
 
 Tyche::EntityRenderer &MapEditor::App::getEntityRenderer() {
     return _entity_renderer;
+}
+
+Tyche::DebugRenderer& MapEditor::App::getDebugRenderer() {
+    return _debug_renderer;
 }

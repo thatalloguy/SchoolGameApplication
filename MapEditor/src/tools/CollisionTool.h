@@ -7,6 +7,7 @@
 #include "Tool.h"
 #include "renderer/TileRenderer.h"
 #include "../entities/DebugBox.h"
+#include "renderer/DebugRenderer.h"
 #include "renderer/EntityRenderer.h"
 
 
@@ -23,12 +24,13 @@ namespace Tools {
     private:
         MapEditor::App* _editor = nullptr;
         Tyche::Tile* _cursor = nullptr;
-        Tyche::EntityRenderer* _entity_renderer = nullptr;
-        MapEntities::DebugBox _debug_box{};
+        Tyche::DebugRenderer* _debug_renderer = nullptr;
+
         Tyche::Camera* _camera = nullptr;
 
         bool is_holding = false;
 
+        Vector4 AABB{0, 0, 0, 0};
         Vector2 last_snapped_position{0, 0};
     };
 

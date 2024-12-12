@@ -38,6 +38,7 @@ namespace MapEditor {
         Tyche::Window& getWindow();
         Tyche::Camera& getCamera();
         Tyche::EntityRenderer& getEntityRenderer();
+        Tyche::DebugRenderer& getDebugRenderer();
 
         //Places a tile and adds it to the current room
         void placeTile(Vector2 pos, Tyche::Tile* tile);
