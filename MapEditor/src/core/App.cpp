@@ -124,7 +124,7 @@ void MapEditor::App::run() {
         // Render the cursor seperate so its always in front of the tiles.
         _tile_renderer.renderTile(_camera, _cursor);
 
-        for (auto collider: _current_room._colliders) {
+        for (auto collider: _current_room.colliders) {
             _debug_renderer.renderBox(collider);
         }
 
@@ -146,15 +146,11 @@ void MapEditor::App::run() {
                 ImGui::MenuItem("New Room");
 
                 if (ImGui::MenuItem("Save Room")) {
-                    Tyche::IO::saveVectorToFile<Tyche::Tile*, Tyche::Tile>("../../../test.room", _current_room.tiles);
+                    saveRoomToDisk("../../../test.room");
                 }
 
                 if (ImGui::MenuItem("Load Room")) {
-                    Tyche::IO::loadVectorFromFile<Tyche::Tile*, Tyche::Tile>("../../../test.room", _current_room.tiles);
-
-                    for (auto tile : _current_room.tiles) {
-                        _tile_renderer.addTile(*tile);
-                    }
+                    loadRoomFromDisk("../../../test.room");
                 }
 
                 ImGui::EndMenu();
@@ -230,14 +226,14 @@ void MapEditor::App::removeTile(Vector2 pos) {
 }
 
 void MapEditor::App::addCollider(Vector4& collider) {
-    _current_room._colliders.push_back(collider);
+    _current_room.colliders.push_back(collider);
 }
 
 void MapEditor::App::deleteCollider(const Vector2& begin_position) {
     int i = 0;
-    for (auto collider : _current_room._colliders) {
+    for (auto collider : _current_room.colliders) {
         if (collider[0] == begin_position[0] && collider[1] == begin_position[1]) {
-            _current_room._colliders.remove(i);
+            _current_room.colliders.remove(i);
             return;
         }
         i++;
@@ -343,6 +339,32 @@ void MapEditor::App::updateCamera(float frameTime) {
 
     _camera.setPosition(out_vec);
 
+}
+
+void MapEditor::App::saveRoomToDisk(const char* path) {
+    FILE* file = fopen(path, "w");
+
+    Tyche::IO::saveVectorToFile<Tyche::Tile*, Tyche::Tile>(path, _current_room.tiles, file, false);
+    Tyche::IO::saveVectorToFile<Vector4>(path, _current_room.colliders, file, false);
+
+    spdlog::info("Saved Room to disk: {}", path);
+
+    fclose(file);
+}
+
+void MapEditor::App::loadRoomFromDisk(const char* path) {
+    FILE* file = fopen(path, "r");
+
+    Tyche::IO::loadVectorFromFile<Tyche::Tile*, Tyche::Tile>(path, _current_room.tiles, file, false);
+    Tyche::IO::loadVectorFromFile<Vector4>(path, _current_room.colliders, file, false);
+
+    for (auto tile : _current_room.tiles) {
+        _tile_renderer.addTile(*tile);
+    }
+
+    spdlog::info("Loaded Room from disk: {}", path);
+
+    fclose(file);
 }
 
 Tyche::EntityRenderer &MapEditor::App::getEntityRenderer() {

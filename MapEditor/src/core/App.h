@@ -21,7 +21,7 @@ namespace MapEditor {
     // NOTE: every ptr in the internal vector gets cleaned up by the manager.
     struct Room {
         vector<Tyche::Tile*> tiles;
-        vector<Tyche::Math::Vector4> _colliders;
+        vector<Vector4> colliders;
     };
 
 
@@ -82,6 +82,10 @@ namespace MapEditor {
         //misc funcs
         void displayLoadMenu();
         void updateCamera(float frameTime);
+
+        //Serialization
+        void saveRoomToDisk(const char* path);
+        void loadRoomFromDisk(const char* path);
     };
 
 }
