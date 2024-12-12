@@ -124,6 +124,10 @@ void MapEditor::App::run() {
         // Render the cursor seperate so its always in front of the tiles.
         _tile_renderer.renderTile(_camera, _cursor);
 
+        for (auto collider: _current_room._colliders) {
+            _debug_renderer.renderBox(collider);
+        }
+
         _debug_renderer.render(_camera);
 
         updateCurrentTool();
@@ -223,6 +227,21 @@ void MapEditor::App::removeTile(Vector2 pos) {
          }
      }
 
+}
+
+void MapEditor::App::addCollider(Vector4& collider) {
+    _current_room._colliders.push_back(collider);
+}
+
+void MapEditor::App::deleteCollider(const Vector2& begin_position) {
+    int i = 0;
+    for (auto collider : _current_room._colliders) {
+        if (collider[0] == begin_position[0] && collider[1] == begin_position[1]) {
+            _current_room._colliders.remove(i);
+            return;
+        }
+        i++;
+    }
 }
 
 

@@ -21,6 +21,7 @@ namespace MapEditor {
     // NOTE: every ptr in the internal vector gets cleaned up by the manager.
     struct Room {
         vector<Tyche::Tile*> tiles;
+        vector<Tyche::Math::Vector4> _colliders;
     };
 
 
@@ -44,6 +45,9 @@ namespace MapEditor {
         void placeTile(Vector2 pos, Tyche::Tile* tile);
         //Deletes the tile with this position both from memory and internal buffers.
         void removeTile(Vector2 pos);
+
+        void addCollider(Vector4& collider);
+        void deleteCollider(const Vector2& begin_position);
 
     private:
         Tyche::Window _window{{{1280, 720}, "TombCrawler - Map Editor"}};

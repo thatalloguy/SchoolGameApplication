@@ -16,7 +16,11 @@ void Tools::CollisionTool::initialize(MapEditor::App& editor_instance) {
 }
 
 void Tools::CollisionTool::update() {
-    _cursor->texture_pos = {2, 3};
+    if (!Tyche::Input::isKeyPressed(Tyche::Input::LSHIFT)) {
+        _cursor->texture_pos = {2, 3};
+    } else {
+        _cursor->texture_pos = {3, 2};
+    }
     _cursor->scale = {32, 32};
 
     //Get the mouse position and then snap it to the grid.
@@ -24,7 +28,7 @@ void Tools::CollisionTool::update() {
     auto snapped_pos = Vector2{floor(mouse_pos[0] / GRID_SIZE), floor(mouse_pos[1] / GRID_SIZE)} * GRID_SIZE;
 
     _cursor->position = mouse_pos;
-    if (Tyche::Mouse::isMouseButtonPressed(Tyche::Mouse::LEFT)) {
+    if (Tyche::Mouse::isMouseButtonPressed(Tyche::Mouse::LEFT) ) {
         if (!is_holding) {
             AABB[0] = snapped_pos[0];
             AABB[1] = snapped_pos[1];
@@ -34,11 +38,25 @@ void Tools::CollisionTool::update() {
         AABB[3] = snapped_pos[1];
 
         is_holding = true;
+        _debug_renderer->renderBox(AABB);
     } else {
         is_holding = false;
     }
 
-    _debug_renderer->renderBox(AABB);
+
+    if (Tyche::Input::isKeyPressed(Tyche::Input::ENTER) && !has_builded_last_frame) {
+        //build
+
+        if (_cursor->texture_pos[0] == 2) {
+            _editor->addCollider(AABB);
+        } else {
+            _editor->deleteCollider(snapped_pos);
+        }
+
+        has_builded_last_frame = true;
+    } if (!Tyche::Input::isKeyPressed(Tyche::Input::ENTER)) {
+        has_builded_last_frame = false;
+    }
 }
 
 void Tools::CollisionTool::onSwitch() {

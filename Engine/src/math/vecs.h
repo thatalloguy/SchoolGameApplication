@@ -117,6 +117,8 @@ namespace Tyche::Math {
             _[3] = w;
         };
 
+        Vector4() = default;
+
         //Our internal buffer.
         float _[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 
