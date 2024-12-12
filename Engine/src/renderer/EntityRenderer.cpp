@@ -90,7 +90,6 @@ void Tyche::EntityRenderer::renderEntity(const Tyche::Camera &camera, Tyche::Ent
 
     Tyche::Entity entity = *entity_ptr;
 
-    spdlog::info("Rendering entities {}", entity.getScale().getY());
     //upload our camera projection to the shader
     _entity_shader.bind();
     _entity_shader.setMatrix4("projection", camera.getMatrix().value_ptr());

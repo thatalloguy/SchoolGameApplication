@@ -4,6 +4,7 @@
 
 #ifndef CAMERA_SPEED
 #define CAMERA_SPEED 200
+#include "renderer/DebugRenderer.h"
 #endif
 
 #pragma once
@@ -47,6 +48,7 @@ namespace MapEditor {
         Tyche::Window _window{{{1280, 720}, "TombCrawler - Map Editor"}};
         Tyche::TileRenderer _tile_renderer{};
         Tyche::EntityRenderer _entity_renderer{};
+        Tyche::DebugRenderer _debug_renderer{};
         Tyche::Camera _camera{{1280, 720}};
 
         vector<Tools::ToolInfo*> _tools;

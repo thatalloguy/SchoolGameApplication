@@ -75,7 +75,6 @@ namespace Tyche::STL {
             // no need if its the smaller or same size.
             if (amount <= maxSize) return;
 
-
             //allocate a new buffer with the desired size.
             T* temp = new T[amount];
 
@@ -134,15 +133,7 @@ namespace Tyche::STL {
 
         /// clears the buffer
         void clear() {
-
-
-            if (buf != nullptr) {
-                delete[] buf;
-            }
-
-            maxSize = 0;
             size = 0;
-
         };
 
         /// removes the item at the index
