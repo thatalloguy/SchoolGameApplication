@@ -106,12 +106,16 @@ void Tyche::PhysicsHandler::resolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
 
 }
 
-Tyche::World::World(Tyche::Math::Vector2 gravity) : _gravity(gravity) {
+Tyche::World::World(bool handle_memory, Tyche::Math::Vector2 gravity) : _gravity(gravity), _should_handle_memory(handle_memory) {
 
 }
 
 Tyche::World::~World() {
-
+    if (_should_handle_memory) {
+        for (auto body: _bodies) {
+            delete body;
+        }
+    }
 }
 
 Tyche::PhysicsID Tyche::World::addRigidBody(Tyche::PhysicsObject *object) {
@@ -144,6 +148,9 @@ Tyche::PhysicsID Tyche::World::addStaticBody(Tyche::PhysicsObject *object) {
 void Tyche::World::removeBody(Tyche::PhysicsID id) {
     for (int i=0; i<_bodies.length(); i++) {
         if (_bodies[i]->getID() == id) {
+            if (_should_handle_memory) {
+                delete _bodies[i];
+            }
             _bodies.remove(i);
         }
     }

@@ -73,7 +73,14 @@ void Tyche::TileRenderer::renderTiles(const Camera& camera) {
     _tile_shader.setInt("texture_atlas", 0);
     _tile_shader.setVector2("grid", _grid.value_ptr());
 
-    for (auto tile_ptr: _tiles) {
+    for (int i=0; i<_tiles.length(); i++) {
+        auto tile_ptr = _tiles[i];
+
+        //Remove any invalid tile from out queue.
+        if (tile_ptr == nullptr) {
+            _tiles.remove(i);
+            break;
+        }
 
         auto tile = *tile_ptr;
         //Bind the mesh

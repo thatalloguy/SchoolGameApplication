@@ -25,9 +25,10 @@ namespace Tyche {
     class PhysicsObject {
 
     public:
-        // 2 different contructors so that we also have the option to set the data manually with having to do at first.
         PhysicsObject() = default;
         PhysicsObject(const Math::Vector2& position, const Math::Vector2& init_vel, float mass = 1.0f); //init_vel = Initial Velocity
+        PhysicsObject(Math::Vector4& AABB, ObjectType type);
+
         ~PhysicsObject() = default;
 
         // Applies gravity to our velocity and updates our position.

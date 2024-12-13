@@ -36,7 +36,7 @@ namespace Tyche {
     class World {
     public:
         // The default gravity of earth is 9.7N
-        World(Math::Vector2 gravity = {0, 9.7f});
+        World(bool handle_memory=false, Math::Vector2 gravity = {0, 9.7f});
         ~World();
 
         PhysicsID addRigidBody(PhysicsObject* object);
@@ -56,6 +56,8 @@ namespace Tyche {
 
         unsigned int _id_count = 0;
         Math::Vector2 _gravity{0, 9.7f};
+
+        bool _should_handle_memory = false;
 
 
     };

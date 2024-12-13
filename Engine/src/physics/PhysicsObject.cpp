@@ -5,7 +5,17 @@
 #include "PhysicsObject.h"
 
 Tyche::PhysicsObject::PhysicsObject(const Tyche::Math::Vector2 &position, const Tyche::Math::Vector2 &init_vel,
-                                    float mass): _position(position), _velocity(init_vel), _mass(mass) {};
+                                    float mass): _position(position), _velocity(init_vel), _mass(mass) {}
+
+Tyche::PhysicsObject::PhysicsObject(Tyche::Math::Vector4& AABB, ObjectType type) {
+
+    _position = {AABB[0] + ((AABB[2] - AABB[0] ) / 2),AABB[1] + ((AABB[3] - AABB[1]) / 2)};
+
+    _size.setX(AABB[2] - AABB[0]);
+    _size.setY(AABB[3] - AABB[1]);
+
+    _type = type;
+}
 
 void Tyche::PhysicsObject::step(float delta_time, Math::Vector2 gravity) {
 
