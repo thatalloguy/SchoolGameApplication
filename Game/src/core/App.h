@@ -3,10 +3,10 @@
 //
 #pragma once
 
+#include "RoomManager.h"
 #include "core/Window.h"
 #include "renderer/TileRenderer.h"
 #include "renderer/EntityRenderer.h"
-#include "physics/PhysicsObject.h"
 #include "physics/PhysicsHandler.h"
 #include "audio/AudioDevice.h"
 
@@ -34,13 +34,14 @@ namespace Game {
         Tyche::Window* _window;
         Tyche::TileRenderer _tile_renderer{};
         Tyche::EntityRenderer _entity_renderer{};
+        Tyche::DebugRenderer _debug_renderer{};
 
         Tyche::AudioEngine _audio_engine;
 
         Tyche::Camera _camera{};
 
-        Tyche::PhysicsObject _object2{};
-        Tyche::World _world{};
+        Tyche::World* _world{};
+        RoomManager* _room_manager = nullptr;
     };
 
 }

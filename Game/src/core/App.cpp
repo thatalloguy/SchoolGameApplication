@@ -7,13 +7,12 @@
 #include "../entities/Player.h"
 #include "core/Input.h"
 
+//Global constants
 namespace {
     Entities::Player player;
 }
 
 Game::App::App(int argc, char **argv) {
-
-    processArgs(argc, argv);
 
 
 
@@ -52,16 +51,16 @@ Game::App::App(int argc, char **argv) {
 
     _entity_renderer.addEntity(&player);
 
-    _object2.setPosition({100, 700});
-    _object2.setAABB(1200, 200);
+    _room_manager = new RoomManager(_tile_renderer, _debug_renderer);
 
+    _world = _room_manager->getWorld();
 
-
-    _world.addRigidBody(&player.getBody());
-    _world.addStaticBody(&_object2);
+    _world->addRigidBody(&player.getBody());
 
     _audio_engine.Init();
 
+
+    processArgs(argc, argv);
 }
 
 Game::App::~App() {
@@ -86,8 +85,8 @@ void Game::App::run() {
 
         _window->update();
 
-       _world.step(frameTime);
-
+        _world->step(frameTime);
+        _world->renderBodies(_debug_renderer);
 
         player.update();
 

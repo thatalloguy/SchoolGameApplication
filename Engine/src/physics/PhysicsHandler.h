@@ -6,6 +6,7 @@
 #include "math/vecs.h"
 #include "PhysicsObject.h"
 #include "stl/vector.h"
+#include "renderer/DebugRenderer.h"
 
 namespace Tyche {
 
@@ -46,6 +47,8 @@ namespace Tyche {
 
         // Updates all of the bodies in the world
         void step(float delta_time);
+
+        void renderBodies(Tyche::DebugRenderer& debug_renderer);
 
         // getters and setters
         Math::Vector2 getGravity();

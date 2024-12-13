@@ -3,10 +3,8 @@
 //
 
 #include <cmath>
-#include <cstdio>
 #include "PhysicsHandler.h"
 
-#include "spdlog/spdlog.h"
 
 bool Tyche::PhysicsHandler::collision(const Tyche::AABB &a, const Tyche::AABB &b) {
 
@@ -180,6 +178,12 @@ void Tyche::World::step(float delta_time) {
                 PhysicsHandler::resolveCollision(*a, *b);
             }
         }
+    }
+}
+
+void Tyche::World::renderBodies(Tyche::DebugRenderer& debug_renderer) {
+    for (auto body: _bodies) {
+        debug_renderer.renderBox(body->getAABB());
     }
 }
 
