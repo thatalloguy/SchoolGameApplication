@@ -29,6 +29,8 @@ Game::App::App(int argc, char **argv) {
     Tyche::EntityRendererCreationInfo entity_renderer_info {};
     _entity_renderer.initialize(entity_renderer_info);
 
+    _debug_renderer = new Tyche::DebugRenderer{};
+
 
     Tyche::Tile floor{
         .position{100, 700},
@@ -51,12 +53,13 @@ Game::App::App(int argc, char **argv) {
 
     _entity_renderer.addEntity(&player);
 
-    _room_manager = new RoomManager(_tile_renderer, _debug_renderer);
+    _room_manager = new RoomManager(_tile_renderer, *_debug_renderer);
 
     _world = _room_manager->getWorld();
 
     _world->addRigidBody(&player.getBody());
 
+    _room_manager->loadRoom("../../../test.room");
     _audio_engine.Init();
 
 
@@ -86,7 +89,7 @@ void Game::App::run() {
         _window->update();
 
         _world->step(frameTime);
-        _world->renderBodies(_debug_renderer);
+        _world->renderBodies(*_debug_renderer);
 
         player.update();
 
@@ -95,12 +98,15 @@ void Game::App::run() {
 
         _tile_renderer.renderTiles(_camera);
         _entity_renderer.renderEntities(_camera);
+        _debug_renderer->render(_camera);
 
 
 
 
     }
 
+
+    delete _debug_renderer;
 }
 
 void Game::App::processArgs(int argc, char** argv) {

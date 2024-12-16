@@ -10,10 +10,11 @@ void Entities::Player::initialize() {
     _sprite = {0, 0};
 
     _position = {100, 100};
-    _scale = {100, 100};
+    _scale = {50, 50};
 
-    _collision_body.setPosition(_position);
-    _collision_body.setAABB(150, 200);
+    Vector4 collisionBody{100, -75, 0, 25};
+
+    _collision_body = Tyche::PhysicsObject{collisionBody, Tyche::ObjectType::Rigid};
 }
 
 void Entities::Player::update() {
@@ -22,12 +23,12 @@ void Entities::Player::update() {
     if (Tyche::Input::isActionPressed("left")) {
         _collision_body.setVelocity(Vector2{40, _collision_body.getVelocity().getY()});
         //Unflip the sprite
-        _scale.setX(100);
+        _scale.setX(50);
     }
     if (Tyche::Input::isActionPressed("right")) {
         _collision_body.setVelocity(Vector2{-40, _collision_body.getVelocity().getY()});
         //Flip the sprite
-        _scale.setX(-100);
+        _scale.setX(-50);
     }
 
     //Check if we should jump

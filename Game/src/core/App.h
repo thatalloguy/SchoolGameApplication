@@ -34,7 +34,7 @@ namespace Game {
         Tyche::Window* _window;
         Tyche::TileRenderer _tile_renderer{};
         Tyche::EntityRenderer _entity_renderer{};
-        Tyche::DebugRenderer _debug_renderer{};
+        Tyche::DebugRenderer* _debug_renderer = nullptr;
 
         Tyche::AudioEngine _audio_engine;
 

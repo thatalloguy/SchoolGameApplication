@@ -10,6 +10,7 @@ file(GLOB_RECURSE GAME_SOURCE
 add_executable(tyche-game
         src/main.cpp
         ${GAME_SOURCE}
+        ${IMGUI_SOURCE}
 )
 
 

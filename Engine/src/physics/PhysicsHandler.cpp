@@ -98,7 +98,6 @@ void Tyche::PhysicsHandler::resolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
 
     a.setCorrection(correction);
     b.setCorrection(-correction);
-
     a.setCollisionInfo({true, normal});
     b.setCollisionInfo({true, normal});
 

@@ -9,7 +9,7 @@ Tyche::PhysicsObject::PhysicsObject(const Tyche::Math::Vector2 &position, const 
 
 Tyche::PhysicsObject::PhysicsObject(Tyche::Math::Vector4& AABB, ObjectType type) {
 
-    _position = {AABB[0] + ((AABB[2] - AABB[0] ) / 2),AABB[1] + ((AABB[3] - AABB[1]) / 2)};
+    _position = {AABB[0], AABB[1]};
 
     _size.setX(AABB[2] - AABB[0]);
     _size.setY(AABB[3] - AABB[1]);
@@ -64,6 +64,7 @@ Tyche::Math::Vector4 Tyche::PhysicsObject::getAABB() {
     // |                    |
     // ([0],[3]) ------  ([2],[3])
 
+    if (static)
     _aabb[0] = _position.getX();
     _aabb[1] = _position.getY();
 
