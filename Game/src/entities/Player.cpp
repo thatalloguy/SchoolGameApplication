@@ -9,7 +9,7 @@
 void Entities::Player::initialize() {
     _sprite = {0, 0};
 
-    _position = {100, 100};
+    _position = {300, 100};
     _scale = {50, 50};
 
     Vector4 collisionBody{100, -75, 0, 25};
@@ -19,25 +19,28 @@ void Entities::Player::initialize() {
 
 void Entities::Player::update() {
     _position = _collision_body.getPosition();
+    _collision_body.setAABB({_position[0] - 50, _position[1] - 50, _position[0] + 50, _position[1] + 50});
 
-    if (Tyche::Input::isActionPressed("left")) {
+    auto collision_info = _collision_body.getCollisionInfo();
+
+
+    if (collision_info.is_colliding && collision_info.collision_normal[1] < 0 && Tyche::Input::isActionPressed("left")) {
         _collision_body.setVelocity(Vector2{40, _collision_body.getVelocity().getY()});
         //Unflip the sprite
         _scale.setX(50);
     }
-    if (Tyche::Input::isActionPressed("right")) {
+    if (collision_info.is_colliding && collision_info.collision_normal[1] < 0 && Tyche::Input::isActionPressed("right")) {
         _collision_body.setVelocity(Vector2{-40, _collision_body.getVelocity().getY()});
         //Flip the sprite
         _scale.setX(-50);
     }
 
     //Check if we should jump
-    auto collision_info = _collision_body.getCollisionInfo();
     if (collision_info.is_colliding &&
-        collision_info.collision_normal[1] < 0 && Tyche::Input::isActionPressed("jump")) {
+        collision_info.collision_normal[1] < -0.7 && Tyche::Input::isActionPressed("jump")) {
         _collision_body.setVelocity(Vector2{_collision_body.getVelocity().getX(), -40});
-    }
 
+    }
 }
 
 

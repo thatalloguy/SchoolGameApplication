@@ -11,8 +11,7 @@ Tyche::PhysicsObject::PhysicsObject(Tyche::Math::Vector4& AABB, ObjectType type)
 
     _position = {AABB[0], AABB[1]};
 
-    _size.setX(AABB[2] - AABB[0]);
-    _size.setY(AABB[3] - AABB[1]);
+    _aabb = AABB;
 
     _type = type;
 }
@@ -56,21 +55,6 @@ float Tyche::PhysicsObject::getMass() {
 }
 
 Tyche::Math::Vector4 Tyche::PhysicsObject::getAABB() {
-    //Update our AABB
-    // ([0],[1]) ------- ([2],[1])
-    // |                    |
-    // |                    |
-    // |                    |
-    // |                    |
-    // ([0],[3]) ------  ([2],[3])
-
-    if (static)
-    _aabb[0] = _position.getX();
-    _aabb[1] = _position.getY();
-
-    _aabb[2] = _position.getX() + _size[0];
-    _aabb[3] = _position.getY() + _size[1];
-
     return _aabb;
 }
 
@@ -90,15 +74,8 @@ void Tyche::PhysicsObject::setMass(float mass) {
     _mass = mass;
 }
 
-void Tyche::PhysicsObject::setAABB(float w, float h) {
-    _aabb[0] = _position.getX();
-    _aabb[1] = _position.getY();
-
-    _size.setX(w);
-    _size.setY(h);
-
-    _aabb[2] = _aabb[0] + w;
-    _aabb[3] = _aabb[1] + h;
+void Tyche::PhysicsObject::setAABB(const Math::Vector4& collider) {
+    _aabb = collider;
 }
 
 void Tyche::PhysicsObject::setRestitution(float restitution) {

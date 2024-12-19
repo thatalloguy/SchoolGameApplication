@@ -47,6 +47,9 @@ Tyche::Math::Vector2 Tyche::PhysicsHandler::getCorrection(const Math::Vector2& a
 
 void Tyche::PhysicsHandler::resolveCollision(Tyche::PhysicsObject &a, Tyche::PhysicsObject &b) {
 
+    if (a.getObjectType() == ObjectType::Static && b.getObjectType() == ObjectType::Static)
+        return;
+
     Math::Vector2 normal;
 
     // n = normalize(bVel - aVel)
@@ -96,8 +99,11 @@ void Tyche::PhysicsHandler::resolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
 
     Math::Vector2 correction = getCorrection(aCenter, bCenter, aBox, bBox);
 
-    a.setCorrection(correction);
-    b.setCorrection(-correction);
+    if (a.getObjectType() == ObjectType::Rigid)
+        a.setCorrection(-correction);
+    if (b.getObjectType() == ObjectType::Rigid)
+        b.setCorrection(-correction);
+
     a.setCollisionInfo({true, normal});
     b.setCollisionInfo({true, normal});
 

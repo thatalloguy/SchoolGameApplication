@@ -49,7 +49,7 @@ namespace Tyche {
         void setForce(const Math::Vector2& force);
         void setMass(float mass);
         void setRestitution(float restitution);
-        void setAABB(float w, float h);
+        void setAABB(const Math::Vector4& collider);
         void setID(PhysicsID id);
         void setObjectType(ObjectType type);
 
