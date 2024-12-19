@@ -209,11 +209,9 @@ void MapEditor::App::run() {
             ImGui::EndMenuBar();
         }
 
-
-
-
         ImGui::End();
 
+        _current_tool->instance->displayDebugWindow();
 
         renderImGuiFrame();
     }

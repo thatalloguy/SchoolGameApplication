@@ -26,6 +26,7 @@ namespace Tools {
         virtual void update() {};
         virtual void onSwitch() {};
         virtual void destroy() {};
+        virtual void displayDebugWindow() {};
 
     };
 

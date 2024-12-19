@@ -4,6 +4,7 @@
 
 #include "EntityTool.h"
 
+#include "imgui.h"
 #include "../core/App.h"
 #include "core/Mouse.h"
 
@@ -37,13 +38,11 @@ void Tools::EntityTool::update() {
     _debug_renderer->renderBox(AABB);
 
 
-    if (Tyche::Mouse::isMouseButtonPressed(Tyche::Mouse::LEFT) && !has_builded_last_frame ) {
-
+    if (Tyche::Mouse::isMouseButtonPressed(Tyche::Mouse::RIGHT) && !has_builded_last_frame ) {
         has_builded_last_frame = true;
     } else {
         has_builded_last_frame = false;
     }
-
 }
 
 void Tools::EntityTool::onSwitch() {
@@ -52,4 +51,12 @@ void Tools::EntityTool::onSwitch() {
 
 void Tools::EntityTool::destroy() {
 
+}
+
+void Tools::EntityTool::displayDebugWindow() {
+    ImGui::Begin("Entity Info");
+
+
+
+    ImGui::End();
 }

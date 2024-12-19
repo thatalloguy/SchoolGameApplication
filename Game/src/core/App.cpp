@@ -59,7 +59,7 @@ Game::App::App(int argc, char **argv) {
 
     _world->addRigidBody(&player.getBody());
 
-    _room_manager->loadRoom("../../../test.room");
+    _room_manager->loadRoom("../../../Rooms/test.room");
     _audio_engine.Init();
 
 
