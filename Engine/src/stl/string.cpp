@@ -76,6 +76,8 @@ Tyche::STL::string Tyche::STL::string::operator+(const Tyche::STL::string &obj) 
     return s;
 }
 
+
+
 bool Tyche::STL::string::operator==(const string& obj) const {
     const char* a = obj.c_str();
     const char* b = buf;

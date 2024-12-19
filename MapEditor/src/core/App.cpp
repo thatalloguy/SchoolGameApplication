@@ -146,15 +146,24 @@ void MapEditor::App::run() {
                 ImGui::MenuItem("New Room");
 
                 if (ImGui::MenuItem("Save Room")) {
-                    saveRoomToDisk("../../../test.room");
+                    saveRoomToDisk(_room_names[_current_room_index]);
                 }
 
                 if (ImGui::MenuItem("Load Room")) {
-                    loadRoomFromDisk("../../../test.room");
+                    loadRoomFromDisk(_room_names[_current_room_index]);
+                    _display_popup = true;
                 }
+
+                if (ImGui::MenuItem("Reload Room List")) {
+                    //loadRoomFromDisk("../../../test.room");
+                    _display_popup = true;
+                }
+
+
 
                 ImGui::EndMenu();
             }
+
 
             if (ImGui::BeginMenu("Tools")) {
 
@@ -179,11 +188,27 @@ void MapEditor::App::run() {
 
                 ImGui::EndMenu();
             }
+            if (ImGui::BeginPopupModal("SelectRoom")) {
+
+
+                ImGui::EndPopup();
+            }
+
+
+            ImGui::Text("|| Current Room:");
+            ImGui::SetNextItemWidth(_window.getWindowSize().getX() * 0.1f);
+            ImGui::Combo(" ", &_current_room_index, _room_names.data(), _room_names.length());
+
+
 
             ImGui::EndMenuBar();
         }
 
+
+
+
         ImGui::End();
+
 
         renderImGuiFrame();
     }
@@ -342,27 +367,41 @@ void MapEditor::App::updateCamera(float frameTime) {
 }
 
 void MapEditor::App::saveRoomToDisk(const char* path) {
-    FILE* file = fopen(path, "w");
 
-    Tyche::IO::saveVectorToFile<Tyche::Tile*, Tyche::Tile>(path, _current_room.tiles, file, false);
-    Tyche::IO::saveVectorToFile<Vector4>(path, _current_room.colliders, file, false);
 
-    spdlog::info("Saved Room to disk: {}", path);
+    string full_path = "../../../Rooms/";
+    full_path = full_path + path;
+
+    FILE* file = fopen(full_path.c_str(), "w");
+
+    Tyche::IO::saveVectorToFile<Tyche::Tile*, Tyche::Tile>(full_path.c_str(), _current_room.tiles, file, false);
+    Tyche::IO::saveVectorToFile<Vector4>(full_path.c_str(), _current_room.colliders, file, false);
+
+    spdlog::info("Saved Room to disk: {}", full_path.c_str());
 
     fclose(file);
 }
 
 void MapEditor::App::loadRoomFromDisk(const char* path) {
-    FILE* file = fopen(path, "r");
+    for (auto tile : _current_room.tiles) {
+        delete tile;
+    }
+    _current_room.tiles.clear();
+    _current_room.colliders.clear();
 
-    Tyche::IO::loadVectorFromFile<Tyche::Tile*, Tyche::Tile>(path, _current_room.tiles, file, false);
-    Tyche::IO::loadVectorFromFile<Vector4>(path, _current_room.colliders, file, false);
+    string full_path = "../../../Rooms/";
+    full_path = full_path + path;
+
+    FILE* file = fopen(full_path.c_str(), "r");
+
+    Tyche::IO::loadVectorFromFile<Tyche::Tile*, Tyche::Tile>(full_path.c_str(), _current_room.tiles, file, false);
+    Tyche::IO::loadVectorFromFile<Vector4>(full_path.c_str(), _current_room.colliders, file, false);
 
     for (auto tile : _current_room.tiles) {
         _tile_renderer.addTile(*tile);
     }
 
-    spdlog::info("Loaded Room from disk: {}", path);
+    spdlog::info("Loaded Room from disk: {}", full_path.c_str());
 
     fclose(file);
 }

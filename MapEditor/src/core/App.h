@@ -59,6 +59,11 @@ namespace MapEditor {
         vector<Tools::ToolInfo*> _tools;
         Tools::ToolInfo* _current_tool = nullptr;
 
+        string _room_name{"New_Room"};
+        int _current_room_index = 0;
+        vector<const char*> _room_names{"test.room", "test2.room", "test3.room"};
+        bool _display_popup = false;
+
 
         Room _current_room{};
 
