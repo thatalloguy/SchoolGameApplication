@@ -74,7 +74,7 @@ namespace MapEditor {
 
         string _room_name{"New_Room"};
         int _current_room_index = 0;
-        vector<const char*> _room_names{"test.room", "test2.room", "test3.room"};
+        vector<string*> _room_names{};
         bool _display_popup = false;
 
 

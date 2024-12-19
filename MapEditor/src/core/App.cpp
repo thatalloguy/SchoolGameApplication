@@ -4,6 +4,7 @@
 
 #include "App.h"
 
+#include <filesystem>
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
@@ -24,8 +25,12 @@
 MapEditor::App::~App() {
     deinitializeImGui();
     destroyAllTools();
+    for (auto name : _room_names) {
+        delete name;
+    }
 
     //TODO this should be done by the room itself and not the editor.
+    //TODO kiss my ass.
     for (auto tile : _current_room.tiles) {
         delete tile;
     }
@@ -100,6 +105,13 @@ void MapEditor::App::init() {
     Tyche::Input::addKey("camera-right", Tyche::Input::D);
     Tyche::Input::addKey("camera-up", Tyche::Input::W);
     Tyche::Input::addKey("camera-down", Tyche::Input::S);
+
+
+    //Load all rooms
+    for (const auto & entry : std::filesystem::directory_iterator("../../../Rooms/")) {
+        //may god forgive me for this sin of c++ code
+        _room_names.push_back(new string{entry.path().filename().string().data()});
+    }
 }
 
 void MapEditor::App::run() {
@@ -164,11 +176,11 @@ void MapEditor::App::run() {
                 ImGui::MenuItem("New Room");
 
                 if (ImGui::MenuItem("Save Room")) {
-                    saveRoomToDisk(_room_names[_current_room_index]);
+                    saveRoomToDisk(_room_names[_current_room_index]->c_str());
                 }
 
                 if (ImGui::MenuItem("Load Room")) {
-                    loadRoomFromDisk(_room_names[_current_room_index]);
+                    loadRoomFromDisk(_room_names[_current_room_index]->c_str());
                     _display_popup = true;
                 }
 
@@ -215,7 +227,15 @@ void MapEditor::App::run() {
 
             ImGui::Text("|| Current Room:");
             ImGui::SetNextItemWidth(_window.getWindowSize().getX() * 0.1f);
-            ImGui::Combo(" ", &_current_room_index, _room_names.data(), _room_names.length());
+
+            if (ImGui::BeginCombo("Rooms", _room_names[_current_room_index]->c_str())) {
+                for (int i=0; i< _room_names.length(); i++) {
+                    auto name = _room_names[i];
+                    if (ImGui::Selectable(name->c_str()))
+                        _current_room_index = i;
+                }
+                ImGui::EndCombo();
+            }
 
 
 
@@ -424,6 +444,7 @@ void MapEditor::App::saveRoomToDisk(const char* path) {
     FILE* file = fopen(full_path.c_str(), "w");
 
     Tyche::IO::saveVectorToFile<Tyche::Tile*, Tyche::Tile>(full_path.c_str(), _current_room.tiles, file, false);
+    Tyche::IO::saveVectorToFile<EntityBlueprint*, EntityBlueprint>(full_path.c_str(), _current_room.entities, file, false);
     Tyche::IO::saveVectorToFile<Vector4>(full_path.c_str(), _current_room.colliders, file, false);
 
     spdlog::info("Saved Room to disk: {}", full_path.c_str());
@@ -450,6 +471,7 @@ void MapEditor::App::loadRoomFromDisk(const char* path) {
     FILE* file = fopen(full_path.c_str(), "r");
 
     Tyche::IO::loadVectorFromFile<Tyche::Tile*, Tyche::Tile>(full_path.c_str(), _current_room.tiles, file, false);
+    Tyche::IO::loadVectorFromFile<EntityBlueprint*, EntityBlueprint>(full_path.c_str(), _current_room.entities, file, false);
     Tyche::IO::loadVectorFromFile<Vector4>(full_path.c_str(), _current_room.colliders, file, false);
 
     for (auto tile : _current_room.tiles) {
