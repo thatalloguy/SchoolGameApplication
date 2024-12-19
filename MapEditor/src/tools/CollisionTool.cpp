@@ -44,7 +44,7 @@ void Tools::CollisionTool::update() {
     }
 
 
-    if (Tyche::Input::isKeyPressed(Tyche::Input::ENTER) && !has_builded_last_frame) {
+    if (Tyche::Input::isKeyPressed(Tyche::Input::Z) && !has_builded_last_frame) {
         //build
 
         if (_cursor->texture_pos[0] == 2) {
@@ -54,7 +54,7 @@ void Tools::CollisionTool::update() {
         }
 
         has_builded_last_frame = true;
-    } if (!Tyche::Input::isKeyPressed(Tyche::Input::ENTER)) {
+    } if (!Tyche::Input::isKeyPressed(Tyche::Input::Z)) {
         has_builded_last_frame = false;
     }
 }

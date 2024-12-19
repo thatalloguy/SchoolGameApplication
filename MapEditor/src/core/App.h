@@ -17,11 +17,19 @@
 
 namespace MapEditor {
 
+    struct EntityBlueprint {
+        unsigned int type = 0;
+        vector<string> tags;
+        Vector2 position;
+    };
+
+
     //Simple struct that holds all info we need about a room
     // NOTE: every ptr in the internal vector gets cleaned up by the manager.
     struct Room {
         vector<Tyche::Tile*> tiles;
         vector<Vector4> colliders;
+        vector<EntityBlueprint> _entities;
     };
 
 

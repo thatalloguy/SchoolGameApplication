@@ -13,6 +13,7 @@
 #include "core/Mouse.h"
 #include "core/IO.h"
 #include "../tools/CollisionTool.h"
+#include "../tools/EntityTool.h"
 
 
 #ifdef _WIN32
@@ -46,28 +47,32 @@ void MapEditor::App::init() {
     // Register all of the default tools, all allocated memory gets cleaned up in the Deconstructor
     Tools::ToolInfo* paintTool = new Tools::ToolInfo{
         "Paint",
-        Tools::ToolType::MouseTool,
         Tyche::Input::Key::G,
         new Tools::PaintTool,
     };
 
     Tools::ToolInfo* eraseTool = new Tools::ToolInfo{
         "Erase",
-        Tools::ToolType::MouseTool,
         Tyche::Input::Key::E,
         new Tools::EraseTool,
     };
 
     Tools::ToolInfo* collisionTool = new Tools::ToolInfo{
             "Collision",
-            Tools::ToolType::MouseTool,
             Tyche::Input::Key::C,
             new Tools::CollisionTool,
+    };
+
+    Tools::ToolInfo* entityTool = new Tools::ToolInfo{
+        "Entity",
+        Tyche::Input::Key::B,
+        new Tools::EntityTool,
     };
 
     registerNewTool(paintTool);
     registerNewTool(eraseTool);
     registerNewTool(collisionTool);
+    registerNewTool(entityTool);
 
 
     // Painting is the default.
