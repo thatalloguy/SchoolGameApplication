@@ -18,9 +18,10 @@
 namespace MapEditor {
 
     struct EntityBlueprint {
-        unsigned int type = 0;
-        vector<string> tags;
-        Vector2 position;
+        int type = 0;
+        //tags are seperated by coma's
+        char tags[50] = {" "};
+        Vector2 position = {0,0};
     };
 
 
@@ -28,8 +29,8 @@ namespace MapEditor {
     // NOTE: every ptr in the internal vector gets cleaned up by the manager.
     struct Room {
         vector<Tyche::Tile*> tiles;
+        vector<EntityBlueprint*> entities;
         vector<Vector4> colliders;
-        vector<EntityBlueprint> _entities;
     };
 
 
@@ -56,6 +57,10 @@ namespace MapEditor {
 
         void addCollider(Vector4& collider);
         void deleteCollider(const Vector2& begin_position);
+
+        EntityBlueprint* addEntity(const Vector2& pos);
+        EntityBlueprint* getEntity(const Vector2& pos);
+        void deleteEntity(const Vector2& pos);
 
     private:
         Tyche::Window _window{{{1280, 720}, "TombCrawler - Map Editor"}};

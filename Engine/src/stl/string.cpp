@@ -12,6 +12,11 @@ Tyche::STL::string::~string() {
 
 }
 
+Tyche::STL::string::string(int new_size) {
+    size = new_size;
+    buf = new char[size];
+}
+
 Tyche::STL::string::string(const char *buffer) {
     size = strlen(buffer);
     buf = new char[size + 1];

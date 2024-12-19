@@ -35,10 +35,24 @@ void Tools::EntityTool::update() {
     AABB[2] = snapped_pos[0] + 12.5f;
     AABB[3] = snapped_pos[1] + 12.5f;
 
+
     _debug_renderer->renderBox(AABB);
 
 
     if (Tyche::Mouse::isMouseButtonPressed(Tyche::Mouse::RIGHT) && !has_builded_last_frame ) {
+        if (!Tyche::Input::isKeyPressed(Tyche::Input::LSHIFT))
+            selected_entity = _editor->addEntity(snapped_pos);
+        else {
+
+            if (Tyche::Input::isKeyPressed(Tyche::Input::LCONTROL)) {
+                _editor->deleteEntity(snapped_pos);
+                selected_entity = nullptr;
+            }
+            else
+                selected_entity = _editor->getEntity(snapped_pos);
+
+        }
+
         has_builded_last_frame = true;
     } else {
         has_builded_last_frame = false;
@@ -46,7 +60,7 @@ void Tools::EntityTool::update() {
 }
 
 void Tools::EntityTool::onSwitch() {
-
+    selected_entity = nullptr;
 }
 
 void Tools::EntityTool::destroy() {
@@ -54,9 +68,16 @@ void Tools::EntityTool::destroy() {
 }
 
 void Tools::EntityTool::displayDebugWindow() {
-    ImGui::Begin("Entity Info");
+
+    if (selected_entity != nullptr) {
+        ImGui::Begin("Entity Info");
+
+        ImGui::DragInt("Type", &selected_entity->type);
+
+        ImGui::InputText("Tags", selected_entity->tags, 50);
+
+        ImGui::End();
+    }
 
 
-
-    ImGui::End();
 }

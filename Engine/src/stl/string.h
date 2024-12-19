@@ -15,6 +15,8 @@ namespace Tyche::STL {
         /// Initializes the internal buff to nullptr and size to 0.
         string() : buf(nullptr), size(0) {};
 
+        string(int size);
+
         /// Copies the char array to the internal buffer.
         string(const char* buffer);
 

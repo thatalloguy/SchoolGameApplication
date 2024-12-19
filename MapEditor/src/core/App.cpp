@@ -29,6 +29,10 @@ MapEditor::App::~App() {
     for (auto tile : _current_room.tiles) {
         delete tile;
     }
+
+    for (auto entity: _current_room.entities) {
+        delete entity;
+    }
 }
 
 void MapEditor::App::init() {
@@ -116,10 +120,13 @@ void MapEditor::App::run() {
 
         // Update the window and check for inputs.
         _window.update();
-        checkForToolHotkeys();
+        if (!ImGui::GetIO().WantCaptureKeyboard) {
+            checkForToolHotkeys();
+            updateCamera(frameTime);
+        }
+
 
         // Update the canera
-        updateCamera(frameTime);
         _camera.setViewportSize(_window.getWindowSize());
         _camera.update();
 
@@ -131,6 +138,12 @@ void MapEditor::App::run() {
 
         for (auto collider: _current_room.colliders) {
             _debug_renderer.renderBox(collider);
+        }
+
+        for (auto entity: _current_room.entities) {
+            Vector4 box = {entity->position[0] - 12.5f, entity->position[1] - 12.5f,
+                entity->position[0] + 12.5f, entity->position[1] + 12.5f};
+            _debug_renderer.renderBox(box);
         }
 
         _debug_renderer.render(_camera);
@@ -268,6 +281,38 @@ void MapEditor::App::deleteCollider(const Vector2& begin_position) {
     }
 }
 
+MapEditor::EntityBlueprint* MapEditor::App::addEntity(const Vector2& pos) {
+    _current_room.entities.push_back(new EntityBlueprint{.position=pos});
+
+    return _current_room.entities.back();
+}
+
+MapEditor::EntityBlueprint* MapEditor::App::getEntity(const Vector2& pos) {
+
+    for (auto entity: _current_room.entities) {
+        if (entity->position == pos) {
+            return entity;
+        }
+    }
+
+    return nullptr;
+}
+
+void MapEditor::App::deleteEntity(const Vector2& pos) {
+
+    for (int i=0; i<_current_room.entities.length(); i++) {
+
+        auto entity = _current_room.entities[i];
+
+        if (entity->position == pos) {
+            delete entity;
+            _current_room.entities.remove(i);
+            return;
+        }
+    }
+
+}
+
 
 void MapEditor::App::registerNewTool(Tools::ToolInfo* tool_info) {
     if (tool_info->instance == nullptr) {
@@ -285,6 +330,7 @@ void MapEditor::App::setCurrentTool(Tools::ToolInfo* tool_info) {
 void MapEditor::App::checkForToolHotkeys() {
     for (auto tool : _tools) {
         if (Tyche::Input::isKeyPressed(tool->hotkey)) {
+            _current_tool->instance->onSwitch();
             setCurrentTool(tool);
         }
     }
@@ -389,7 +435,13 @@ void MapEditor::App::loadRoomFromDisk(const char* path) {
     for (auto tile : _current_room.tiles) {
         delete tile;
     }
+
+    for (auto entity: _current_room.entities) {
+        delete entity;
+    }
+
     _current_room.tiles.clear();
+    _current_room.entities.clear();
     _current_room.colliders.clear();
 
     string full_path = "../../../Rooms/";
