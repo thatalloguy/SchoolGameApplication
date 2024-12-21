@@ -59,8 +59,8 @@ Game::App::App(int argc, char **argv) {
 
     _world->addRigidBody(&player.getBody());
 
-    if (argc > 0)
-        _room_manager->loadRoom("../../../Rooms/test.room");
+    if (argc == 0)
+        _room_manager->loadRoom("../../../Rooms/begin.room");
 
     _audio_engine.Init();
 
@@ -92,6 +92,8 @@ void Game::App::run() {
 
         _world->step(frameTime);
         _world->renderBodies(*_debug_renderer);
+
+        _room_manager->update();
 
         player.update();
 

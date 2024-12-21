@@ -11,8 +11,17 @@
 
 namespace Game {
 
+    struct EntityBlueprint {
+        int type = 0;
+        //tags are seperated by coma's
+        char tags[50] = {" "};
+        Vector2 position = {0,0};
+    };
+
+
     struct Room {
         vector<Tyche::Tile*> tiles;
+        vector<EntityBlueprint*> entities;
         vector<Vector4> colliders;
     };
 

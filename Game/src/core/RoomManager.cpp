@@ -25,6 +25,7 @@ void Game::RoomManager::loadRoom(const char* path) {
     FILE* file = fopen(path, "r");
 
     Tyche::IO::loadVectorFromFile<Tyche::Tile*, Tyche::Tile>(path, new_room->tiles, file, false);
+    Tyche::IO::loadVectorFromFile<EntityBlueprint*, EntityBlueprint>(path, new_room->entities, file, false);
     Tyche::IO::loadVectorFromFile<Vector4>(path, new_room->colliders, file, false);
 
     loadTiles(*new_room);
@@ -33,10 +34,18 @@ void Game::RoomManager::loadRoom(const char* path) {
     spdlog::info("Loaded Room from disk: {}", path);
 
     fclose(file);
+
+    _rooms.push_back(new_room);
 }
 
 void Game::RoomManager::update() {
-
+    for (auto room: _rooms) {
+        for (auto entity: room->entities) {
+            Vector4 box = {entity->position[0] - 12.5f, entity->position[1] - 12.5f,
+                entity->position[0] + 12.5f, entity->position[1] + 12.5f};
+            _debug_renderer->renderBox(box);
+        }
+    }
 }
 
 Tyche::World* Game::RoomManager::getWorld() {
