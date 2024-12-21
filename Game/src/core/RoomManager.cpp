@@ -20,29 +20,37 @@ Game::RoomManager::~RoomManager() {
 
 void Game::RoomManager::loadRoom(const char* path) {
 
+    RawRoom* new_raw_room = new RawRoom{};
     Room* new_room = new Room{};
 
     FILE* file = fopen(path, "r");
 
-    Tyche::IO::loadVectorFromFile<Tyche::Tile*, Tyche::Tile>(path, new_room->tiles, file, false);
-    Tyche::IO::loadVectorFromFile<EntityBlueprint*, EntityBlueprint>(path, new_room->entities, file, false);
-    Tyche::IO::loadVectorFromFile<Vector4>(path, new_room->colliders, file, false);
+    Tyche::IO::loadVectorFromFile<Tyche::Tile*, Tyche::Tile>(path, new_raw_room->tiles, file, false);
+    Tyche::IO::loadVectorFromFile<EntityBlueprint*, EntityBlueprint>(path, new_raw_room->entities, file, false);
+    Tyche::IO::loadVectorFromFile<Vector4>(path, new_raw_room->colliders, file, false);
 
-    loadTiles(*new_room);
-    setupCollision(*new_room);
+    loadTiles(*new_raw_room);
+    setupCollision(*new_raw_room);
 
     spdlog::info("Loaded Room from disk: {}", path);
 
     fclose(file);
+
+    new_room->tiles = new_raw_room->tiles;
+    new_room->colliders = new_raw_room->colliders;
+
+    loadEntities(*new_raw_room, new_room->entities);
+
+    delete new_raw_room;
 
     _rooms.push_back(new_room);
 }
 
 void Game::RoomManager::update() {
     for (auto room: _rooms) {
-        for (auto entity: room->entities) {
-            Vector4 box = {entity->position[0] - 12.5f, entity->position[1] - 12.5f,
-                entity->position[0] + 12.5f, entity->position[1] + 12.5f};
+        for (Entities::RoomEntity* entity: room->entities) {
+            Vector4 box = {entity->getPosition()[0] - 12.5f, entity->getPosition()[1] - 12.5f,
+                           entity->getPosition()[0] + 12.5f, entity->getPosition()[1] + 12.5f};
             _debug_renderer->renderBox(box);
         }
     }
@@ -52,7 +60,7 @@ Tyche::World* Game::RoomManager::getWorld() {
     return &_world;
 }
 
-void Game::RoomManager::loadTiles(Room& room) {
+void Game::RoomManager::loadTiles(RawRoom& room) {
 
     for (auto tile : room.tiles) {
         _tile_renderer->addTile(*tile);
@@ -60,7 +68,7 @@ void Game::RoomManager::loadTiles(Room& room) {
 
 }
 
-void Game::RoomManager::setupCollision(Room& room) {
+void Game::RoomManager::setupCollision(RawRoom& room) {
 
     for (auto collider: room.colliders) {
         _world.addStaticBody(new Tyche::PhysicsObject{collider, Tyche::ObjectType::Static});
@@ -76,3 +84,6 @@ void Game::RoomManager::destroyRoom(Room* room) {
     delete room;
 }
 
+void Game::RoomManager::loadEntities(Game::RawRoom &in, vector<Entities::RoomEntity*> &out) {
+
+}

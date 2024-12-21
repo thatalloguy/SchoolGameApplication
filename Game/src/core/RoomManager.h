@@ -8,6 +8,7 @@
 #include "renderer/DebugRenderer.h"
 #include "renderer/TileRenderer.h"
 #include "stl/vector.h"
+#include "../entities/RoomEntity.h"
 
 namespace Game {
 
@@ -19,12 +20,17 @@ namespace Game {
     };
 
 
-    struct Room {
+    struct RawRoom {
         vector<Tyche::Tile*> tiles;
         vector<EntityBlueprint*> entities;
         vector<Vector4> colliders;
     };
 
+    struct Room {
+        vector<Tyche::Tile*> tiles;
+        vector<Entities::RoomEntity*> entities;
+        vector<Vector4> colliders;
+    };
 
     class RoomManager {
 
@@ -39,8 +45,9 @@ namespace Game {
         Tyche::World* getWorld();
 
     private:
-        void loadTiles(Room& room);
-        void setupCollision(Room& room);
+        void loadTiles(RawRoom& room);
+        void setupCollision(RawRoom& room);
+        void loadEntities(RawRoom& in, vector<Entities::RoomEntity*>& out);
 
         void destroyRoom(Room* room);
 
