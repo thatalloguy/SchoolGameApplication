@@ -11,6 +11,7 @@
 #include "../entities/RoomEntity.h"
 #include "stl/hashmap.h"
 #include "renderer/EntityRenderer.h"
+#include "audio/AudioDevice.h"
 
 namespace Game {
 
@@ -54,6 +55,8 @@ namespace Game {
         Tyche::World* getWorld();
 
         Tyche::DebugRenderer* getDebugRenderer() { return _debug_renderer; };
+        Tyche::AudioEngine* getAudioEngine() { return _audio_engine; };
+        void setAudioEngine(Tyche::AudioEngine* audio_engine) { _audio_engine = audio_engine; };
 
     private:
 
@@ -76,6 +79,7 @@ namespace Game {
         Tyche::EntityRenderer* _entity_renderer = nullptr;
         Tyche::DebugRenderer* _debug_renderer = nullptr;
 
+        Tyche::AudioEngine* _audio_engine = nullptr;
         vector<Room*> _rooms;
         hashmap<int, Entities::RoomEntity*(*)()> _registry;
         Tyche::World _world{true};

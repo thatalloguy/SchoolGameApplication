@@ -107,6 +107,8 @@ namespace Tyche {
         //Plays the sound at the position given, also adds it to the queue to update it later.
         void playSound(SoundID id, const Math::Vector2& pos, float volume=1.0f);
 
+        void updateSound(SoundID id, const Math::Vector2& pos);
+
         //Updates all sounds positions and directions
         void update(const Math::Vector2& listenerPos);
 
@@ -161,6 +163,7 @@ namespace Tyche {
         STL::hashmap<SoundID, SoundObject*> registry;
         STL::vector<SoundObject*> _objects; // have a seperate vector, since the hashmap doesnt support iterating yet.
 
+        Math::Vector2 _listener_pos{0, 0};
 
         STL::vector<SoundObject*> _queue;
         unsigned int idCounter = 1;

@@ -28,15 +28,18 @@ void Entities::FallingTile::initialize(const Vector2 &position, Game::Room *room
                    });
      _body.setPosition(_position);
 
+
+
     _room_manager = (Game::RoomManager*) room->parent;
     _world = _room_manager->getWorld();
     _room = room;
-
+    _audio_engine = _room_manager->getAudioEngine();
 
     _player_body = _world->getFirstBody();
     _debug_renderer = _room_manager->getDebugRenderer();
 
     _world->addStaticBody(&_body);
+    _falling_sound_id = _audio_engine->registerSound({"../../../Resources/Audio/falling_block.wav"});
 }
 
 
@@ -44,8 +47,9 @@ void Entities::FallingTile::update(float delta_time) {
 
     _debug_renderer->renderBox(_trigger);
 
-    if (Tyche::PhysicsHandler::collision(_trigger, _player_body->getAABB())) {
+    if (Tyche::PhysicsHandler::collision(_trigger, _player_body->getAABB()) && !is_falling) {
         is_falling = true;
+        _audio_engine->playSound(_falling_sound_id, _position);
     }
 
     if (is_falling) {
@@ -59,10 +63,14 @@ void Entities::FallingTile::update(float delta_time) {
                               _position.getX() + 12.5f,
                               _position.getY() + 40.0f
                       });
+
+        _audio_engine->updateSound(_falling_sound_id, _position);
     }
 
+
+
     if (_position.getY() > 700) {
-        //Delete itself?
+        //delete itself?
     }
 }
 

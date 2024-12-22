@@ -21,10 +21,12 @@ class FallingTile: public Entities::RoomEntity {
     private:
         Vector4 _trigger;
         Tyche::PhysicsObject _body{};
+        Tyche::SoundID _falling_sound_id;
 
         bool is_falling = false;
 
         Tyche::DebugRenderer* _debug_renderer = nullptr;
+        Tyche::AudioEngine* _audio_engine   = nullptr;
         Game::RoomManager* _room_manager    = nullptr;
         Game::Room* _room                   = nullptr;
         Tyche::World* _world                = nullptr;

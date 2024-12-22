@@ -61,10 +61,13 @@ Game::App::App(int argc, char **argv) {
     _world = _room_manager->getWorld();
 
     _world->addRigidBody(&player.getBody());
+    _audio_engine.Init();
+
+    _room_manager->setAudioEngine(&_audio_engine);
+
+
 
     _room_manager->loadRoom("../../../Rooms/begin.room");
-
-    _audio_engine.Init();
 
 
     processArgs(argc, argv);
@@ -97,13 +100,21 @@ void Game::App::run() {
 
         _room_manager->update(frameTime);
 
-        player.update(frameTime);
 
+
+        player.update(frameTime);
+        _audio_engine.update(player.getPosition());
 
         _camera.update();
 
         _tile_renderer.renderTiles(_camera);
         _entity_renderer.renderEntities(_camera);
+
+        if (Tyche::Input::isKeyPressed(Tyche::Input::F1)) {
+            _debug_rendering = true;
+        } else if (Tyche::Input::isKeyPressed(Tyche::Input::F2)) {
+            _debug_rendering = false;
+        }
 
         if (_debug_rendering) {
             _debug_renderer->render(_camera);

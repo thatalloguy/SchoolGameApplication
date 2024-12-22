@@ -340,6 +340,8 @@ bool Tyche::AudioEngine::isSoundPlaying(Tyche::SoundID id) {
 }
 
 void Tyche::AudioEngine::update(const Tyche::Math::Vector2 &listenerPos) {
+    _listener_pos = listenerPos;
+
     for (int i=0; i<_queue.length(); i++) {
 
         auto sound = _queue[i];
@@ -355,4 +357,13 @@ void Tyche::AudioEngine::update(const Tyche::Math::Vector2 &listenerPos) {
             _queue.remove(i);
         }
     }
+}
+
+void Tyche::AudioEngine::updateSound(Tyche::SoundID id, const Tyche::Math::Vector2 &pos) {
+    SoundObject* sound = registry.get(id);
+
+    sound->soundEffect.direction = pos - _listener_pos;
+    sound->soundEffect.direction.normalize();
+
+    sound->soundEffect.playerPosition = _listener_pos;
 }
