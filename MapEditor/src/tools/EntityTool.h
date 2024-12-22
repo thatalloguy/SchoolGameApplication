@@ -7,7 +7,6 @@
 #include "Tool.h"
 #include "../core/App.h"
 #include "renderer/TileRenderer.h"
-#include "../entities/DebugBox.h"
 #include "renderer/DebugRenderer.h"
 #include "renderer/EntityRenderer.h"
 
