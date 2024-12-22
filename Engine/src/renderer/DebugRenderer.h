@@ -56,6 +56,7 @@ namespace Tyche {
         void renderBox(const Vector4& AABB);
 
         void render(Camera& camera);
+        void clearQueue();
 
     private:
 

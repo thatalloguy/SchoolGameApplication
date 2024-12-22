@@ -42,6 +42,7 @@ namespace Tyche {
 
         PhysicsID addRigidBody(PhysicsObject* object);
         PhysicsID addStaticBody(PhysicsObject* object);
+        PhysicsID addGhostBody(PhysicsObject* object);
 
         void removeBody(PhysicsID id);
 
@@ -53,6 +54,7 @@ namespace Tyche {
         // getters and setters
         Math::Vector2 getGravity();
         void setGravity(const Math::Vector2& vec);
+        PhysicsObject* getFirstBody() { return _bodies[0]; };
 
     private:
         STL::vector<PhysicsObject*> _bodies;

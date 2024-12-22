@@ -27,7 +27,7 @@ namespace Entities {
 
         virtual void initialize(const Vector2& position, Game::Room* room, char tags[50]);
 
-        virtual void update();
+        virtual void update(float delta_time);
         virtual void destroy();
 
         bool hasTag(const string& tag);

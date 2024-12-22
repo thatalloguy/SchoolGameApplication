@@ -133,7 +133,14 @@ void Tyche::DebugRenderer::renderBox(const Vector4& AABB) {
 void Tyche::DebugRenderer::render(Camera& camera) {
     for (DrawCommand* command: _queue) {
         command->render(_debug_shader, camera);
+    }
 
+    clearQueue();
+
+}
+
+void Tyche::DebugRenderer::clearQueue() {
+    for (DrawCommand* command: _queue) {
         delete command;
     }
 

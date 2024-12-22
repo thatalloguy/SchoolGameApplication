@@ -35,8 +35,8 @@ void Entities::RoomEntity::loadTagsFromSingleString(char tags[50]) {
     }
 }
 
-void Entities::RoomEntity::update() {
-    Entity::update();
+void Entities::RoomEntity::update(float delta_time) {
+    Entity::update(delta_time);
 }
 
 void Entities::RoomEntity::destroy() {

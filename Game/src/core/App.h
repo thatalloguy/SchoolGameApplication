@@ -42,6 +42,8 @@ namespace Game {
 
         Tyche::World* _world{};
         RoomManager* _room_manager = nullptr;
+
+        bool _debug_rendering = false;
     };
 
 }

@@ -7,7 +7,7 @@
 void Entities::Torch::initialize() {
 }
 
-void Entities::Torch::update() {
+void Entities::Torch::update(float delta_time) {
 }
 
 void Entities::Torch::destroy() {

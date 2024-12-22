@@ -32,6 +32,8 @@ namespace Game {
         vector<Tyche::Tile*> tiles;
         vector<Entities::RoomEntity*> entities;
         vector<Vector4> colliders;
+
+        void* parent = nullptr;
     };
 
     class RoomManager {
@@ -47,9 +49,11 @@ namespace Game {
 
         void loadRoom(const char* path);
 
-        void update();
+        void update(float delta_time);
 
         Tyche::World* getWorld();
+
+        Tyche::DebugRenderer* getDebugRenderer() { return _debug_renderer; };
 
     private:
 

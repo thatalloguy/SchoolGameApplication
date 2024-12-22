@@ -15,7 +15,7 @@ namespace Entities {
 
     public:
         void initialize() override;
-        void update() override;
+        void update(float delta_time) override;
         void destroy() override;
 
 

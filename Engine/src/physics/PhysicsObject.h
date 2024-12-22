@@ -13,7 +13,8 @@ namespace Tyche {
 
     enum class ObjectType: unsigned int {
         Static = 0,
-        Rigid = 1
+        Rigid = 1,
+        Ghost = 2,
     };
 
     struct CollisionInfo {

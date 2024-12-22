@@ -20,7 +20,7 @@ namespace Tyche {
         ~Entity() = default;
 
         virtual void initialize();
-        virtual void update();
+        virtual void update(float delta_time);
         virtual void prepareRendering();
         virtual void destroy();
 

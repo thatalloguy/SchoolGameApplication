@@ -95,16 +95,21 @@ void Game::App::run() {
         _world->step(frameTime);
         _world->renderBodies(*_debug_renderer);
 
-        _room_manager->update();
+        _room_manager->update(frameTime);
 
-        player.update();
+        player.update(frameTime);
 
 
         _camera.update();
 
         _tile_renderer.renderTiles(_camera);
         _entity_renderer.renderEntities(_camera);
-        _debug_renderer->render(_camera);
+
+        if (_debug_rendering) {
+            _debug_renderer->render(_camera);
+        }
+
+        _debug_renderer->clearQueue();
 
 
 

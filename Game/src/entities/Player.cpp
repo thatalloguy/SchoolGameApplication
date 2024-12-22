@@ -17,7 +17,7 @@ void Entities::Player::initialize() {
     _collision_body = Tyche::PhysicsObject{collisionBody, Tyche::ObjectType::Rigid};
 }
 
-void Entities::Player::update() {
+void Entities::Player::update(float delta_time) {
     _position = _collision_body.getPosition();
     _collision_body.setAABB({_position[0] - 50, _position[1] - 50, _position[0] + 50, _position[1] + 50});
 

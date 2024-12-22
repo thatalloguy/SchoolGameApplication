@@ -36,7 +36,7 @@ void Tyche::Entity::destroy() {
 
 }
 
-void Tyche::Entity::update() {
+void Tyche::Entity::update(float delta_time) {
 }
 
 void Tyche::Entity::initialize() {

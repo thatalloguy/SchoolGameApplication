@@ -47,7 +47,10 @@ Tyche::Math::Vector2 Tyche::PhysicsHandler::getCorrection(const Math::Vector2& a
 
 void Tyche::PhysicsHandler::resolveCollision(Tyche::PhysicsObject &a, Tyche::PhysicsObject &b) {
 
-    if (a.getObjectType() == ObjectType::Static && b.getObjectType() == ObjectType::Static)
+    if (a.getObjectType() == ObjectType::Static &&
+        b.getObjectType() == ObjectType::Static ||
+        a.getObjectType() == ObjectType::Ghost ||
+        b.getObjectType() == ObjectType::Ghost)
         return;
 
     Math::Vector2 normal;
@@ -57,6 +60,12 @@ void Tyche::PhysicsHandler::resolveCollision(Tyche::PhysicsObject &a, Tyche::Phy
     normal.setY(a.getVelocity().getY() - b.getVelocity().getY());
 
     normal = normal.normalize();
+
+    if (normal.getX() > 1 || normal.getX() < -1 ||
+        normal.getY() > 1 || normal.getY() < -1 ) {
+        spdlog::warn("Invalid collision normal");
+        return;
+    }
 
     auto aVel = a.getVelocity();
     auto bVel = b.getVelocity();
@@ -148,6 +157,20 @@ Tyche::PhysicsID Tyche::World::addStaticBody(Tyche::PhysicsObject *object) {
 }
 
 
+Tyche::PhysicsID Tyche::World::addGhostBody(Tyche::PhysicsObject *object) {
+    // Increase the id count
+    _id_count++;
+
+    // Update the object's information
+    object->setID(_id_count);
+    object->setObjectType(ObjectType::Ghost);
+
+    _bodies.push_back(object);
+
+    return _id_count;
+}
+
+
 void Tyche::World::removeBody(Tyche::PhysicsID id) {
     for (int i=0; i<_bodies.length(); i++) {
         if (_bodies[i]->getID() == id) {
@@ -172,6 +195,8 @@ void Tyche::World::step(float delta_time) {
     // Then check for collision and resolve them if needed
     for (int i=0; i<_bodies.length(); i++) {
         auto a = _bodies[i];
+        if (a->getObjectType() == ObjectType::Ghost)
+            break;
 
         // Loop through all of the other objects, since we have to check against every other body
         // Isnt optimale but we wont have so much bodies in our vector so it wont be a issue

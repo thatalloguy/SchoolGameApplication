@@ -39,6 +39,7 @@ void Game::RoomManager::loadRoom(const char* path) {
 
     new_room->tiles = new_raw_room->tiles;
     new_room->colliders = new_raw_room->colliders;
+    new_room->parent = this;
 
     loadEntities(*new_raw_room, *new_room);
 
@@ -47,14 +48,12 @@ void Game::RoomManager::loadRoom(const char* path) {
     _rooms.push_back(new_room);
 }
 
-void Game::RoomManager::update() {
-    /*for (auto room: _rooms) {
+void Game::RoomManager::update(float delta_time) {
+    for (auto room: _rooms) {
         for (Entities::RoomEntity* entity: room->entities) {
-            Vector4 box = {entity->getPosition()[0] - 12.5f, entity->getPosition()[1] - 12.5f,
-                           entity->getPosition()[0] + 12.5f, entity->getPosition()[1] + 12.5f};
-            _debug_renderer->renderBox(box);
+            entity->update(delta_time);
         }
-    }*/
+    }
 }
 
 Tyche::World* Game::RoomManager::getWorld() {
