@@ -141,12 +141,11 @@ void MapEditor::App::run() {
         // Update the canera
         _camera.setViewportSize(_window.getWindowSize());
         _camera.update();
-
         // Render all of the tiles first
         _tile_renderer.renderTiles(_camera);
         _entity_renderer.renderEntities(_camera);
         // Render the cursor seperate so its always in front of the tiles.
-        _tile_renderer.renderTile(_camera, _cursor);
+        _entity_renderer.renderEntity(_camera, &_cursor);
 
         for (auto collider: _current_room.colliders) {
             _debug_renderer.renderBox(collider);
@@ -251,7 +250,7 @@ void MapEditor::App::run() {
 }
 
 
-Tyche::Tile& MapEditor::App::getCursor() {
+Tyche::Entity& MapEditor::App::getCursor() {
     return _cursor;
 }
 
@@ -267,7 +266,7 @@ void MapEditor::App::placeTile(Vector2 pos, Tyche::Tile* tile) {
     _current_room.tiles.push_back(tile);
     _tile_renderer.addTile(*tile);
 
-
+    _tile_renderer.prepareRendering();
 
 }
 

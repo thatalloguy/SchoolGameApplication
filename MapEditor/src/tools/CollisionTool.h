@@ -22,7 +22,7 @@ namespace Tools {
 
     private:
         MapEditor::App* _editor = nullptr;
-        Tyche::Tile* _cursor = nullptr;
+        Tyche::Entity* _cursor = nullptr;
         Tyche::DebugRenderer* _debug_renderer = nullptr;
 
         Tyche::Camera* _camera = nullptr;

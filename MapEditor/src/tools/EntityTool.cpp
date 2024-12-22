@@ -18,17 +18,17 @@ void Tools::EntityTool::initialize(MapEditor::App& editor_instance) {
 
 void Tools::EntityTool::update() {
     if (!Tyche::Input::isKeyPressed(Tyche::Input::LSHIFT)) {
-        _cursor->texture_pos = {1, 3};
+        _cursor->setSprite({1, 3});
     } else {
-        _cursor->texture_pos = {0, 3};
+        _cursor->setSprite({0, 3});
     }
-    _cursor->scale = {32, 32};
+    _cursor->setScale({32, 32});
 
     //Get the mouse position and then snap it to the grid.
     auto mouse_pos =  Tyche::Mouse::getPosition() - _camera->getPosition();
     auto snapped_pos = Vector2{floor(mouse_pos[0] / GRID_SIZE), floor(mouse_pos[1] / GRID_SIZE)} * GRID_SIZE;
 
-    _cursor->position = mouse_pos;
+    _cursor->setPosition(mouse_pos);
     AABB[0] = snapped_pos[0] - 12.5f;
     AABB[1] = snapped_pos[1] - 12.5f;
 
@@ -39,10 +39,11 @@ void Tools::EntityTool::update() {
     _debug_renderer->renderBox(AABB);
 
 
-    if (Tyche::Mouse::isMouseButtonPressed(Tyche::Mouse::RIGHT) && !has_builded_last_frame ) {
-        if (!Tyche::Input::isKeyPressed(Tyche::Input::LSHIFT))
+    if (Tyche::Mouse::isMouseButtonPressed(Tyche::Mouse::RIGHT)) {
+        if (!Tyche::Input::isKeyPressed(Tyche::Input::LSHIFT)  && !has_builded_last_frame) {
             selected_entity = _editor->addEntity(snapped_pos);
-        else {
+            has_builded_last_frame = true;
+        } else {
 
             if (Tyche::Input::isKeyPressed(Tyche::Input::LCONTROL)) {
                 _editor->deleteEntity(snapped_pos);
@@ -53,7 +54,6 @@ void Tools::EntityTool::update() {
 
         }
 
-        has_builded_last_frame = true;
     } else {
         has_builded_last_frame = false;
     }

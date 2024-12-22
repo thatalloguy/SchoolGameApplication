@@ -41,6 +41,7 @@ namespace Tyche {
         void setTextureSize(int new_texture_size);
         void setAtlasSize(int new_atlas_size);
 
+        unsigned int getVAO() {return _mesh.VAO; };
 
     private:
         STL::vector<Entity*> _entities;

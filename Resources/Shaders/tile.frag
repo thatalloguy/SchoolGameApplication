@@ -10,5 +10,6 @@ void main() {
     vec4 albedo = texture(texture_atlas, TexCoords).rgba;
     if(albedo.a < 0.1)
         discard;
+
     fragColor = albedo;
 }

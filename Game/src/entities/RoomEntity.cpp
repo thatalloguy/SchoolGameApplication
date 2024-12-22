@@ -24,11 +24,15 @@ bool Entities::RoomEntity::hasTag(const string &tag) {
 
 void Entities::RoomEntity::loadTagsFromSingleString(char tags[50]) {
 
-    string temp_str;
+    string temp_str{""};
+
 
     for (int i=0; i<50; i++) {
         if (strcmp(&tags[i], ",") == 0) {
             _tags.push_back(temp_str);
+        } else if (strcmp(&tags[i], "Í")) {
+            _tags.push_back(temp_str);
+            return;
         } else {
             temp_str = temp_str + tags[i];
         }

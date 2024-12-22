@@ -7,6 +7,7 @@
 #include "../entities/Player.h"
 #include "../entities/FallingTile.h"
 #include "core/Input.h"
+#include "../entities/Portal.h"
 
 //Global constants
 namespace {
@@ -57,6 +58,7 @@ Game::App::App(int argc, char **argv) {
     _room_manager = new RoomManager(_tile_renderer, _entity_renderer, *_debug_renderer);
 
     _room_manager->registerEntity<Entities::FallingTile>(0);
+    _room_manager->registerEntity<Entities::Portal>(1);
 
     _world = _room_manager->getWorld();
 
@@ -80,6 +82,8 @@ Game::App::~App() {
 
 void Game::App::run() {
     auto currentTime = std::chrono::high_resolution_clock ::now();
+
+    _tile_renderer.prepareRendering();
 
 
     while (!_window->shouldWindowClose()) {

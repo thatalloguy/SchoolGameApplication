@@ -6,6 +6,7 @@
 
 #include "Tool.h"
 #include "renderer/TileRenderer.h"
+#include "core/Entity.h"
 
 namespace Tools {
 
@@ -21,7 +22,7 @@ namespace Tools {
 
     private:
         MapEditor::App* _editor = nullptr;
-        Tyche::Tile* _cursor = nullptr;
+        Tyche::Entity* _cursor = nullptr;
         Tyche::Window* _window = nullptr;
         Tyche::Camera* _camera = nullptr;
 

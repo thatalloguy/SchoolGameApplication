@@ -28,7 +28,7 @@ void Tyche::Entity::calculateTransformMatrix() {
     _transform.scale(_scale);
 }
 
-Tyche::Sprite Tyche::Entity::getSprite() {
+Tyche::Math::Vector2 Tyche::Entity::getSprite() {
     return _sprite;
 }
 
@@ -49,4 +49,8 @@ Tyche::Math::Matrix4 Tyche::Entity::getTransform() {
 
 void Tyche::Entity::prepareRendering() {
     calculateTransformMatrix();
+}
+
+void Tyche::Entity::setSprite(const Math::Vector2 &sprite) {
+    _sprite = sprite;
 }

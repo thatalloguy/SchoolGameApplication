@@ -57,21 +57,21 @@ void Tools::PaintTool::initialize(MapEditor::App& editor_instance) {
 void Tools::PaintTool::update() {
 
     //Update the cursor to the current selected tile_texture.
-    _cursor->texture_pos = tile_texture;
-    _cursor->scale = {25, 25};
+    _cursor->setSprite({2, 2});
+    _cursor->setScale({25, 25});
 
     //Get the mouse position and snap it to the grid.
     auto mouse_pos =  Tyche::Mouse::getPosition() - _camera->getPosition();
     auto snapped_pos = Vector2{floor(mouse_pos[0] / GRID_SIZE), floor(mouse_pos[1] / GRID_SIZE)} * GRID_SIZE;
 
-    _cursor->position = snapped_pos;
+    _cursor->setPosition(snapped_pos);
 
     // Only paint if the cursor is in a new grid space and we arent hovering over the menu bar and the left mouse button is down.
     if (Tyche::Mouse::isMouseButtonPressed(Tyche::Mouse::LEFT) && last_snapped_position != snapped_pos && mouse_pos[1] > _window->getWindowPosition().getY() + 20) {
         last_snapped_position = snapped_pos;
 
         // We can allocate memory here since the Room deletes all tiles in its internal vector
-        _editor->placeTile(snapped_pos, new Tyche::Tile{.position = snapped_pos, .texture_pos = _cursor->texture_pos});
+        _editor->placeTile(snapped_pos, new Tyche::Tile{.position = snapped_pos, .texture_pos = tile_texture});
     }
 }
 

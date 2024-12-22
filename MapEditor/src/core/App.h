@@ -44,7 +44,7 @@ namespace MapEditor {
         void init();
         void run();
 
-        Tyche::Tile& getCursor();
+        Tyche::Entity& getCursor();
         Tyche::Window& getWindow();
         Tyche::Camera& getCamera();
         Tyche::EntityRenderer& getEntityRenderer();
@@ -81,7 +81,7 @@ namespace MapEditor {
         Room _current_room{};
 
         //default Debug Entities;
-        Tyche::Tile _cursor{.scale = {30, 30}, .texture_pos = {3, 3}};
+        Tyche::Entity _cursor{};
 
         //Tool functions
         void registerNewTool(Tools::ToolInfo* tool_info);

@@ -73,6 +73,9 @@ void Tyche::TileRenderer::renderTiles(const Camera& camera) {
     _tile_shader.setInt("texture_atlas", 0);
     _tile_shader.setVector2("grid", _grid.value_ptr());
 
+
+    glBindVertexArray(_mesh.VAO);
+
     for (int i=0; i<_tiles.length(); i++) {
         auto tile_ptr = _tiles[i];
 
@@ -84,45 +87,20 @@ void Tyche::TileRenderer::renderTiles(const Camera& camera) {
 
         auto tile = *tile_ptr;
         //Bind the mesh
-        glBindVertexArray(_mesh.VAO);
 
         // update the transform matrix of the tile
-        tile.transform.translate(tile.position);
+/*        tile.transform.translate(tile.position);
         tile.transform.scale(tile.scale);
 
-        _tile_shader.setMatrix4("model", tile.transform.value_ptr());
+        _tile_shader.setMatrix4("model", tile.transform.value_ptr());*/
         _tile_shader.setVector2("texture_slot", tile.texture_pos.value_ptr());
 
         //Draw the mesh
-        glDrawArrays(GL_TRIANGLES, 0, 6);
     }
-}
-
-void Tyche::TileRenderer::renderTile(const Camera& camera, Tile tile) {
 
 
-    //upload our camera projection to the shader
-    _tile_shader.bind();
-    _tile_shader.setMatrix4("projection", camera.getMatrix().value_ptr());
-
-    //upload our texture + our texture info to the shader
-    _texture_atlas.bind();
-    _tile_shader.setInt("texture_atlas", 0);
-    _tile_shader.setVector2("grid", _grid.value_ptr());
-
-
-    //Bind the mesh
-    glBindVertexArray(_mesh.VAO);
-
-    // update the transform matrix of the tile
-    tile.transform.translate(tile.position);
-    tile.transform.scale(tile.scale);
-
-    _tile_shader.setMatrix4("model", tile.transform.value_ptr());
-    _tile_shader.setVector2("texture_slot", tile.texture_pos.value_ptr());
-
-    //Draw the mesh
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 6, (int) _tile_matrices.length());
+    glBindVertexArray(0);
 }
 
 int Tyche::TileRenderer::getTileSize() {
@@ -153,4 +131,48 @@ void Tyche::TileRenderer::loadTextureAtlas(const string &path) {
     };
 
     _texture_atlas.init(atlas_texture_info);
+}
+
+void Tyche::TileRenderer::prepareRendering() {
+    glDeleteBuffers(1, &_matrices_buffer);
+
+    _tile_matrices.clear();
+
+    for (auto tile: _tiles) {
+        Matrix4 mat;
+
+        mat.translate(tile->position);
+        mat.scale(tile->scale);
+
+        _tile_matrices.push_back({mat, tile->texture_pos});
+    }
+
+    // Instance buffer for the matrices
+    glGenBuffers(1, &_matrices_buffer);
+    glBindVertexArray(_mesh.VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, _matrices_buffer);
+    glBufferData(GL_ARRAY_BUFFER, _tile_matrices.length() * sizeof(RawTile), _tile_matrices.data(), GL_STREAM_DRAW);
+
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(RawTile), (void*)0);
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(RawTile), (void*)(sizeof(Vector4)));
+    glEnableVertexAttribArray(5);
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(RawTile), (void*)(2 * sizeof(Vector4)));
+    glEnableVertexAttribArray(6);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(RawTile), (void*)(3 * sizeof(Vector4)));
+    glEnableVertexAttribArray(7);
+    glVertexAttribPointer(7, 2, GL_FLOAT, GL_FALSE, sizeof(RawTile), (void*)(4 * sizeof(Vector4)));
+
+    glVertexAttribDivisor(3, 1);
+    glVertexAttribDivisor(4, 1);
+    glVertexAttribDivisor(5, 1);
+    glVertexAttribDivisor(6, 1);
+    glVertexAttribDivisor(7, 1);
+
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
 }

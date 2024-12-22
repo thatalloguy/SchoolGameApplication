@@ -7,8 +7,6 @@
 
 namespace Tyche {
 
-    //Sprites are functionally the same as tile.texture_slot;
-    typedef Math::Vector2 Sprite;
 
     /* Entities are dynamic gameobjects
      * Functions very simulair to tiles.
@@ -16,7 +14,7 @@ namespace Tyche {
      */
     class Entity {
     public:
-        Entity() = default;
+        Entity()  = default;
         ~Entity() = default;
 
         virtual void initialize();
@@ -26,20 +24,22 @@ namespace Tyche {
 
         void setPosition(const Math::Vector2& vec);
         void setScale(const Math::Vector2& vec);
+        void setSprite(const Math::Vector2& sprite);
+
 
         Math::Vector2 getPosition();
         Math::Vector2 getScale();
         Math::Matrix4 getTransform();
-        Sprite getSprite();
+        Math::Vector2 getSprite();
 
     protected:
         void calculateTransformMatrix();
 
-        Math::Matrix4 _transform;
+        Math::Matrix4 _transform{};
         Math::Vector2 _position{100.0f, 100.0f};
         Math::Vector2 _scale{100.0f, 100.0f};
+        Math::Vector2 _sprite{0.0f, 0.0f};
 
-        Sprite _sprite{0, 0};
     };
 
 

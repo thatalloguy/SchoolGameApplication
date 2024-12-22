@@ -36,6 +36,11 @@ namespace Tyche {
     };
 
 
+    struct RawTile {
+        Matrix4 matrix;
+        Vector2 vector;
+    };
+
     // A struct to specify how the TileRenderer should be structured
     struct TileRendererCreationInfo {
         int tile_size = 16; // a tile will be 16x16
@@ -63,7 +68,7 @@ namespace Tyche {
 
         //Renders all layers and tiles to the screen.
         void renderTiles(const Camera& camera);
-        void renderTile(const Camera& camera, Tile tile);
+        void prepareRendering();
 
         int getTileSize();
         void setTileSize(int new_tile_size);
@@ -73,7 +78,10 @@ namespace Tyche {
 
     private:
         vector<Tile*> _tiles;
+        vector<RawTile> _tile_matrices;
         GPUMesh _mesh{0, 0};
+
+        unsigned int _matrices_buffer;
         Shader _tile_shader;
         // x is the tile_size and y is the atlas size
         Vector2 _grid{16, 64};
