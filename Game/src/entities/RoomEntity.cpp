@@ -4,9 +4,8 @@
 
 #include "RoomEntity.h"
 
-void Entities::RoomEntity::initialize(const Vector2& position, Game::Room *room, Entities::RoomObjectId id, char tags[50]) {
+void Entities::RoomEntity::initialize(const Vector2& position, Game::Room *room, char tags[50]) {
     _parent = room;
-    _id = id;
     _position = position;
 
     loadTagsFromSingleString(tags);
@@ -34,4 +33,12 @@ void Entities::RoomEntity::loadTagsFromSingleString(char tags[50]) {
             temp_str = temp_str + tags[i];
         }
     }
+}
+
+void Entities::RoomEntity::update() {
+    Entity::update();
+}
+
+void Entities::RoomEntity::destroy() {
+    Entity::destroy();
 }

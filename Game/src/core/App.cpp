@@ -5,6 +5,7 @@
 #include "App.h"
 
 #include "../entities/Player.h"
+#include "../entities/FallingTile.h"
 #include "core/Input.h"
 
 //Global constants
@@ -53,14 +54,15 @@ Game::App::App(int argc, char **argv) {
 
     _entity_renderer.addEntity(&player);
 
-    _room_manager = new RoomManager(_tile_renderer, *_debug_renderer);
+    _room_manager = new RoomManager(_tile_renderer, _entity_renderer, *_debug_renderer);
+
+    _room_manager->registerEntity<Entities::FallingTile>(0);
 
     _world = _room_manager->getWorld();
 
     _world->addRigidBody(&player.getBody());
 
-    if (argc == 0)
-        _room_manager->loadRoom("../../../Rooms/begin.room");
+    _room_manager->loadRoom("../../../Rooms/begin.room");
 
     _audio_engine.Init();
 

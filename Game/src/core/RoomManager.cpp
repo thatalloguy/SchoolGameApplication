@@ -6,10 +6,11 @@
 
 #include "core/IO.h"
 
-Game::RoomManager::RoomManager(Tyche::TileRenderer& tile_renderer, Tyche::DebugRenderer& debug_renderer) {
+Game::RoomManager::RoomManager(Tyche::TileRenderer& tile_renderer, Tyche::EntityRenderer& entity_renderer, Tyche::DebugRenderer& debug_renderer) {
     _rooms.reserve(3);
     _tile_renderer = &tile_renderer;
     _debug_renderer = &debug_renderer;
+    _entity_renderer = &entity_renderer;
 }
 
 Game::RoomManager::~RoomManager() {
@@ -39,7 +40,7 @@ void Game::RoomManager::loadRoom(const char* path) {
     new_room->tiles = new_raw_room->tiles;
     new_room->colliders = new_raw_room->colliders;
 
-    loadEntities(*new_raw_room, new_room->entities);
+    loadEntities(*new_raw_room, *new_room);
 
     delete new_raw_room;
 
@@ -47,13 +48,13 @@ void Game::RoomManager::loadRoom(const char* path) {
 }
 
 void Game::RoomManager::update() {
-    for (auto room: _rooms) {
+    /*for (auto room: _rooms) {
         for (Entities::RoomEntity* entity: room->entities) {
             Vector4 box = {entity->getPosition()[0] - 12.5f, entity->getPosition()[1] - 12.5f,
                            entity->getPosition()[0] + 12.5f, entity->getPosition()[1] + 12.5f};
             _debug_renderer->renderBox(box);
         }
-    }
+    }*/
 }
 
 Tyche::World* Game::RoomManager::getWorld() {
@@ -81,9 +82,34 @@ void Game::RoomManager::destroyRoom(Room* room) {
         delete tile;
     }
 
+    for (auto entity : room->entities) {
+        entity->destroy();
+
+        delete entity;
+    }
+
     delete room;
 }
 
-void Game::RoomManager::loadEntities(Game::RawRoom &in, vector<Entities::RoomEntity*> &out) {
+void Game::RoomManager::loadEntities(Game::RawRoom &in, Room& out) {
+
+    for (auto blueprint : in.entities) {
+
+        if (_registry.has(blueprint->type)) {
+            auto create_entity = _registry.get(blueprint->type);
+
+            auto new_entity = create_entity();
+
+            new_entity->initialize(blueprint->position, &out, blueprint->tags);
+
+            out.entities.push_back(new_entity);
+            _entity_renderer->addEntity(new_entity);
+
+        } else {
+            spdlog::error("No Entity with TypeId {} is registered!", blueprint->type);
+        }
+
+        delete blueprint;
+    }
 
 }

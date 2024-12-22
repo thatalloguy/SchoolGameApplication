@@ -67,7 +67,13 @@ void Tyche::EntityRenderer::renderEntities(const Tyche::Camera &camera) {
     _entity_shader.setInt("texture_atlas", 0);
     _entity_shader.setVector2("grid", _grid.value_ptr());
 
+    int i=0;
     for (auto entity_ptr: _entities) {
+
+        if (entity_ptr == nullptr) {
+            _entities.remove(i);
+            break;
+        }
 
         Entity entity = *entity_ptr;
 
@@ -82,6 +88,7 @@ void Tyche::EntityRenderer::renderEntities(const Tyche::Camera &camera) {
 
         //Draw the mesh
         glDrawArrays(GL_TRIANGLES, 0, 6);
+        i++;
     }
 }
 

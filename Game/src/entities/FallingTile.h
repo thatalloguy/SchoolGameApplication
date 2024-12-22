@@ -9,10 +9,10 @@
 
 namespace Entities {
 
-    class FallingTile: public Entities::RoomEntity {
+class FallingTile: public Entities::RoomEntity {
 
     public:
-        void initialize(const Vector2& position, Game::Room* room, RoomObjectId id, char tags[50]) override;
+        void initialize(const Vector2& position, Game::Room* room, char tags[50]) override;
 
         void update() override;
         void destroy() override;
