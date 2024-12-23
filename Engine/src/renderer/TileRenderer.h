@@ -27,7 +27,7 @@ namespace Tyche {
         Vector2 scale{25, 25};
 
         // The final transformation matrix (should include  the scale and position of the tile)
-        Matrix4 transform;
+        Matrix4 transform{};
 
         // Type determines the texture the tile will have
         Vector2 texture_pos = {0, 0};

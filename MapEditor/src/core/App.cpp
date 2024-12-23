@@ -158,6 +158,7 @@ void MapEditor::App::run() {
         }
 
         _debug_renderer.render(_camera);
+        _debug_renderer.clearQueue();
 
         updateCurrentTool();
 

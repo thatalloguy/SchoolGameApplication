@@ -28,10 +28,10 @@ namespace Tyche {
         void  setViewportSize(const Math::Vector2& new_size);
 
     private:
-        Math::Matrix4 _camera_matrix;
-        Math::Vector2 _position;
+        Math::Matrix4 _camera_matrix{};
+        Math::Vector2 _position{0, 0};
 
-        Math::Vector2 _viewport_size;
+        Math::Vector2 _viewport_size{};
     };
 
 

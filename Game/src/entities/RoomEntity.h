@@ -33,7 +33,7 @@ namespace Entities {
         bool hasTag(const string& tag);
 
     protected:
-        vector<string> _tags;
+        string _tag;
         Game::Room* _parent{};
 
     private:

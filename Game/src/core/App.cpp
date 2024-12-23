@@ -71,7 +71,6 @@ Game::App::App(int argc, char **argv) {
 
     _room_manager->loadRoom("../../../Rooms/begin.room");
 
-
     processArgs(argc, argv);
 }
 
@@ -84,7 +83,6 @@ void Game::App::run() {
     auto currentTime = std::chrono::high_resolution_clock ::now();
 
     _tile_renderer.prepareRendering();
-
 
     while (!_window->shouldWindowClose()) {
 
@@ -109,6 +107,8 @@ void Game::App::run() {
         player.update(frameTime);
         _audio_engine.update(player.getPosition());
 
+
+        _camera.setPosition({-player.getPosition().getX() + (_camera.getViewportSize().getX() / 2), _camera.getPosition().getY()});
         _camera.update();
 
         _tile_renderer.renderTiles(_camera);

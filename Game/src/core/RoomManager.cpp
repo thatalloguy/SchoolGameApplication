@@ -66,6 +66,8 @@ void Game::RoomManager::loadTiles(RawRoom& room) {
         _tile_renderer->addTile(*tile);
     }
 
+
+
 }
 
 void Game::RoomManager::setupCollision(RawRoom& room) {

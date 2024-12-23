@@ -84,18 +84,6 @@ void Tyche::TileRenderer::renderTiles(const Camera& camera) {
             _tiles.remove(i);
             break;
         }
-
-        auto tile = *tile_ptr;
-        //Bind the mesh
-
-        // update the transform matrix of the tile
-/*        tile.transform.translate(tile.position);
-        tile.transform.scale(tile.scale);
-
-        _tile_shader.setMatrix4("model", tile.transform.value_ptr());*/
-        _tile_shader.setVector2("texture_slot", tile.texture_pos.value_ptr());
-
-        //Draw the mesh
     }
 
 
