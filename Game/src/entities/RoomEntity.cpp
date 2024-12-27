@@ -28,3 +28,7 @@ void Entities::RoomEntity::update(float delta_time) {
 void Entities::RoomEntity::destroy() {
     Entity::destroy();
 }
+
+void Entities::RoomEntity::reset() {
+    //unused
+}

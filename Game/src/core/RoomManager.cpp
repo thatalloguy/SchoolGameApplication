@@ -60,6 +60,10 @@ void Game::RoomManager::loadRoom(const char* path) {
 
 void Game::RoomManager::update(float delta_time) {
 
+    if (_player->getPosition().getY() >= max_y) {
+        resetCurrentRoom();
+    }
+
     for (Entities::RoomEntity* entity: _current_room->entities) {
         if (_is_outdated) {
             _is_outdated = false;
@@ -78,6 +82,10 @@ void Game::RoomManager::loadTiles(RawRoom& room) {
 
     for (auto tile : room.tiles) {
         _tile_renderer->addTile(*tile);
+
+        if (tile->position.getY() > max_y) {
+            max_y = tile->position.getY();
+        }
     }
 
     _tile_renderer->prepareRendering();
@@ -105,6 +113,7 @@ void Game::RoomManager::destroyRoom(Room* room) {
     }
 
     _world.clearAllStaticBodies();
+    max_y = 100.0f;
 
     delete room;
 }
@@ -122,6 +131,11 @@ void Game::RoomManager::loadEntities(Game::RawRoom &in, Room& out) {
 
             out.entities.push_back(new_entity);
             _entity_renderer->addEntity(new_entity);
+
+
+            if (new_entity->hasTag("start")) {
+                out.start = new_entity->getPosition();
+            }
 
         } else {
             spdlog::error("No Entity with TypeId {} is registered!", blueprint->type);
@@ -185,15 +199,20 @@ void Game::RoomManager::goToNextRoom() {
 
 
     // teleport player to the start portal
-    for (auto entity : _current_room->entities) {
-        if (entity->hasTag("start")) {
-            _player->setPosition(entity->getPosition());
-        }
-    }
+    _player->setPosition(_current_room->start);
 
     _is_outdated = true;
 }
 
 void Game::RoomManager::loadStartRoom() {
     loadRoom(_next_room.second->c_str());
+}
+
+void Game::RoomManager::resetCurrentRoom() {
+
+    for (auto entity : _current_room->entities) {
+        entity->reset();
+    }
+
+    _player->setPosition(_current_room->start);
 }

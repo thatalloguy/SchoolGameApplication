@@ -11,6 +11,7 @@ void Entities::FallingTile::initialize(const Vector2 &position, Game::Room *room
     _sprite = {3, 0};
     _scale = {25, 25};
     _position = position;
+    _old_position = position;
 
     //The collider is above the block
      _trigger = {
@@ -47,12 +48,12 @@ void Entities::FallingTile::update(float delta_time) {
 
     _debug_renderer->renderBox(_trigger);
 
-    if (Tyche::PhysicsHandler::collision(_trigger, _player_body->getAABB()) && !is_falling) {
+    if (Tyche::PhysicsHandler::collision(_trigger, _player_body->getAABB()) && !is_falling && !sleeping) {
         is_falling = true;
         _audio_engine->playSound(_falling_sound_id, _position);
     }
 
-    if (is_falling) {
+    if (is_falling && !sleeping) {
         _body.step(delta_time, _world->getGravity());
 
         _position = _body.getPosition();
@@ -68,12 +69,27 @@ void Entities::FallingTile::update(float delta_time) {
     }
 
 
-
-    if (_position.getY() > 700) {
-        //delete itself?
-    }
+    sleeping = false;
 }
 
 void Entities::FallingTile::destroy() {
+
+}
+
+void Entities::FallingTile::reset() {
+    is_falling = false;
+    sleeping = true;
+    _position = _old_position;
+
+    _body.setAABB({
+                          _position.getX() - 25,
+                          _position.getY() - 2.0f,
+                          _position.getX() + 12.5f,
+                          _position.getY() + 40.0f
+                  });
+
+
+    _body.setPosition(_position);
+    _body.setVelocity({0, 0});
 
 }

@@ -18,12 +18,16 @@ class FallingTile: public Entities::RoomEntity {
         void update(float delta_time) override;
         void destroy() override;
 
+        void reset() override;
+
     private:
         Vector4 _trigger;
+        Vector2 _old_position{0, 0};
         Tyche::PhysicsObject _body{};
         Tyche::SoundID _falling_sound_id;
 
         bool is_falling = false;
+        bool sleeping = false;
 
         Tyche::DebugRenderer* _debug_renderer = nullptr;
         Tyche::AudioEngine* _audio_engine   = nullptr;

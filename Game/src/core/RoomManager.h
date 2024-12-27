@@ -36,6 +36,8 @@ namespace Game {
         vector<Entities::RoomEntity*> entities;
         vector<Vector4> colliders;
 
+        Vector2 start{0, 0};
+
         void* parent = nullptr;
     };
 
@@ -59,6 +61,7 @@ namespace Game {
 
         void goToNextRoom();
         void loadStartRoom();
+        void resetCurrentRoom();
 
         void update(float delta_time);
 
@@ -98,6 +101,7 @@ namespace Game {
         Room* _current_room = nullptr;
 
         bool _is_outdated = false;
+        float max_y = 0.0f;
 
         hashmap<int, Entities::RoomEntity*(*)()> _registry;
     };

@@ -30,6 +30,8 @@ namespace Entities {
         virtual void update(float delta_time);
         virtual void destroy();
 
+        virtual void reset();
+
         bool hasTag(const string& tag);
 
     protected:
