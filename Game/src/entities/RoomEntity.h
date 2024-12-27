@@ -36,8 +36,6 @@ namespace Entities {
         string _tag;
         Game::Room* _parent{};
 
-    private:
-        void loadTagsFromSingleString(char tags[50]);
     };
 
 

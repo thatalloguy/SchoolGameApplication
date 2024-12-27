@@ -15,6 +15,9 @@ void Entities::Portal::initialize(const Vector2 &position, Game::Room *room, cha
         _type = PortalType::END;
     }
 
+    _trigger = {_position[0] - 12.5f, _position[1] - 12.5f,
+                _position[0] + 12.5f, _position[1] + 12.5f};
+
     _room_manager = (Game::RoomManager*) room->parent;
     _world = _room_manager->getWorld();
 
@@ -26,8 +29,12 @@ void Entities::Portal::initialize(const Vector2 &position, Game::Room *room, cha
 void Entities::Portal::update(float delta_time) {
     RoomEntity::update(delta_time);
 
-    _debug_renderer->renderBox({_position[0] - 12.5f, _position[1] - 12.5f,
-                                      _position[0] + 12.5f, _position[1] + 12.5f});
+    _debug_renderer->renderBox(_trigger);
+
+    if (Tyche::PhysicsHandler::collision(_trigger, _player_body->getAABB())
+            && _type == PortalType::END) {
+        _room_manager->goToNextRoom();
+    }
 }
 
 void Entities::Portal::destroy() {

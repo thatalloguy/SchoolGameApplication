@@ -212,7 +212,13 @@ void Tyche::World::step(float delta_time) {
 }
 
 void Tyche::World::renderBodies(Tyche::DebugRenderer& debug_renderer) {
+    int i=0;
     for (auto body: _bodies) {
+        if (body == nullptr) {
+            _bodies.remove(i);
+            break;
+        }
+
         debug_renderer.renderBox(body->getAABB());
 
         if (body->getVelocity() != Vector2{0, 0}) {
@@ -224,7 +230,7 @@ void Tyche::World::renderBodies(Tyche::DebugRenderer& debug_renderer) {
 
             debug_renderer.renderLine(body->getPosition(), vel_normal);
         }
-
+        i++;
     }
 }
 
@@ -234,4 +240,16 @@ Tyche::Math::Vector2 Tyche::World::getGravity() {
 
 void Tyche::World::setGravity(const Tyche::Math::Vector2 &vec) {
     _gravity = vec;
+}
+
+void Tyche::World::clearAllStaticBodies() {
+
+    for (auto body : _bodies) {
+        if (_should_handle_memory && body->getObjectType() == ObjectType::Static) {
+            delete body;
+        }
+    }
+
+    _bodies.clear();
+    _id_count = 0;
 }

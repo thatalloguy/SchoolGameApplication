@@ -51,3 +51,8 @@ void Entities::Player::destroy() {
 Tyche::PhysicsObject& Entities::Player::getBody() {
     return _collision_body;
 }
+
+void Entities::Player::setPosition(const Vector2 &pos) {
+    _collision_body.setPosition(pos);
+    _position = pos;
+}

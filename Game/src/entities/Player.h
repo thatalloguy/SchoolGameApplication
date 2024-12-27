@@ -17,6 +17,8 @@ namespace Entities {
         void update(float delta_time) override;
         void destroy() override;
 
+        void setPosition(const Tyche::Math::Vector2& pos) override;
+
         Tyche::PhysicsObject& getBody();
 
     private:

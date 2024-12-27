@@ -55,7 +55,7 @@ Game::App::App(int argc, char **argv) {
 
     _entity_renderer.addEntity(&player);
 
-    _room_manager = new RoomManager(_tile_renderer, _entity_renderer, *_debug_renderer);
+    _room_manager = new RoomManager(_tile_renderer, _entity_renderer, *_debug_renderer, player);
 
     _room_manager->registerEntity<Entities::FallingTile>(0);
     _room_manager->registerEntity<Entities::Portal>(1);
@@ -68,8 +68,8 @@ Game::App::App(int argc, char **argv) {
     _room_manager->setAudioEngine(&_audio_engine);
 
 
-
-    _room_manager->loadRoom("../../../Rooms/begin.room");
+    _room_manager->loadRoomList("../../../Rooms", "TEST");
+    _room_manager->loadStartRoom();
 
     processArgs(argc, argv);
 }

@@ -22,7 +22,7 @@ namespace Tyche {
         virtual void prepareRendering();
         virtual void destroy();
 
-        void setPosition(const Math::Vector2& vec);
+        virtual void setPosition(const Math::Vector2& vec);
         void setScale(const Math::Vector2& vec);
         void setSprite(const Math::Vector2& sprite);
 

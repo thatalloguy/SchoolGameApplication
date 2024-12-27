@@ -12,6 +12,8 @@
 #include "stl/hashmap.h"
 #include "renderer/EntityRenderer.h"
 #include "audio/AudioDevice.h"
+#include "stl/pair.h"
+#include "../entities/Player.h"
 
 namespace Game {
 
@@ -37,10 +39,12 @@ namespace Game {
         void* parent = nullptr;
     };
 
+
     class RoomManager {
 
     public:
-        RoomManager(Tyche::TileRenderer& tile_renderer, Tyche::EntityRenderer& entity_renderer, Tyche::DebugRenderer& debug_renderer);
+        RoomManager(Tyche::TileRenderer& tile_renderer, Tyche::EntityRenderer& entity_renderer,
+                    Tyche::DebugRenderer& debug_renderer, Entities::Player& player);
         ~RoomManager();
 
         template<typename T>
@@ -49,6 +53,12 @@ namespace Game {
         }
 
         void loadRoom(const char* path);
+        void loadRoomList(const char* directory_path, const char* seed);
+
+        bool hasOutdatedData() { return _is_outdated; };
+
+        void goToNextRoom();
+        void loadStartRoom();
 
         void update(float delta_time);
 
@@ -78,11 +88,18 @@ namespace Game {
         Tyche::TileRenderer* _tile_renderer = nullptr;
         Tyche::EntityRenderer* _entity_renderer = nullptr;
         Tyche::DebugRenderer* _debug_renderer = nullptr;
+        Entities::Player* _player = nullptr;
 
-        Tyche::AudioEngine* _audio_engine = nullptr;
-        vector<Room*> _rooms;
-        hashmap<int, Entities::RoomEntity*(*)()> _registry;
+        Tyche::AudioEngine*     _audio_engine = nullptr;
         Tyche::World _world{true};
+
+        Pair<float, string*> _next_room{0.0f, nullptr};
+        vector<Pair<float, string*>> _room_weights;
+        Room* _current_room = nullptr;
+
+        bool _is_outdated = false;
+
+        hashmap<int, Entities::RoomEntity*(*)()> _registry;
     };
 
 

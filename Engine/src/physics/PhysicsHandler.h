@@ -45,6 +45,7 @@ namespace Tyche {
         PhysicsID addGhostBody(PhysicsObject* object);
 
         void removeBody(PhysicsID id);
+        void clearAllStaticBodies();
 
         // Updates all of the bodies in the world
         void step(float delta_time);

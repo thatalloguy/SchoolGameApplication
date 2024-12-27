@@ -60,6 +60,7 @@ void Tyche::TileRenderer::removeTile(int index) {
 
 void Tyche::TileRenderer::clearTiles() {
     _tiles.clear();
+    prepareRendering();
 }
 
 void Tyche::TileRenderer::renderTiles(const Camera& camera) {
