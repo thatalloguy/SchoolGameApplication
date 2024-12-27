@@ -54,6 +54,10 @@ namespace Tyche::STL {
             (push_back(args), ...);
         }
 
+        ~vector() {
+            delete[] buf;
+        }
+
         /// Copies the obj.
         vector& operator=(vector& obj) {
             //if (*this == obj) return *this; // no self asignment.
@@ -187,13 +191,7 @@ namespace Tyche::STL {
 
 
         /// Deletes the allocated objects.
-        ~vector() {
 
-            if (buf != nullptr) {
-                delete[] buf;
-            }
-
-        };
 
 
         /* --- Iterator stuff */

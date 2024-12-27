@@ -23,7 +23,7 @@ namespace Entities {
     public:
 
         RoomEntity() = default;
-        ~RoomEntity() = default;
+        virtual ~RoomEntity() = default;
 
         virtual void initialize(const Vector2& position, Game::Room* room, char tags[50]);
 

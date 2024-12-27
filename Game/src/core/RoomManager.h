@@ -98,7 +98,7 @@ namespace Game {
 
         Pair<float, string*> _next_room{0.0f, nullptr};
         vector<Pair<float, string*>> _room_weights;
-        Room* _current_room = nullptr;
+        Room _current_room{};
 
         bool _is_outdated = false;
         float max_y = 0.0f;

@@ -7,8 +7,8 @@
 void Entities::Portal::initialize(const Vector2 &position, Game::Room *room, char *tags) {
     RoomEntity::initialize(position, room, tags);
 
-    _sprite = {1, 0};
-    _scale = {0, 0};
+    _sprite = {0, 1};
+    _scale = {25, 25};
 
 
     if (RoomEntity::hasTag("end")) {

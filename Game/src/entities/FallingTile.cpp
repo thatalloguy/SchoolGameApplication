@@ -5,6 +5,11 @@
 #include "FallingTile.h"
 #include "spdlog/spdlog.h"
 
+
+namespace {
+    Tyche::SoundID _falling_sound_id = -1;
+}
+
 void Entities::FallingTile::initialize(const Vector2 &position, Game::Room *room, char *tags) {
     RoomEntity::initialize(position, room, tags);
 
@@ -40,7 +45,9 @@ void Entities::FallingTile::initialize(const Vector2 &position, Game::Room *room
     _debug_renderer = _room_manager->getDebugRenderer();
 
     _world->addStaticBody(&_body);
-    _falling_sound_id = _audio_engine->registerSound({"../../../Resources/Audio/falling_block.wav"});
+    if (_falling_sound_id == -1) {
+        _falling_sound_id = _audio_engine->registerSound({"../../../Resources/Audio/falling_block.wav"});
+    }
 }
 
 
@@ -73,7 +80,6 @@ void Entities::FallingTile::update(float delta_time) {
 }
 
 void Entities::FallingTile::destroy() {
-
 }
 
 void Entities::FallingTile::reset() {

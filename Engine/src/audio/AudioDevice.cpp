@@ -367,3 +367,16 @@ void Tyche::AudioEngine::updateSound(Tyche::SoundID id, const Tyche::Math::Vecto
 
     sound->soundEffect.playerPosition = _listener_pos;
 }
+
+void Tyche::AudioEngine::deleteSound(Tyche::SoundID id) {
+    if (registry.has(id)) {
+        delete registry.get(id);
+    }
+
+    for (int i=0; i<_objects.length(); i++) {
+        auto sound = _objects[i];
+        if (sound == nullptr) {
+            _objects.remove(i);
+        }
+    }
+}

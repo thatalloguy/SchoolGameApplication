@@ -107,6 +107,8 @@ namespace Tyche {
         //Plays the sound at the position given, also adds it to the queue to update it later.
         void playSound(SoundID id, const Math::Vector2& pos, float volume=1.0f);
 
+        void deleteSound(SoundID id);
+
         void updateSound(SoundID id, const Math::Vector2& pos);
 
         //Updates all sounds positions and directions

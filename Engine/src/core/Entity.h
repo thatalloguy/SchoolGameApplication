@@ -15,7 +15,7 @@ namespace Tyche {
     class Entity {
     public:
         Entity()  = default;
-        ~Entity() = default;
+        virtual ~Entity() = default;
 
         virtual void initialize();
         virtual void update(float delta_time);

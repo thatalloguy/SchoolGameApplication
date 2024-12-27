@@ -17,7 +17,7 @@ Game::RoomManager::RoomManager(Tyche::TileRenderer& tile_renderer, Tyche::Entity
 }
 
 Game::RoomManager::~RoomManager() {
-    destroyRoom(_current_room);
+    destroyRoom(&_current_room);
 
 
     for (auto room_weight : _room_weights) {
@@ -31,31 +31,27 @@ void Game::RoomManager::loadRoom(const char* path) {
     string full_path = "../../../Rooms/";
     full_path = full_path + path;
 
-    RawRoom* new_raw_room = new RawRoom{};
-    Room* new_room = new Room{};
+    RawRoom new_raw_room{};
 
     FILE* file = fopen(full_path.c_str(), "r");
 
-    Tyche::IO::loadVectorFromFile<Tyche::Tile*, Tyche::Tile>(full_path.c_str(), new_raw_room->tiles, file, false);
-    Tyche::IO::loadVectorFromFile<EntityBlueprint*, EntityBlueprint>(full_path.c_str(), new_raw_room->entities, file, false);
-    Tyche::IO::loadVectorFromFile<Vector4>(full_path.c_str(), new_raw_room->colliders, file, false);
+    Tyche::IO::loadVectorFromFile<Tyche::Tile*, Tyche::Tile>(full_path.c_str(), new_raw_room.tiles, file, false);
+    Tyche::IO::loadVectorFromFile<EntityBlueprint*, EntityBlueprint>(full_path.c_str(), new_raw_room.entities, file, false);
+    Tyche::IO::loadVectorFromFile<Vector4>(full_path.c_str(), new_raw_room.colliders, file, false);
 
-    loadTiles(*new_raw_room);
-    setupCollision(*new_raw_room);
+    loadTiles(new_raw_room);
+    setupCollision(new_raw_room);
 
     spdlog::info("Loaded Room from disk: {}", full_path.c_str());
 
     fclose(file);
 
-    new_room->tiles = new_raw_room->tiles;
-    new_room->colliders = new_raw_room->colliders;
-    new_room->parent = this;
+    _current_room.tiles = new_raw_room.tiles;
+    _current_room.colliders = new_raw_room.colliders;
+    _current_room.parent = this;
 
-    loadEntities(*new_raw_room, *new_room);
+    loadEntities(new_raw_room, _current_room);
 
-    delete new_raw_room;
-
-    _current_room = new_room;
 }
 
 void Game::RoomManager::update(float delta_time) {
@@ -64,7 +60,7 @@ void Game::RoomManager::update(float delta_time) {
         resetCurrentRoom();
     }
 
-    for (Entities::RoomEntity* entity: _current_room->entities) {
+    for (Entities::RoomEntity* entity: _current_room.entities) {
         if (_is_outdated) {
             _is_outdated = false;
             return;
@@ -104,18 +100,20 @@ void Game::RoomManager::destroyRoom(Room* room) {
     for (Tyche::Tile* tile: room->tiles) {
         delete tile;
     }
-    _tile_renderer->clearTiles();
 
     for (auto entity : room->entities) {
-        entity->destroy();
-
         delete entity;
     }
 
     _world.clearAllStaticBodies();
+    _tile_renderer->clearTiles();
     max_y = 100.0f;
 
-    delete room;
+    _current_room.tiles.clear();
+    _current_room.entities.clear();
+    _current_room.colliders.clear();
+
+    spdlog::info("Destroyed room");
 }
 
 void Game::RoomManager::loadEntities(Game::RawRoom &in, Room& out) {
@@ -141,7 +139,7 @@ void Game::RoomManager::loadEntities(Game::RawRoom &in, Room& out) {
             spdlog::error("No Entity with TypeId {} is registered!", blueprint->type);
         }
 
-        delete blueprint;
+        //delete blueprint;
     }
 
 }
@@ -191,7 +189,7 @@ void Game::RoomManager::goToNextRoom() {
 
     // go to next room :D
 
-    destroyRoom(_current_room);
+    destroyRoom(&_current_room);
 
     _world.addRigidBody(&_player->getBody());
 
@@ -199,7 +197,7 @@ void Game::RoomManager::goToNextRoom() {
 
 
     // teleport player to the start portal
-    _player->setPosition(_current_room->start);
+    _player->setPosition(_current_room.start);
 
     _is_outdated = true;
 }
@@ -210,9 +208,9 @@ void Game::RoomManager::loadStartRoom() {
 
 void Game::RoomManager::resetCurrentRoom() {
 
-    for (auto entity : _current_room->entities) {
+    for (auto entity : _current_room.entities) {
         entity->reset();
     }
 
-    _player->setPosition(_current_room->start);
+    _player->setPosition( _current_room.start);
 }
