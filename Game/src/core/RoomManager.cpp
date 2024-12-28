@@ -138,8 +138,6 @@ void Game::RoomManager::loadEntities(Game::RawRoom &in, Room& out) {
         } else {
             spdlog::error("No Entity with TypeId {} is registered!", blueprint->type);
         }
-
-        //delete blueprint;
     }
 
 }
@@ -147,30 +145,30 @@ void Game::RoomManager::loadEntities(Game::RawRoom &in, Room& out) {
 void Game::RoomManager::loadRoomList(const char *directory_path, const char* seed) {
     int i = 0;
     for (const auto & entry : std::filesystem::directory_iterator(directory_path)) {
-        if (entry.is_directory())
-            break;
+        if (!std::filesystem::is_directory(entry.path())) {
 
-        if (i>strlen(seed)) {
-            i=0;
+            if (i > strlen(seed)) {
+                i = 0;
+            }
+
+
+            char a = seed[i];
+            int letter_pos = a - 64;
+
+            float weight = 1.0f + ((float) letter_pos / 26);
+
+            _room_weights.push_back({weight, new string{entry.path().filename().string().data()}});
+
+            auto room = _room_weights.back();
+
+            if (_next_room.first <= room.first) {
+                _next_room = room;
+            }
+
+            spdlog::info("Room {} {}", room.first, room.second->c_str());
+
+            i++;
         }
-
-
-        char a = seed[i];
-        int letter_pos = a - 64;
-
-        float weight = 1.0f + ((float) letter_pos / 26);
-
-        _room_weights.push_back({weight, new string{entry.path().filename().string().data()}});
-
-        auto room = _room_weights.back();
-
-        if (_next_room.first <= room.first) {
-            _next_room = room;
-        }
-
-        spdlog::info("Room {} {}", room.first, room.second->c_str());
-
-        i++;
     }
 }
 
@@ -206,7 +204,11 @@ void Game::RoomManager::goToNextRoom() {
 }
 
 void Game::RoomManager::loadStartRoom() {
-    loadRoom(_next_room.second->c_str());
+    if (_next_room.second != nullptr) {
+        loadRoom(_next_room.second->c_str());
+    } else {
+        spdlog::error("No Next room found!");
+    }
 }
 
 void Game::RoomManager::resetCurrentRoom() {
