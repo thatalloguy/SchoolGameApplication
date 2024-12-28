@@ -147,10 +147,13 @@ void Game::RoomManager::loadEntities(Game::RawRoom &in, Room& out) {
 void Game::RoomManager::loadRoomList(const char *directory_path, const char* seed) {
     int i = 0;
     for (const auto & entry : std::filesystem::directory_iterator(directory_path)) {
+        if (entry.is_directory())
+            break;
 
         if (i>strlen(seed)) {
             i=0;
         }
+
 
         char a = seed[i];
         int letter_pos = a - 64;
