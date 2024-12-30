@@ -76,8 +76,7 @@ Game::App::App(int argc, char **argv) {
     _room_manager->setAudioEngine(&_audio_engine);
 
 
-    _room_manager->loadRoomList("../../../Rooms", "TEST");
-    _room_manager->loadStartRoom();
+
 
     processArgs(argc, argv);
 
@@ -192,15 +191,25 @@ void Game::App::menuTick(float delta_time) {
     float window_width = _window->getWindowSize()[0];
     float window_height = _window->getWindowSize()[1];
 
-    float scale = sqrt((window_width * window_width) + (window_height * window_height)) / 200.0f;
+    float scale = sqrt((window_width * window_width) + (window_height * window_height)) / 800.0f;
 
 
     ImGui::SetWindowFontScale(scale);
     ImGui::Text("Tomb Crawler");
+    ImGui::Separator();
 
-    ImGui::SetCursorPos({window_width * 0.45f, window_height * 0.45f});
-    if (ImGui::Button("START")) {
+    ImGui::SetWindowFontScale(scale * 0.2f);
+    ImGui::SetCursorPos({window_width * 0.05f, window_height * 0.45f});
+
+    ImGui::SetNextItemWidth(window_width * 0.2f);
+    ImGui::InputText(" <- Seed ", seed_to_use, 10);
+    ImGui::NewLine();
+
+    ImGui::SetWindowFontScale(scale * 0.4f);
+    if (ImGui::Button(" START")) {
         _current_state = GameState::GAMELOOP;
+        _room_manager->loadRoomList("../../../Rooms", seed_to_use);
+        _room_manager->loadStartRoom();
     }
 
 
@@ -218,6 +227,11 @@ void Game::App::initializeImgui() {
 
     ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*) _window->getRawWindowPtr(), true);
     ImGui_ImplOpenGL3_Init("#version 420");
+
+    ImGuiIO& io = ImGui::GetIO();
+
+    io.Fonts->AddFontFromFileTTF("../../../Resources/Fonts/KarmaFuture.ttf", 128);
+    io.Fonts->Build();
 }
 
 void Game::App::cleanupImgui() {

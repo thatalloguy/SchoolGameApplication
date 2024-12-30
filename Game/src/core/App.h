@@ -41,6 +41,8 @@ namespace Game {
         void newImguiFrame();
         void renderImguiFrame();
 
+        char seed_to_use[10]{"hellotest"};
+
 
         Tyche::Window* _window;
         Tyche::TileRenderer _tile_renderer{};
