@@ -40,7 +40,7 @@ namespace Entities {
         Game::RoomManager* _room_manager        = nullptr;
         Tyche::World* _world                    = nullptr;
         Tyche::PhysicsObject* _player_body      = nullptr;
-
+        Tyche::AudioEngine* _audio_engine   = nullptr;
     };
 
 }

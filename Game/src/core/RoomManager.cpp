@@ -247,4 +247,5 @@ void Game::RoomManager::resetCurrentRoom() {
     }
 
     _player->setPosition( _current_room.start);
+    _player->getBody().setVelocity({0, 0});
 }

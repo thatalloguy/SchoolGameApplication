@@ -40,7 +40,6 @@ void Entities::FallingTile::initialize(const Vector2 &position, Game::Room *room
 
     _room_manager = (Game::RoomManager*) room->parent;
     _world = _room_manager->getWorld();
-    _room = room;
     _audio_engine = _room_manager->getAudioEngine();
 
     _player_body = _world->getFirstBody();

@@ -166,6 +166,9 @@ void Game::App::mainloopTick(float frameTime) {
     _debug_renderer->clearQueue();
 
 
+    if (Tyche::Input::isKeyPressed(Tyche::Input::R)) {
+        _room_manager->resetCurrentRoom();
+    }
 
 }
 

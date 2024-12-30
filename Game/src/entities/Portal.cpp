@@ -4,6 +4,11 @@
 
 #include "Portal.h"
 
+//global constants
+namespace {
+    unsigned int portal_sound = -1;
+}
+
 void Entities::Portal::initialize(const Vector2 &position, Game::Room *room, char *tags) {
     RoomEntity::initialize(position, room, tags);
 
@@ -23,7 +28,12 @@ void Entities::Portal::initialize(const Vector2 &position, Game::Room *room, cha
 
     _player_body = _world->getFirstBody();
     _debug_renderer = _room_manager->getDebugRenderer();
+    _audio_engine = _room_manager->getAudioEngine();
 
+
+    if (portal_sound == -1) {
+        portal_sound = _audio_engine->registerSound({"../../../Resources/Audio/level.wav"});
+    }
 }
 
 void Entities::Portal::update(float delta_time) {
@@ -34,6 +44,8 @@ void Entities::Portal::update(float delta_time) {
     if (Tyche::PhysicsHandler::collision(_trigger, _player_body->getAABB())
             && _type == PortalType::END) {
         _room_manager->goToNextRoom();
+
+        _audio_engine->playSound(portal_sound, {-100, 0});
     }
 }
 

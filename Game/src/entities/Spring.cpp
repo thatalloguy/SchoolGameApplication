@@ -4,6 +4,11 @@
 
 #include "Spring.h"
 
+//global constants
+namespace {
+    unsigned int spring_sound = -1;
+}
+
 void Entities::Spring::initialize(const Vector2 &position, Game::Room *room, char *tags) {
     RoomEntity::initialize(position, room, tags);
 
@@ -25,6 +30,11 @@ void Entities::Spring::initialize(const Vector2 &position, Game::Room *room, cha
 
     _player_body = _world->getFirstBody();
     _debug_renderer = _room_manager->getDebugRenderer();
+    _audio_engine = _room_manager->getAudioEngine();
+
+    if (spring_sound == -1) {
+        spring_sound = _audio_engine->registerSound({"../../../Resources/Audio/spring.wav"});
+    }
 }
 
 void Entities::Spring::update(float delta_time) {
@@ -37,6 +47,8 @@ void Entities::Spring::update(float delta_time) {
     // Launch the player upwards when it comes in contact with us.
     if (Tyche::PhysicsHandler::collision(_trigger, _player_body->getAABB()) && _state == SpringState::IN) {
         _state = SpringState::OUT;
+
+        _audio_engine->playSound(spring_sound, _position, 2.0f);
 
         // Set a delay to go back to IN state
         _delay_timer.setWaitTime(turn_off_delay);
@@ -53,6 +65,8 @@ void Entities::Spring::update(float delta_time) {
         _sprite = {3, 1};
     } else {
         _sprite = {0, 2};
+
+        _audio_engine->updateSound(spring_sound, _position);
     }
 }
 

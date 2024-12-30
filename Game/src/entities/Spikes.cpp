@@ -4,6 +4,11 @@
 
 #include "Spikes.h"
 
+//global constants
+namespace {
+    unsigned int spike_sound = -1;
+}
+
 void Entities::Spikes::initialize(const Vector2 &position, Game::Room *room, char *tags) {
     RoomEntity::initialize(position, room, tags);
 
@@ -24,6 +29,11 @@ void Entities::Spikes::initialize(const Vector2 &position, Game::Room *room, cha
 
     _player_body = _world->getFirstBody();
     _debug_renderer = _room_manager->getDebugRenderer();
+    _audio_engine = _room_manager->getAudioEngine();
+
+    if (spike_sound == -1) {
+        spike_sound = _audio_engine->registerSound({"../../../Resources/Audio/spikes.wav"});
+    }
 }
 
 void Entities::Spikes::update(float delta_time) {
@@ -81,6 +91,7 @@ void Entities::Spikes::destroy() {
 
 void Entities::Spikes::activate() {
     _state = SpikeState::OUT;
+    _audio_engine->playSound(spike_sound, _position);
 
     // Set a delay to retract again so that the player can jump over us again.
     _delay_timer.setWaitTime(reactivation_delay);

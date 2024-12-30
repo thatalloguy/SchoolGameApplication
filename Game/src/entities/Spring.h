@@ -36,7 +36,7 @@ namespace Entities {
 
     private:
 
-        const int turn_off_delay = 400;
+        const int turn_off_delay = 1000;
 
         SpringState _state = SpringState::IN;
         Vector4 _trigger;
@@ -46,7 +46,7 @@ namespace Entities {
         Game::RoomManager* _room_manager        = nullptr;
         Tyche::World* _world                    = nullptr;
         Tyche::PhysicsObject* _player_body      = nullptr;
-
+        Tyche::AudioEngine* _audio_engine   = nullptr;
     };
 
 

@@ -333,7 +333,7 @@ void Tyche::AudioEngine::playSound(SoundID id, const Math::Vector2& pos, float v
     ma_sound_set_volume(sound, volume);
     ma_sound_start(sound);
 
-    _queue.push_back(obj);
+    //_queue.push_back(obj);
 }
 
 bool Tyche::AudioEngine::isSoundPlaying(Tyche::SoundID id) {
@@ -343,22 +343,25 @@ bool Tyche::AudioEngine::isSoundPlaying(Tyche::SoundID id) {
 void Tyche::AudioEngine::update(const Tyche::Math::Vector2 &listenerPos) {
     _listener_pos = listenerPos;
 
-    for (int i=0; i<_queue.length(); i++) {
+ /*   for (int i=0; i<_queue.length(); i++) {
 
         auto sound = _queue[i];
 
         //Update all of the sounds that are playing
-        if (ma_sound_is_playing(&sound->g_sound)) {
 
-            //Update the direction
-            sound->soundEffect.direction = sound->soundEffect.soundPosition - listenerPos;
-            sound->soundEffect.direction.normalize();
+        if (&sound->g_sound != nullptr) {
+            if (ma_sound_is_playing(&sound->g_sound)) {
 
-            sound->soundEffect.playerPosition = listenerPos;
+                //Update the direction
+                sound->soundEffect.direction = sound->soundEffect.soundPosition - listenerPos;
+                sound->soundEffect.direction.normalize();
+
+                sound->soundEffect.playerPosition = listenerPos;
+            }
         } else {
             _queue.remove(i);
         }
-    }
+    }*/
 }
 
 void Tyche::AudioEngine::updateSound(Tyche::SoundID id, const Tyche::Math::Vector2 &pos) {

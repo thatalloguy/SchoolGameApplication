@@ -34,7 +34,7 @@ namespace Entities {
     private:
         const int activation_delay = 400;
         const int reactivation_delay = 2000;
-        const int death_delay = 250; // Have a death delay to show the player why they died
+        const int death_delay = 100; // Have a death delay to show the player why they died
 
         Vector4 _trigger;
         Tyche::Timer _delay_timer{activation_delay};
@@ -44,6 +44,7 @@ namespace Entities {
         Game::RoomManager* _room_manager        = nullptr;
         Tyche::World* _world                    = nullptr;
         Tyche::PhysicsObject* _player_body      = nullptr;
+        Tyche::AudioEngine* _audio_engine   = nullptr;
 
     };
 
