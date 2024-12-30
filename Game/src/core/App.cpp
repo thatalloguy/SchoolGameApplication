@@ -11,6 +11,7 @@
 #include "../entities/FallingTile.h"
 #include "../entities/Portal.h"
 #include "../entities/Spikes.h"
+#include "../entities/Spring.h"
 
 //Global constants
 namespace {
@@ -63,6 +64,7 @@ Game::App::App(int argc, char **argv) {
     _room_manager->registerEntity<Entities::FallingTile>(0);
     _room_manager->registerEntity<Entities::Portal>(1);
     _room_manager->registerEntity<Entities::Spikes>(2);
+    _room_manager->registerEntity<Entities::Spring>(3);
 
     _world = _room_manager->getWorld();
 

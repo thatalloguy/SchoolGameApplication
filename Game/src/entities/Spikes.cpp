@@ -31,11 +31,21 @@ void Entities::Spikes::update(float delta_time) {
 
     _debug_renderer->renderBox(_trigger);
 
-    if (Tyche::PhysicsHandler::collision(_trigger, _player_body->getAABB())
-        && _state == SpikeState::IN) {
-        _delay_timer.start([=, this](){
-            this->activate();
-        });
+    if (Tyche::PhysicsHandler::collision(_trigger, _player_body->getAABB())) {
+        if (_state == SpikeState::IN) {
+            _delay_timer.start([=, this](){
+                this->activate();
+            });
+        } else {
+            // ded :(
+
+            _delay_timer.setWaitTime(death_delay);
+
+            _delay_timer.start([=, this](){
+                _room_manager->resetCurrentRoom();
+            });
+        }
+
     }
 
     if (_state == SpikeState::IN) {
@@ -79,5 +89,6 @@ void Entities::Spikes::reset() {
     RoomEntity::reset();
 
     _delay_timer.stop();
+    _delay_timer.setWaitTime(activation_delay);
     _state = SpikeState::IN;
 }

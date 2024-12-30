@@ -478,6 +478,8 @@ void MapEditor::App::loadRoomFromDisk(const char* path) {
         _tile_renderer.addTile(*tile);
     }
 
+    _tile_renderer.prepareRendering();
+
     spdlog::info("Loaded Room from disk: {}", full_path.c_str());
 
     fclose(file);

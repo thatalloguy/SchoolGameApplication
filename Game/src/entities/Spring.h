@@ -1,5 +1,5 @@
 //
-// Created by allos on 12/28/2024.
+// Created by allos on 12/30/2024.
 //
 #pragma once
 
@@ -9,32 +9,34 @@
 
 namespace Entities {
 
-    enum class SpikeState: unsigned int{
+
+    enum class SpringState : unsigned int {
         IN = 0,
         OUT = 1,
     };
 
-    class Spikes : public RoomEntity {
+    class Spring: public RoomEntity {
     public:
 
-        void initialize(const Vector2& position, Game::Room* room, char tags[50]) override;
+        void initialize(const Vector2 &position, Game::Room *room, char tags[50]) override;
 
         void update(float delta_time) override;
+
         void destroy() override;
 
-        SpikeState getState() { return _state; };
+        SpringState getState() { return _state; };
 
         void reset() override;
 
         void activate();
-    private:
-        const int activation_delay = 400;
-        const int reactivation_delay = 2000;
-        const int death_delay = 100; // Have a death delay to show the player why they died
 
+    private:
+
+        const int turn_off_delay = 400;
+
+        SpringState _state = SpringState::IN;
         Vector4 _trigger;
-        Tyche::Timer _delay_timer{activation_delay};
-        SpikeState _state = SpikeState::IN;
+        Tyche::Timer _delay_timer;
 
         Tyche::DebugRenderer* _debug_renderer   = nullptr;
         Game::RoomManager* _room_manager        = nullptr;
@@ -43,4 +45,6 @@ namespace Entities {
 
     };
 
+
 }
+
