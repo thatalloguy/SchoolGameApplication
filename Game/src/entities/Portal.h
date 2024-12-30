@@ -13,6 +13,13 @@ namespace Entities {
         END = 1,
     };
 
+    /*
+     * The portal entity defines the length of a level.
+     * Its either the start or the end of a level
+     * When its the start of a level the player will get teleported to it when the level resets.
+     * When its an end of a level, when it comes in contact with the player
+     * it will tell the room manager to go to the next level.
+     */
 
     class Portal: public RoomEntity {
     public:

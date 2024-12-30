@@ -8,7 +8,7 @@
 
 namespace Entities {
 
-
+    // The player is the main entity and only controlled by that player :D
     class Player : public Tyche::Entity {
 
 

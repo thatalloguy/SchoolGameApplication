@@ -8,6 +8,8 @@
 namespace Tyche {
 
 
+    //Simple Timer class
+    //NOTE it uses threads to create the delay effect, so many timers going at once could create problems.
     class Timer {
 
     public:

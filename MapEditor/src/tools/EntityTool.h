@@ -13,6 +13,7 @@
 
 namespace Tools {
 
+    // A tool for creating, removing and editing entities.
     class EntityTool: public Tools::Tool {
 
     public:
@@ -33,7 +34,6 @@ namespace Tools {
         bool has_builded_last_frame = false;
 
         Vector4 AABB{0, 0, 0, 0};
-        Vector2 last_snapped_position{0, 0};
     };
 
 }

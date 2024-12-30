@@ -10,6 +10,12 @@
 
 namespace Entities {
 
+
+    /*
+     * The falling tile is a block that falls if the player touches it.
+     * NOTE: the trigger to make the block fall is slightly larger than the actual entity size.
+     * This is to give the player time to react to the change. It also allows the player to run over it when at max speed.
+     */
 class FallingTile: public Entities::RoomEntity {
 
     public:
@@ -26,6 +32,7 @@ class FallingTile: public Entities::RoomEntity {
         Tyche::PhysicsObject _body{};
 
         bool is_falling = false;
+        // Sleeping is a 1 frame delay to avoid falling again when the level resets.
         bool sleeping = false;
 
         Tyche::DebugRenderer* _debug_renderer = nullptr;

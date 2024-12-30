@@ -33,15 +33,18 @@ void Entities::Spring::update(float delta_time) {
 
     _debug_renderer->renderBox(_trigger);
 
-    if (Tyche::PhysicsHandler::collision(_trigger, _player_body->getAABB())) {
+
+    // Launch the player upwards when it comes in contact with us.
+    if (Tyche::PhysicsHandler::collision(_trigger, _player_body->getAABB()) && _state == SpringState::IN) {
         _state = SpringState::OUT;
 
+        // Set a delay to go back to IN state
         _delay_timer.setWaitTime(turn_off_delay);
         _delay_timer.start([=, this](){
             _state = SpringState::IN;
         });
 
-
+        // Slightly slow down the player on the x-axis.
         _player_body->setVelocity({_player_body->getVelocity()[0] * 0.995f, -100});
     }
 

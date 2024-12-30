@@ -24,13 +24,14 @@ namespace Game {
         Vector2 position = {0,0};
     };
 
-
+    //The struct which are saved in binary in the room files
     struct RawRoom {
         vector<Tyche::Tile*> tiles;
         vector<EntityBlueprint*> entities;
         vector<Vector4> colliders;
     };
 
+    // Actual game ready Room structs
     struct Room {
         vector<Tyche::Tile*> tiles;
         vector<Entities::RoomEntity*> entities;
@@ -38,6 +39,7 @@ namespace Game {
 
         Vector2 start{0, 0};
 
+        // Parent is the RoomManager.
         void* parent = nullptr;
     };
 
@@ -57,8 +59,6 @@ namespace Game {
         void loadRoom(const char* path);
         void loadRoomList(const char* directory_path, const char* seed);
 
-        bool hasOutdatedData() { return _is_outdated; };
-
         void goToNextRoom();
         void loadStartRoom();
         void resetCurrentRoom();
@@ -73,6 +73,8 @@ namespace Game {
 
     private:
 
+        //We need this function / way to create entities.
+        // So that we use / instantiate the correct constructor.
         template<typename T>
         static Entities::RoomEntity* createEntity() {
             T* inst = new T{};
@@ -91,18 +93,21 @@ namespace Game {
         Tyche::TileRenderer* _tile_renderer = nullptr;
         Tyche::EntityRenderer* _entity_renderer = nullptr;
         Tyche::DebugRenderer* _debug_renderer = nullptr;
-        Entities::Player* _player = nullptr;
-
         Tyche::AudioEngine*     _audio_engine = nullptr;
+
+        Entities::Player* _player = nullptr;
         Tyche::World _world{true};
 
+        //Float is the room weight amd the string is the path to the room.
         Pair<float, string*> _next_room{0.0f, nullptr};
+        // Holds a list of paths with weights.
         vector<Pair<float, string*>> _room_weights;
         Room _current_room{};
 
         bool _is_outdated = false;
         float max_y = 0.0f;
 
+        // a registry with function ptrs to creation funcs
         hashmap<int, Entities::RoomEntity*(*)()> _registry;
     };
 

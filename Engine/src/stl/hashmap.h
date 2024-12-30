@@ -259,7 +259,11 @@ namespace Tyche::STL {
             buf = temp;
         }
 
+        int maxLength() { return maxSize; };
 
+        hashnode<K, V>* getNode(int pos) {
+            return buf[pos];
+        }
     private:
 
         void cleanup() {

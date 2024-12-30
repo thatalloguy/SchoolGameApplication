@@ -28,12 +28,16 @@ void Tools::CollisionTool::update() {
     auto snapped_pos = Vector2{floor(mouse_pos[0] / GRID_SIZE), floor(mouse_pos[1] / GRID_SIZE)} * GRID_SIZE;
 
     _cursor->setPosition(mouse_pos);
+
+
     if (Tyche::Mouse::isMouseButtonPressed(Tyche::Mouse::LEFT) ) {
+
+        // If we weren't pressing the mouse button, yet then it means this will be our start pos.
         if (!is_holding) {
             AABB[0] = snapped_pos[0];
             AABB[1] = snapped_pos[1];
         }
-
+        // Always set the end position to the mouse.
         AABB[2] = snapped_pos[0];
         AABB[3] = snapped_pos[1];
 
@@ -47,6 +51,7 @@ void Tools::CollisionTool::update() {
     if (Tyche::Input::isKeyPressed(Tyche::Input::Z) && !has_builded_last_frame) {
         //build
 
+        // just check if the sprite is 2 on the x-axis to avoid colling isPressed unneeded.
         if (_cursor->getSprite()[0] == 2) {
             _editor->addCollider(AABB);
         } else {

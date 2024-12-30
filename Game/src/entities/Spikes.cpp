@@ -31,14 +31,18 @@ void Entities::Spikes::update(float delta_time) {
 
     _debug_renderer->renderBox(_trigger);
 
+    // If we are touching the player
     if (Tyche::PhysicsHandler::collision(_trigger, _player_body->getAABB())) {
         if (_state == SpikeState::IN) {
+            // And we are retracted, then we set a delay and activate!
+            _delay_timer.setWaitTime(activation_delay);
             _delay_timer.start([=, this](){
                 this->activate();
             });
         } else {
-            // ded :(
+            // set a small delay and then 'kill' the player by resetting the room.
 
+            // We have this delay to give the player time to realize why they died.
             _delay_timer.setWaitTime(death_delay);
 
             _delay_timer.start([=, this](){
@@ -47,6 +51,8 @@ void Entities::Spikes::update(float delta_time) {
         }
 
     }
+
+    // Change our collider / trigger based on our current state.
 
     if (_state == SpikeState::IN) {
         _sprite = {1, 1};
@@ -76,6 +82,7 @@ void Entities::Spikes::destroy() {
 void Entities::Spikes::activate() {
     _state = SpikeState::OUT;
 
+    // Set a delay to retract again so that the player can jump over us again.
     _delay_timer.setWaitTime(reactivation_delay);
 
     _delay_timer.start([=, this](){

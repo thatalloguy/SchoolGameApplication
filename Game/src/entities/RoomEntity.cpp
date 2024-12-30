@@ -14,7 +14,7 @@ void Entities::RoomEntity::initialize(const Vector2& position, Game::Room *room,
 
 bool Entities::RoomEntity::hasTag(const string &tag) {
     if (_tag == tag) {
-            return true;
+        return true;
     }
 
     return false;

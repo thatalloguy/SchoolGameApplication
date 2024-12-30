@@ -12,6 +12,7 @@
 
 namespace Tools {
 
+    // A tool for defining collision.
     class CollisionTool: public Tools::Tool {
 
     public:

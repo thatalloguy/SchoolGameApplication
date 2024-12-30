@@ -48,7 +48,7 @@ namespace Tyche {
         GPUMesh _mesh{0, 0};
         Shader _entity_shader;
         // x is the tile_size and y is the atlas size
-        Math::Vector2 _grid{16, 64};
+        Math::Vector2 _grid{16, 16};
         Texture _texture_atlas{};
 
         void loadTextureAtlas(const STL::string& path);

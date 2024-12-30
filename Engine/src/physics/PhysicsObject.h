@@ -14,6 +14,7 @@ namespace Tyche {
     enum class ObjectType: unsigned int {
         Static = 0,
         Rigid = 1,
+        //unused
         Ghost = 2,
     };
 

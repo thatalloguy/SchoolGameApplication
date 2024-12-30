@@ -14,6 +14,10 @@ namespace Entities {
         OUT = 1,
     };
 
+    /*
+     * Spikes are entities that will extend when the player touches it.
+     * If the player comes in contact with it when extended the player will die.
+     */
     class Spikes : public RoomEntity {
     public:
 

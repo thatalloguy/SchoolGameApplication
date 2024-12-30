@@ -31,11 +31,8 @@ void Tyche::LineDrawCommand::render(Shader& shader, Camera& camera) {
         _end[0], _end[1],  0.0f, 0.0f
     };
 
-    //Setup a reusable quad mesh;
-
-    //    glBindVertexArray(_line_mesh.VAO);
+    // update the mesh for the line!
     glBindBuffer(GL_ARRAY_BUFFER, _line_mesh.VBO);
-
     glBufferData(GL_ARRAY_BUFFER, sizeof(line_verts), &line_verts, GL_DYNAMIC_DRAW);
 
     glBindVertexArray(_line_mesh.VAO);
@@ -87,6 +84,8 @@ Tyche::DebugRenderer::DebugRenderer() {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
 
+    // Do the same for the Line mesh
+    // We dont upload any vertices to it since the line command will do that internally.
     glGenVertexArrays(1, &_line_mesh.VAO);
     glGenBuffers(1, &_line_mesh.VBO);
 
@@ -116,6 +115,8 @@ void Tyche::DebugRenderer::renderPoint(const Vector2& position) {
 }
 
 void Tyche::DebugRenderer::renderBox(const Vector4& AABB) {
+    // Its a very hacky way to do this.
+    // But it doesnt matter for the scale of this project.
 
     _queue.push_back(new PointDrawCommand({AABB[0], AABB[1]}));
     _queue.push_back(new PointDrawCommand({AABB[2], AABB[1]}));
@@ -134,9 +135,6 @@ void Tyche::DebugRenderer::render(Camera& camera) {
     for (DrawCommand* command: _queue) {
         command->render(_debug_shader, camera);
     }
-
-    clearQueue();
-
 }
 
 void Tyche::DebugRenderer::clearQueue() {

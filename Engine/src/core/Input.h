@@ -79,12 +79,16 @@ namespace Tyche::Input {
         F12 = 301
     };
 
+    //Tell the system what input of which window we should be capturing.
+    // Is REQUIRED before capturing / asking for any key/action data.
     void setTargetWindow(Window& window);
 
+    // Actions allow different keys to be bound to the same Action.
     void addAction(const Action& action);
     void addKey(const Action& action, Key key);
 
     bool isActionPressed(const Action& action);
     bool isKeyPressed(Key key);
 
+    void cleanUp();
 }

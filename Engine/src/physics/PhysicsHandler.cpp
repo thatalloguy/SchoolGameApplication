@@ -222,9 +222,11 @@ void Tyche::World::renderBodies(Tyche::DebugRenderer& debug_renderer) {
         debug_renderer.renderBox(body->getAABB());
 
         if (body->getVelocity() != Vector2{0, 0}) {
+            // draw a line pointing in the direction of moving objects.
             auto vel_normal = body->getVelocity();
             vel_normal.normalize();
 
+            // do times 3 to make the line more visible.
             vel_normal *= 3.0f;
             vel_normal += body->getPosition();
 

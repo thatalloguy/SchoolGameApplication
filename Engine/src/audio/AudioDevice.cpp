@@ -29,6 +29,8 @@ void Tyche::AudioEngine::soundEffectProccessPCMFrames(ma_node *pNode, const floa
 
     model.type = IPL_DISTANCEATTENUATIONTYPE_DEFAULT;
     directEffectParams.flags = IPL_DIRECTEFFECTFLAGS_APPLYDISTANCEATTENUATION;
+
+    //Note: the z is always 1 since its a 2d game :D
     directEffectParams.distanceAttenuation = iplDistanceAttenuationCalculate(soundEffect->context, IPLVector3{soundEffect->soundPosition[0], soundEffect->soundPosition[1], 1}, IPLVector3{soundEffect->playerPosition[0], soundEffect->playerPosition[1], 1}, &model);
 
     inputBufferDesc.numChannels = (IPLint32) ma_node_get_input_channels(pNode, 0);
@@ -49,7 +51,7 @@ void Tyche::AudioEngine::soundEffectProccessPCMFrames(ma_node *pNode, const floa
             // no need for deinterleaving since its a mono stream.
             soundEffect->inBuffer[0] = (float*) ma_offset_pcm_frames_const_ptr_f32(ppFramesIn[0], totalFramesProcessed, 1);
         } else {
-            // womp womp we need to deinterleave the input stream.
+            //  we need to deinterleave the input stream.
             ma_deinterleave_pcm_frames(ma_format_f32, inputBufferDesc.numChannels, framesToProcessThisIteration,
                                        ma_offset_pcm_frames_const_ptr_f32(ppFramesIn[0], totalFramesProcessed, inputBufferDesc.numChannels),
                                        (void **) soundEffect->inBuffer); // note the example doenst cast to (void **)
@@ -58,6 +60,7 @@ void Tyche::AudioEngine::soundEffectProccessPCMFrames(ma_node *pNode, const floa
         inputBufferDesc.data = soundEffect->inBuffer;
         inputBufferDesc.numSamples = (IPLint32) framesToProcessThisIteration;
 
+        //Apply both effects to our buffers
         iplBinauralEffectApply(soundEffect->binauralEffect, &binauralEffectParams, &inputBufferDesc, &outputBufferDesc);
 
         iplDirectEffectApply(soundEffect->directEffect, &directEffectParams, &outputBufferDesc, &outputBufferDesc);
@@ -131,14 +134,10 @@ ma_result Tyche::AudioEngine::initSoundEffect(ma_node_graph* nodeGraph, const So
     directEffectSettings.numChannels = 2;
 
     //Create all of the objects that we need.
-
-
     result = ma_node_init(nodeGraph, &baseConfig, allocationCallbacks, &soundEffect.baseNode);
     if (result != MA_SUCCESS) {
         return result;
     }
-
-
 
     auto success = iplBinauralEffectCreate(soundEffect.context, &soundEffect.audioSettings, &effectSettings, &soundEffect.binauralEffect);
     if (success != IPL_STATUS_SUCCESS) {
@@ -158,6 +157,7 @@ ma_result Tyche::AudioEngine::initSoundEffect(ma_node_graph* nodeGraph, const So
     heapSizeInBytes += sizeof(float) * channelsIn * soundEffect.audioSettings.frameSize; // in buffer
 
     soundEffect._heap = ma_malloc(heapSizeInBytes, allocationCallbacks);
+    // if we have a NULL obj then it means we dont have enough memory.
     if (soundEffect._heap == NULL) {
         iplBinauralEffectRelease(&soundEffect.binauralEffect);
         iplDirectEffectRelease(&soundEffect.directEffect);
@@ -184,6 +184,7 @@ void Tyche::AudioEngine::destroySoundEffect(SoundEffect *binauralEffect,
         return;
     }*/
 
+    //destroy the allocated sound effect obj's
     ma_node_uninit(&binauralEffect->baseNode, allocationCallbacks);
 
     iplBinauralEffectRelease(&binauralEffect->binauralEffect);
@@ -293,7 +294,6 @@ Tyche::SoundID Tyche::AudioEngine::registerSound(SoundCreationInfo info) {
 
     // No need for miniaudio to do this, since steam audio does this already
     ma_sound_set_directional_attenuation_factor(&newSoundObject->g_sound, 0);
-
     ma_sound_set_looping(&newSoundObject->g_sound, info.shouldLoop);
 
 
@@ -312,8 +312,9 @@ Tyche::SoundID Tyche::AudioEngine::registerSound(SoundCreationInfo info) {
     }
 
     ma_node_attach_output_bus(&newSoundObject->soundEffect, 0, ma_engine_get_endpoint(&engine), 0);
-
     ma_node_attach_output_bus(&newSoundObject->g_sound, 0, &newSoundObject->soundEffect, 0);
+
+
     registry.put(idCounter, newSoundObject);
     _objects.push_back(newSoundObject);
 
@@ -346,6 +347,7 @@ void Tyche::AudioEngine::update(const Tyche::Math::Vector2 &listenerPos) {
 
         auto sound = _queue[i];
 
+        //Update all of the sounds that are playing
         if (ma_sound_is_playing(&sound->g_sound)) {
 
             //Update the direction
@@ -369,10 +371,12 @@ void Tyche::AudioEngine::updateSound(Tyche::SoundID id, const Tyche::Math::Vecto
 }
 
 void Tyche::AudioEngine::deleteSound(Tyche::SoundID id) {
+    //First delete the actual sound object
     if (registry.has(id)) {
         delete registry.get(id);
     }
 
+    //then remove it from our internal _objects list.
     for (int i=0; i<_objects.length(); i++) {
         auto sound = _objects[i];
         if (sound == nullptr) {

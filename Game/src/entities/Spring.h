@@ -15,6 +15,10 @@ namespace Entities {
         OUT = 1,
     };
 
+    /*
+     * The spring entity is very similar to the spike entity except it launches the player up.
+     */
+
     class Spring: public RoomEntity {
     public:
 

@@ -130,6 +130,7 @@ void Tyche::EntityRenderer::setAtlasSize(int new_atlas_size) {
 
 void Tyche::EntityRenderer::loadTextureAtlas(const STL::string &path) {
 
+    //Note we are using NEAREST filters since its pixel art at pixel size.
     TextureCreationInfo atlas_texture_info {
             .path = path.c_str(),
             .flip_vertically = false,

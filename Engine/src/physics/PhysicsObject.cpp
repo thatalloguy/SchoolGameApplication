@@ -112,6 +112,8 @@ void Tyche::PhysicsObject::setCorrection(const Tyche::Math::Vector2 &cor) {
 
 Tyche::CollisionInfo Tyche::PhysicsObject::getCollisionInfo() {
     CollisionInfo info{_col_info.is_colliding, _col_info.collision_normal};
+
+    // Clear our internal collision info so that it isnt outdated.
     _col_info = {false, {0, 0}};
 
     return info;

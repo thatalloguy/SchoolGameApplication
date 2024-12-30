@@ -63,6 +63,7 @@ namespace Tyche {
         unsigned int _id_count = 0;
         Math::Vector2 _gravity{0, 9.7f};
 
+        // If enabled any bodies added to the world will get automatically deleted when removed (or world gets destroyed).
         bool _should_handle_memory = false;
 
 

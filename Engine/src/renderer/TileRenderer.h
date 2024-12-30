@@ -84,7 +84,7 @@ namespace Tyche {
         unsigned int _matrices_buffer;
         Shader _tile_shader;
         // x is the tile_size and y is the atlas size
-        Vector2 _grid{16, 64};
+        Vector2 _grid{16, 16};
         Texture _texture_atlas{};
 
         void loadTextureAtlas(const string& path);

@@ -163,7 +163,8 @@ namespace Tyche {
 
 
         STL::hashmap<SoundID, SoundObject*> registry;
-        STL::vector<SoundObject*> _objects; // have a seperate vector, since the hashmap doesnt support iterating yet.
+        // have a seperate vector, since the hashmap doesnt support iterating yet.
+        STL::vector<SoundObject*> _objects;
 
         Math::Vector2 _listener_pos{0, 0};
 

@@ -18,7 +18,7 @@ void Entities::FallingTile::initialize(const Vector2 &position, Game::Room *room
     _position = position;
     _old_position = position;
 
-    //The collider is above the block
+    //The trigger is above the block and slightly larger than the actual block.
      _trigger = {
         _position.getX() - 30,
         _position.getY() - 20,
@@ -26,12 +26,14 @@ void Entities::FallingTile::initialize(const Vector2 &position, Game::Room *room
         _position.getY() + 20
     };
 
+     // set the physical collider of the block.
      _body.setAABB({
                            _position.getX() - 25,
                            _position.getY() - 2.0f,
                            _position.getX() + 12.5f,
                            _position.getY() + 40.0f
                    });
+
      _body.setPosition(_position);
 
 
@@ -45,6 +47,8 @@ void Entities::FallingTile::initialize(const Vector2 &position, Game::Room *room
     _debug_renderer = _room_manager->getDebugRenderer();
 
     _world->addStaticBody(&_body);
+
+    // only load the sound if we haven't already.
     if (_falling_sound_id == -1) {
         _falling_sound_id = _audio_engine->registerSound({"../../../Resources/Audio/falling_block.wav"});
     }
@@ -55,22 +59,27 @@ void Entities::FallingTile::update(float delta_time) {
 
     _debug_renderer->renderBox(_trigger);
 
+    // If the player touches the trigger and we arent already falling or sleeping then we can fall
     if (Tyche::PhysicsHandler::collision(_trigger, _player_body->getAABB()) && !is_falling && !sleeping) {
         is_falling = true;
         _audio_engine->playSound(_falling_sound_id, _position);
     }
 
     if (is_falling && !sleeping) {
+        // Update the body which makes us fall further.
         _body.step(delta_time, _world->getGravity());
 
+        // update our position to represent that change.
         _position = _body.getPosition();
 
+        // then we update the collider of our body so that the player can still interact with that.
         _body.setAABB({
                               _position.getX() - 25,
                               _position.getY() - 2.0f,
                               _position.getX() + 12.5f,
                               _position.getY() + 40.0f
                       });
+
 
         _audio_engine->updateSound(_falling_sound_id, _position);
     }
@@ -80,6 +89,7 @@ void Entities::FallingTile::update(float delta_time) {
 }
 
 void Entities::FallingTile::destroy() {
+
 }
 
 void Entities::FallingTile::reset() {

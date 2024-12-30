@@ -21,7 +21,10 @@ namespace Game {
     class App {
 
     public:
+
+        //Setups all our objects
         App(int argc, char** argv);
+
         ~App();
 
 
@@ -29,8 +32,10 @@ namespace Game {
 
     private:
 
-        void processArgs(int argc, char** argv);
-        void debugRoom(const char* path);
+        //These used to work but removed after finishing the room manager
+        // You used to be able to do 'tyche-game.exe -d 'room.room' '
+        //void processArgs(int argc, char** argv);
+        //void debugRoom(const char* path);
 
         void mainloopTick(float frameTime);
         void menuTick(float frameTime);

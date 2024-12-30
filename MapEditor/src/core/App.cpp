@@ -29,8 +29,6 @@ MapEditor::App::~App() {
         delete name;
     }
 
-    //TODO this should be done by the room itself and not the editor.
-    //TODO kiss my ass.
     for (auto tile : _current_room.tiles) {
         delete tile;
     }
@@ -38,6 +36,8 @@ MapEditor::App::~App() {
     for (auto entity: _current_room.entities) {
         delete entity;
     }
+
+    Tyche::Input::cleanUp();
 }
 
 void MapEditor::App::init() {
@@ -151,6 +151,7 @@ void MapEditor::App::run() {
             _debug_renderer.renderBox(collider);
         }
 
+        // render all of our entities as a debug box.
         for (auto entity: _current_room.entities) {
             Vector4 box = {entity->position[0] - 12.5f, entity->position[1] - 12.5f,
                 entity->position[0] + 12.5f, entity->position[1] + 12.5f};
@@ -160,9 +161,10 @@ void MapEditor::App::run() {
         _debug_renderer.render(_camera);
         _debug_renderer.clearQueue();
 
+
         updateCurrentTool();
 
-
+        // Render all the debug GUI.
         newImGuiFrame();
 
         ImGui::SetNextWindowPos({0, 0});
@@ -185,8 +187,15 @@ void MapEditor::App::run() {
                 }
 
                 if (ImGui::MenuItem("Reload Room List")) {
-                    //loadRoomFromDisk("../../../test.room");
-                    _display_popup = true;
+                    //Reload the internal room list :D
+                    for (auto name : _room_names) {
+                        delete name;
+                    }
+
+                    for (const auto & entry : std::filesystem::directory_iterator("../../../Rooms/")) {
+                        //may god again forgive me for this sin of c++ code
+                        _room_names.push_back(new string{entry.path().filename().string().data()});
+                    }
                 }
 
 
@@ -205,6 +214,8 @@ void MapEditor::App::run() {
                 ImGui::EndMenu();
             }
 
+            // DEPRECATED FEATURE
+/*
             if (ImGui::BeginMenu("Execute")) {
 
                 if (ImGui::MenuItem("Debug Current Room")) {
@@ -218,16 +229,14 @@ void MapEditor::App::run() {
 
                 ImGui::EndMenu();
             }
-            if (ImGui::BeginPopupModal("SelectRoom")) {
+*/
 
-
-                ImGui::EndPopup();
-            }
 
 
             ImGui::Text("|| Current Room:");
             ImGui::SetNextItemWidth(_window.getWindowSize().getX() * 0.1f);
 
+            //Render a dropdown menu to allow room selection.
             if (ImGui::BeginCombo("Rooms", _room_names[_current_room_index]->c_str())) {
                 for (int i=0; i< _room_names.length(); i++) {
                     auto name = _room_names[i];
@@ -264,6 +273,7 @@ Tyche::Camera& MapEditor::App::getCamera() {
 }
 
 void MapEditor::App::placeTile(Vector2 pos, Tyche::Tile* tile) {
+    //place a tile and make the tile renderer refresh.
     _current_room.tiles.push_back(tile);
     _tile_renderer.addTile(*tile);
 
@@ -280,6 +290,8 @@ void MapEditor::App::removeTile(Vector2 pos) {
              _current_room.tiles.remove(i);
              _tile_renderer.removeTile(i);
              delete tile;
+
+             // we return to avoid deleting multiple tiles.
              return;
          }
      }
@@ -465,6 +477,7 @@ void MapEditor::App::loadRoomFromDisk(const char* path) {
     _current_room.entities.clear();
     _current_room.colliders.clear();
 
+    // correct the path.
     string full_path = "../../../Rooms/";
     full_path = full_path + path;
 

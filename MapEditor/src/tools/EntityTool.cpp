@@ -40,11 +40,12 @@ void Tools::EntityTool::update() {
 
 
     if (Tyche::Mouse::isMouseButtonPressed(Tyche::Mouse::RIGHT)) {
+        // If we arent pressing shift and we havent already created a entity last frame then we build.
         if (!Tyche::Input::isKeyPressed(Tyche::Input::LSHIFT)  && !has_builded_last_frame) {
             selected_entity = _editor->addEntity(snapped_pos);
             has_builded_last_frame = true;
         } else {
-
+            // Else it means we are trying to either select or delete an entity.
             if (Tyche::Input::isKeyPressed(Tyche::Input::LCONTROL)) {
                 _editor->deleteEntity(snapped_pos);
                 selected_entity = nullptr;

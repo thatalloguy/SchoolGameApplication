@@ -15,6 +15,10 @@ using namespace Tyche::Math;
 
 namespace Tyche {
 
+    // The debug render works with commands.
+    // It holds an internal buffer with a ptr to commands.
+    // If wanted the user can implement custom debug commands.
+
     class DrawCommand {
     public:
         virtual void render(Shader& shader, Camera& camera) {};
@@ -56,6 +60,9 @@ namespace Tyche {
         void renderBox(const Vector4& AABB);
 
         void render(Camera& camera);
+
+        // NEED to call clearQueue even if not calling render
+        // Otherwise you will be leaking memory!
         void clearQueue();
 
     private:

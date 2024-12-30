@@ -19,13 +19,17 @@ void Entities::Player::initialize() {
 
 void Entities::Player::update(float delta_time) {
     _position = _collision_body.getPosition();
+    // Update the collider based on our position/
     _collision_body.setAABB({_position[0] - 50, _position[1] - 50, _position[0] + 50, _position[1] + 50});
 
     auto collision_info = _collision_body.getCollisionInfo();
 
+    // We are only allowed to move if we are colliding with something.
+    // This is to avoid being able to walk up walls and flying through the air.
 
     if (collision_info.is_colliding && collision_info.collision_normal[1] < 0 && Tyche::Input::isActionPressed("left")) {
         _collision_body.setVelocity(Vector2{40, _collision_body.getVelocity().getY()});
+
         //Unflip the sprite
         _scale.setX(50);
     }
@@ -39,7 +43,6 @@ void Entities::Player::update(float delta_time) {
     if (collision_info.is_colliding &&
         collision_info.collision_normal[1] < -0.7 && Tyche::Input::isActionPressed("jump")) {
         _collision_body.setVelocity(Vector2{_collision_body.getVelocity().getX(), -40});
-
     }
 }
 
@@ -54,5 +57,6 @@ Tyche::PhysicsObject& Entities::Player::getBody() {
 
 void Entities::Player::setPosition(const Vector2 &pos) {
     _collision_body.setPosition(pos);
+    _collision_body.setAABB({_position[0] - 50, _position[1] - 50, _position[0] + 50, _position[1] + 50});
     _position = pos;
 }

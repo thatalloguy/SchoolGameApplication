@@ -9,6 +9,10 @@
 
 namespace Entities {
 
+    /*
+     * Unused.
+     * Was supposed to be an ambient entity that would just play a simple sound on loop.
+     */
 
     class Torch : public Tyche::Entity {
 

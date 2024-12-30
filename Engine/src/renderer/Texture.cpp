@@ -13,9 +13,11 @@ void Tyche::Texture::init(Tyche::TextureCreationInfo &creationInfo) {
 
     // Create a texture on the GPU based on our create info
 
+    //Generate a texture
     glGenTextures(1, &textureGPUId);
     glBindTexture((GLenum) creationInfo.type, textureGPUId);
 
+    //setup the correct params.
     glTexParameteri((GLenum) creationInfo.type, GL_TEXTURE_WRAP_S, (GLint) creationInfo.wrapX);
     glTexParameteri((GLenum) creationInfo.type, GL_TEXTURE_WRAP_T, (GLint) creationInfo.wrapY);
     if (creationInfo.type == TextureType::TEXTURE_3D) {
