@@ -12,6 +12,9 @@
 #include "../entities/Portal.h"
 #include "../entities/Spikes.h"
 #include "../entities/Spring.h"
+#include "imgui.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
 
 //Global constants
 namespace {
@@ -57,7 +60,6 @@ Game::App::App(int argc, char **argv) {
 
     player.initialize();
 
-    _entity_renderer.addEntity(&player);
 
     _room_manager = new RoomManager(_tile_renderer, _entity_renderer, *_debug_renderer, player);
 
@@ -78,10 +80,17 @@ Game::App::App(int argc, char **argv) {
     _room_manager->loadStartRoom();
 
     processArgs(argc, argv);
+
+    initializeImgui();
 }
 
 Game::App::~App() {
     _audio_engine.CleanUp();
+    cleanupImgui();
+
+
+    delete _room_manager;
+    delete _debug_renderer;
     delete _window;
 }
 
@@ -93,7 +102,7 @@ void Game::App::run() {
     while (!_window->shouldWindowClose()) {
 
         auto newTime = std::chrono::high_resolution_clock::now();
-        double frameTime = (double) std::chrono::duration_cast<std::chrono::microseconds>(newTime - currentTime).count() / 100000;
+        float frameTime = (float) std::chrono::duration_cast<std::chrono::microseconds>(newTime - currentTime).count() / 100000;
         currentTime = newTime;
 
         // If we dont cap it, then the physics engine will explode since instead of correcting the velocities we are enlarging them.
@@ -103,44 +112,20 @@ void Game::App::run() {
 
         _window->update();
 
-        _world->step(frameTime);
-        _world->renderBodies(*_debug_renderer);
 
-        _room_manager->update(frameTime);
-
-
-
-        player.update(frameTime);
-        _audio_engine.update(player.getPosition());
-
-        _camera.setViewportSize(_window->getWindowSize());
-
-        // 640 = 1280 / 2 (which is always the width of the camera view)
-        _camera.setPosition({-player.getPosition().getX() + 640, _camera.getPosition().getY()});
-        _camera.update();
-
-        _tile_renderer.renderTiles(_camera);
-        _entity_renderer.renderEntities(_camera);
-
-        if (Tyche::Input::isKeyPressed(Tyche::Input::F1)) {
-            _debug_rendering = true;
-        } else if (Tyche::Input::isKeyPressed(Tyche::Input::F2)) {
-            _debug_rendering = false;
+        switch (_current_state) {
+            case GameState::GAMELOOP:
+                mainloopTick(frameTime);
+                break;
+            case GameState::START_MENU:
+                menuTick(frameTime);
+                break;
+            case GameState::PAUSED:
+                break;
         }
-
-        if (_debug_rendering) {
-            _debug_renderer->render(_camera);
-        }
-
-        _debug_renderer->clearQueue();
-
-
-
 
     }
 
-
-    delete _debug_renderer;
 }
 
 void Game::App::processArgs(int argc, char** argv) {
@@ -153,4 +138,101 @@ void Game::App::processArgs(int argc, char** argv) {
 
 void Game::App::debugRoom(const char* path) {
     spdlog::info("Path {}", path);
+}
+
+void Game::App::mainloopTick(float frameTime) {
+
+    _world->step(frameTime);
+    _world->renderBodies(*_debug_renderer);
+
+    _room_manager->update(frameTime);
+
+
+
+    player.update(frameTime);
+    _audio_engine.update(player.getPosition());
+
+    _camera.setViewportSize(_window->getWindowSize());
+
+    // 640 = 1280 / 2 (which is always the width of the camera view)
+    _camera.setPosition({-player.getPosition().getX() + 640, _camera.getPosition().getY()});
+    _camera.update();
+
+    _tile_renderer.renderTiles(_camera);
+    _entity_renderer.renderEntities(_camera);
+    _entity_renderer.renderEntity( _camera, &player);
+
+    if (Tyche::Input::isKeyPressed(Tyche::Input::F1)) {
+        _debug_rendering = true;
+    } else if (Tyche::Input::isKeyPressed(Tyche::Input::F2)) {
+        _debug_rendering = false;
+    }
+
+    if (_debug_rendering) {
+        _debug_renderer->render(_camera);
+    }
+
+    _debug_renderer->clearQueue();
+
+
+
+}
+
+void Game::App::menuTick(float delta_time) {
+    newImguiFrame();
+
+    // A very ugly Main menu, but better something then nothing :shrug:
+
+    ImGui::SetNextWindowPos({0, 0});
+    ImGui::SetNextWindowSize({_window->getWindowSize()[0], _window->getWindowSize()[1]});
+    ImGui::Begin("Main menu", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove |
+                                                            ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
+
+
+    float window_width = _window->getWindowSize()[0];
+    float window_height = _window->getWindowSize()[1];
+
+    float scale = sqrt((window_width * window_width) + (window_height * window_height)) / 200.0f;
+
+
+    ImGui::SetWindowFontScale(scale);
+    ImGui::Text("Tomb Crawler");
+
+    ImGui::SetCursorPos({window_width * 0.45f, window_height * 0.45f});
+    if (ImGui::Button("START")) {
+        _current_state = GameState::GAMELOOP;
+    }
+
+
+    ImGui::End();
+
+
+    renderImguiFrame();
+}
+
+void Game::App::initializeImgui() {
+    IMGUI_CHECKVERSION();
+
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*) _window->getRawWindowPtr(), true);
+    ImGui_ImplOpenGL3_Init("#version 420");
+}
+
+void Game::App::cleanupImgui() {
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+}
+
+void Game::App::newImguiFrame() {
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+}
+
+void Game::App::renderImguiFrame() {
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

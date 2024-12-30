@@ -12,9 +12,10 @@
 
 namespace Game {
 
-    class TestEntity: public Tyche::Entity {
-    public:
-        void test() {};
+    enum class GameState : unsigned int {
+        PAUSED = 0,
+        GAMELOOP = 1,
+        START_MENU = 2
     };
 
     class App {
@@ -31,10 +32,22 @@ namespace Game {
         void processArgs(int argc, char** argv);
         void debugRoom(const char* path);
 
+        void mainloopTick(float frameTime);
+        void menuTick(float frameTime);
+
+        void initializeImgui();
+        void cleanupImgui();
+
+        void newImguiFrame();
+        void renderImguiFrame();
+
+
         Tyche::Window* _window;
         Tyche::TileRenderer _tile_renderer{};
         Tyche::EntityRenderer _entity_renderer{};
         Tyche::DebugRenderer* _debug_renderer = nullptr;
+
+        GameState _current_state = GameState::START_MENU;
 
         Tyche::AudioEngine _audio_engine;
 
