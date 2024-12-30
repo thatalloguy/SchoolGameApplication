@@ -183,7 +183,6 @@ void MapEditor::App::run() {
 
                 if (ImGui::MenuItem("Load Room")) {
                     loadRoomFromDisk(_room_names[_current_room_index]->c_str());
-                    _display_popup = true;
                 }
 
                 if (ImGui::MenuItem("Reload Room List")) {
@@ -292,6 +291,7 @@ void MapEditor::App::removeTile(Vector2 pos) {
              delete tile;
 
              // we return to avoid deleting multiple tiles.
+             _tile_renderer.prepareRendering();
              return;
          }
      }

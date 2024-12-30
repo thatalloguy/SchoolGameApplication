@@ -26,7 +26,7 @@ Tyche::Math::Vector2 Tyche::PhysicsHandler::getCorrection(const Math::Vector2& a
     Math::Vector2 correction{0, 0};
 
     // First check what axis we should correct (the one most far away from each other)
-    if (bCenter.getY() <= A[1] && bCenter.getY() <= A[3]) {
+    if (bCenter.getY() <= A[1] || bCenter.getY() >= A[3]) {
         // Check if A is above or below B
         if (aCenter.getY() <= bCenter.getY()) {
             correction.setY(B[1] - A[3]);

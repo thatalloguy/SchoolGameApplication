@@ -64,6 +64,7 @@ void Game::RoomManager::update(float delta_time) {
     //If the player falls out of the map we need to reset the map.
     if (_player->getPosition().getY() >= max_y) {
         resetCurrentRoom();
+        spdlog::info("Fell out of the map");
     }
 
 
@@ -241,6 +242,8 @@ void Game::RoomManager::loadStartRoom() {
 }
 
 void Game::RoomManager::resetCurrentRoom() {
+
+    spdlog::info("resetting map");
 
     for (auto entity : _current_room.entities) {
         entity->reset();

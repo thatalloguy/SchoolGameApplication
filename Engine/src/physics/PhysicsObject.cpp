@@ -3,6 +3,7 @@
 //
 
 #include "PhysicsObject.h"
+#include "spdlog/spdlog.h"
 
 Tyche::PhysicsObject::PhysicsObject(const Tyche::Math::Vector2 &position, const Tyche::Math::Vector2 &init_vel,
                                     float mass): _position(position), _velocity(init_vel), _mass(mass) {}
