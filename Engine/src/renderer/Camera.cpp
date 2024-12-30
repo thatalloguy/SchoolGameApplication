@@ -32,7 +32,9 @@ void Tyche::Camera::setViewportSize(const Tyche::Math::Vector2 &new_size) {
 
 void Tyche::Camera::update() {
     //First calculate the projection matrix and then translate (move) it to our position;
-    _camera_matrix.ortho(0.0f, _viewport_size.getX(), _viewport_size.getY(), 0.0f, -1.0f, 1.0f);
+
+    //Also we dont scale our ortho projection so that the game scale looks the same size on every monitor.
+    _camera_matrix.ortho(0.0f, 1280, 720, 0.0f, -1.0f, 1.0f);
     _camera_matrix.translate(_position);
 
     glViewport(0, 0, (int) _viewport_size[0], (int) _viewport_size[1]);

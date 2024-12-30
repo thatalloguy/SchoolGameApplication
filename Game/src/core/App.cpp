@@ -113,8 +113,10 @@ void Game::App::run() {
         player.update(frameTime);
         _audio_engine.update(player.getPosition());
 
+        _camera.setViewportSize(_window->getWindowSize());
 
-        _camera.setPosition({-player.getPosition().getX() + (_camera.getViewportSize().getX() / 2), _camera.getPosition().getY()});
+        // 640 = 1280 / 2 (which is always the width of the camera view)
+        _camera.setPosition({-player.getPosition().getX() + 640, _camera.getPosition().getY()});
         _camera.update();
 
         _tile_renderer.renderTiles(_camera);
