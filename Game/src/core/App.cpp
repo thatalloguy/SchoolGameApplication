@@ -140,7 +140,9 @@ void Game::App::mainloopTick(float frameTime) {
     _camera.setViewportSize(_window->getWindowSize());
 
     // 640 = 1280 / 2 (which is always the width of the camera view)
-    _camera.setPosition({-player.getPosition().getX() + 640, _camera.getPosition().getY()});
+    // 360 = 720 / 2 (which is the y offset)
+    // We do this to make the player appear in the center of the camera :D
+    _camera.setPosition({-player.getPosition().getX() + 640, -player.getPosition().getY() + 360});
     _camera.update();
 
     //render tiles first so entities are in front.
