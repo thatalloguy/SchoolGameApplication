@@ -44,8 +44,6 @@ void Entities::Portal::update(float delta_time) {
     if (Tyche::PhysicsHandler::collision(_trigger, _player_body->getAABB())
             && _type == PortalType::END) {
         _room_manager->goToNextRoom();
-
-        _audio_engine->playSound(portal_sound, {-100, 0});
     }
 }
 
