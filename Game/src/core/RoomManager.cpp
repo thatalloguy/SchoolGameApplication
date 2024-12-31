@@ -57,6 +57,7 @@ void Game::RoomManager::loadRoom(const char* path) {
 
     loadEntities(new_raw_room, _current_room);
 
+    _player->setPosition(_current_room.start);
 }
 
 void Game::RoomManager::update(float delta_time) {
@@ -207,15 +208,17 @@ void Game::RoomManager::goToNextRoom() {
 
     // make the current room to the lowest weight so that we dont have the same room twice in a row.
     _next_room.first = -0.1f;
+    const string& current_room_name = *_next_room.second;
 
     for (auto room_weight: _room_weights) {
         // increase the weight
         room_weight.first += 0.1f;
 
-        if (room_weight.first >= _next_room.first && room_weight.second != _next_room.second) {
+        if (room_weight.first >= _next_room.first && *room_weight.second != current_room_name) {
             _next_room = room_weight;
         }
     }
+
 
     // destroy the room
     destroyRoom(&_current_room);
@@ -242,9 +245,6 @@ void Game::RoomManager::loadStartRoom() {
 }
 
 void Game::RoomManager::resetCurrentRoom() {
-
-    spdlog::info("resetting map");
-
     for (auto entity : _current_room.entities) {
         entity->reset();
     }

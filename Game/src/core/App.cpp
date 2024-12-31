@@ -135,7 +135,7 @@ void Game::App::mainloopTick(float frameTime) {
     player.update(frameTime);
 
     // update the audio engine so that the sounds are coming from the correct direction.
-    _audio_engine.update(player.getPosition());
+    _audio_engine.update(_camera.getPosition());
 
     _camera.setViewportSize(_window->getWindowSize());
 

@@ -32,9 +32,9 @@ namespace Entities {
 
         void activate();
     private:
-        const int activation_delay = 400;
+        const int activation_delay = 500;
         const int reactivation_delay = 2000;
-        const int death_delay = 100; // Have a death delay to show the player why they died
+        const int death_delay = 75; // Have a death delay to show the player why they died
 
         Vector4 _trigger;
         Tyche::Timer _delay_timer{activation_delay};

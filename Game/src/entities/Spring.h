@@ -36,7 +36,7 @@ namespace Entities {
 
     private:
 
-        const int turn_off_delay = 1000;
+        const int turn_off_delay = 4000;
 
         SpringState _state = SpringState::IN;
         Vector4 _trigger;
