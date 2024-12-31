@@ -57,7 +57,7 @@ void Entities::Spring::update(float delta_time) {
         });
 
         // Slightly slow down the player on the x-axis.
-        _player_body->setVelocity({_player_body->getVelocity()[0] * 0.995f, -100});
+        _player_body->setVelocity({_player_body->getVelocity()[0] * 0.995f, -60});
     }
 
 
