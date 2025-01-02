@@ -214,7 +214,11 @@ void Game::RoomManager::goToNextRoom() {
         // increase the weight
         room_weight.first += 0.1f;
 
-        if (room_weight.first >= _next_room.first && *room_weight.second != current_room_name) {
+        if (*room_weight.second == current_room_name) {
+            room_weight.first = -0.1f;
+        }
+
+        if (room_weight.first >= _next_room.first) {
             _next_room = room_weight;
         }
     }
